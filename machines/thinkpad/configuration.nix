@@ -6,10 +6,16 @@ let
   };
 in {
   nixpkgs.config.allowUnfree = true;
-  system.autoUpgrade.enable = true;
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  system = {
+    autoUpgrade.enable = true;
+    stateVersion = "19.03";
+  };
+
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
   networking.hostName = "thilo-laptop"; 
 
@@ -91,13 +97,15 @@ in {
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
-  services.xserver.enable = true;
-  services.xserver.layout = "de";
-  # services.xserver.xkbOptions = "eurosign:e";
+  services.xserver = {
+    enable = true;
+    layout = "de";
 
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome3.enable = true;
-  services.xserver.enableCtrlAltBackspace = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome3.enable = true;
+    enableCtrlAltBackspace = true;
+    videoDrivers = [ "amdgpu" ];
+  };
 
   users.users.thilo = {
     uid = 1000;
@@ -107,9 +115,6 @@ in {
     extraGroups = [ "wheel"  "docker" ]; 
   };
 
-  system.stateVersion = "19.03";
-
-  services.xserver.videoDrivers = [ "amdgpu" ];
   hardware.cpu.amd.updateMicrocode = true;                                                                  
   boot.kernelPackages = pkgs.linuxPackages_testing;
   hardware.opengl.enable = true;
@@ -124,8 +129,10 @@ in {
 
   services.journald.extraConfig = "SystemMaxUse=500M";
 
-  nix.gc.automatic = true;
-  nix.optimise.automatic = true;
+  nix = {
+    gc.automatic = true;
+    optimise.automatic = true;
+  };
 
   fonts = {
     enableFontDir = true;
