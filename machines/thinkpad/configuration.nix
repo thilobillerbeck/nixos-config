@@ -6,6 +6,7 @@ let
   };
 in {
   nixpkgs.config.allowUnfree = true;
+  networking.hostName = "thilo-laptop"; 
 
   system = {
     autoUpgrade.enable = true;
@@ -17,15 +18,16 @@ in {
     efi.canTouchEfiVariables = true;
   };
 
-  networking.hostName = "thilo-laptop"; 
-
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "de";
     defaultLocale = "en_US.UTF-8";
   };
 
-  services.timesyncd.enable = true;
+  nix = {
+    gc.automatic = true;
+    optimise.automatic = true;
+  };
 
   time.timeZone = "Europe/Berlin";
 
@@ -93,10 +95,6 @@ in {
     challengeResponseAuthentication = false;
   };
 
-  services.printing.enable = true;
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
-
   services.xserver = {
     enable = true;
     layout = "de";
@@ -107,6 +105,10 @@ in {
     videoDrivers = [ "amdgpu" ];
   };
 
+  services.journald.extraConfig = "SystemMaxUse=500M";
+  services.printing.enable = true;
+  services.timesyncd.enable = true;
+
   users.users.thilo = {
     uid = 1000;
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
@@ -115,24 +117,28 @@ in {
     extraGroups = [ "wheel"  "docker" ]; 
   };
 
-  hardware.cpu.amd.updateMicrocode = true;                                                                  
-  boot.kernelPackages = pkgs.linuxPackages_testing;
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-
-  virtualisation.docker.enable = true;
-  virtualisation.docker.autoPrune.enable = true;
-  hardware.enableAllFirmware = true;
-  hardware.enableRedistributableFirmware = true; 
-
-  security.sudo.wheelNeedsPassword = false;
-
-  services.journald.extraConfig = "SystemMaxUse=500M";
-
-  nix = {
-    gc.automatic = true;
-    optimise.automatic = true;
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    enableAllFirmware = true;
+    enableRedistributableFirmware = true; 
+    pulseaudio.enable = true;
+    opengl = {
+      enable = true;
+      driSupport = true;
+    };
   };
+  
+  sound.enable = true;
+                                                           
+  boot.kernelPackages = pkgs.linuxPackages_testing;
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune.enable = true;
+    };
+  };
+  security.sudo.wheelNeedsPassword = false;
 
   fonts = {
     enableFontDir = true;
