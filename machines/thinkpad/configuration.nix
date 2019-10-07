@@ -1,36 +1,28 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
-{
+let
+  unstable = import <nixos-unstable> {
+    config.allowUnfree = true;
+  };
+in {
   nixpkgs.config.allowUnfree = true;
   system.autoUpgrade.enable = true;
 
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "thilo-laptop"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.hostName = "thilo-laptop"; 
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "de";
     defaultLocale = "en_US.UTF-8";
   };
 
-  # Set your time zone.
-  time.timeZone = "Europe/Amsterdam";
+  services.timesyncd.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  time.timeZone = "Europe/Berlin";
+
   environment.systemPackages = with pkgs; [
     ddate
     file
@@ -56,21 +48,21 @@
     unzip
     imagemagick
     youtube-dl
-    go
+    unstable.go
     openjdk
     nodejs
     watchman
     vagrant
     kubectl
     steam
-    python
+    python3
     discord
 
-    jetbrains.goland
-    jetbrains.idea-ultimate
-    jetbrains.phpstorm
-    jetbrains.pycharm-professional
-    jetbrains.webstorm
+    unstable.jetbrains.goland
+    unstable.jetbrains.idea-ultimate
+    unstable.jetbrains.phpstorm
+    unstable.jetbrains.pycharm-professional
+    unstable.jetbrains.webstorm
   ];
 
   environment.etc."xdg/gtk-3.0/settings.ini" = {
@@ -82,65 +74,69 @@
     '';
   };
 
-  programs.zsh.enable = true;
+  programs.zsh =  {
+    enable = true;
+    ohMyZsh = {
+      enable = true;
+    };
+  };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    challengeResponseAuthentication = false;
+  };
 
-  # List services that you want to enable:
+  services.printing.enable = true;
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
-
-  # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.layout = "de";
   # services.xserver.xkbOptions = "eurosign:e";
 
-  # Enable touchpad support.
-  # services.xserver.libinput.enable = true;
-
-  # Enable the KDE Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome3.enable = true;
+  services.xserver.enableCtrlAltBackspace = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.thilo = {
+    uid = 1000;
+    description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
+    shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel"  "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel"  "docker" ]; 
   };
 
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
   system.stateVersion = "19.03";
 
-  services.xserver.videoDrivers = [ "amdgpu" ];                                                                                                                                                                                                                                                      
-  hardware.cpu.amd.updateMicrocode = true;                                                                                                                                   
+  services.xserver.videoDrivers = [ "amdgpu" ];
+  hardware.cpu.amd.updateMicrocode = true;                                                                  
   boot.kernelPackages = pkgs.linuxPackages_testing;
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
 
   virtualisation.docker.enable = true;
+  virtualisation.docker.autoPrune.enable = true;
   hardware.enableAllFirmware = true;
   hardware.enableRedistributableFirmware = true; 
 
   security.sudo.wheelNeedsPassword = false;
+
+  services.journald.extraConfig = "SystemMaxUse=500M";
+
+  nix.gc.automatic = true;
+  nix.optimise.automatic = true;
+
+  fonts = {
+    enableFontDir = true;
+    enableGhostscriptFonts = true;
+    fontconfig.cache32Bit = true;
+    fontconfig.ultimate.preset = "osx";
+
+    fonts = with pkgs; [
+      terminus_font
+      source-code-pro
+    ];
+  };
 }
 
