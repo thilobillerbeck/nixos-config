@@ -65,6 +65,8 @@
     steam
     python
     discord
+    nox
+    virtmanager
   ];
 
   environment.etc."xdg/gtk-3.0/settings.ini" = {
@@ -116,7 +118,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.thilo = {
     isNormalUser = true;
-    extraGroups = [ "wheel"  "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel"  "docker" "libvirtd" ]; # Enable ‘sudo’ for the user.
   };
 
   # This value determines the NixOS release with which your system is to be
@@ -131,8 +133,17 @@
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
 
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    libvirtd = {
+      enable = true;
+      qemuOvmf = true;
+    };
+  };
 
   security.sudo.wheelNeedsPassword = false;
+
+  hardware.opengl.driSupport32Bit = true;
+  hardware.pulseaudio.support32Bit = true;
 }
 

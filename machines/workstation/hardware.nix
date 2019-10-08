@@ -8,29 +8,30 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
-  # boot.extraModulePackages = [ config.boot.kernelPackages.rtlwifi_new ];
-  boot.extraModulePackages = [ pkgs.rtlwifi_new-firmware ];
-
+  boot.extraModulePackages = [ ];
+  boot.kernelParams = [ "amd_iommu=on" ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/ec99f556-6f81-4def-b57a-23364682c739";
+    { device = "/dev/disk/by-uuid/0e41bf24-12ec-4c0a-92ee-113f5e598726";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/65CC-72C9";
+    { device = "/dev/disk/by-uuid/D610-7363";
       fsType = "vfat";
     };
 
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/43f4d7e7-8c79-42cd-8fbb-75d98f059de5";
+      fsType = "ext4";
+    };
+
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/6a67c51a-e8cc-4d35-b75a-8dd5d5aeaa25"; }
+    [ { device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }
     ];
 
-  nix.maxJobs = lib.mkDefault 8;
-
-  hardware.opengl.driSupport32Bit = true;
-  hardware.pulseaudio.support32Bit = true;
+  nix.maxJobs = lib.mkDefault 16;
 }
