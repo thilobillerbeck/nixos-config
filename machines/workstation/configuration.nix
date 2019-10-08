@@ -82,7 +82,6 @@ in {
     };
     libvirtd = {
       enable = true;
-      enableKVM = true;
       qemuOvmf = true;
     };
   };
