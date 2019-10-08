@@ -1,6 +1,6 @@
 {
 	imports = [
-		# ./common.nix
+		./common.nix
 		./current/configuration.nix
 		./current/hardware.nix
 	];
