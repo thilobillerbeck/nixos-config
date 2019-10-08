@@ -40,7 +40,14 @@ in {
     tree
     wget
     vim
-    neovim
+    ( neovim.override {
+      configure = {
+        packages.myVimPackage = with pkgs.vimPlugins; {
+          start = [ nerdtree fugitive vim-nix ];
+          opt = [ ];
+        };
+      };
+    })
     zsh
     chromium
     vscode
@@ -58,13 +65,14 @@ in {
     youtube-dl
     unstable.go
     openjdk
-    nodejs
+    unstable.nodejs
     watchman
     vagrant
     kubectl
     steam
     python3
     discord
+    ycmd
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
@@ -86,7 +94,15 @@ in {
     enable = true;
     ohMyZsh = {
       enable = true;
+      theme = "fishy";
     };
+    shellAliases = {
+      cccda-weechat = "ssh -t avocadoom@shells.darmstadt.ccc.de \"tmux attach -t weechat\"";
+    };
+    shellInit = ''
+      npm set prefix ~/.npm-global
+      PATH=$PATH:$HOME/.npm-global/bin
+    '';
   };
 
   services.openssh = {
