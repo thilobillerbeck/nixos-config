@@ -59,7 +59,6 @@ in {
     steam
     python3
     discord
-    virtmanager
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
