@@ -12,6 +12,12 @@ in {
     stateVersion = "19.03";
   };
 
+  location = {
+    latitude = 49.8217934;
+    longitude = 8.9421667;
+  };
+
+  # boot.extraModprobeConfig = "options vfio-pci ids=1002:687f,1002:aaf8,1022:145c";
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -38,28 +44,34 @@ in {
     enable = true;
     layout = "de";
 
-    displayManager.gdm.enable = true;
-    desktopManager.gnome3.enable = true;
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
     enableCtrlAltBackspace = true;
     videoDrivers = [ "amdgpu" ];
+
+    serverFlagsSection = ''
+      Option "AutoAddGPU" "off"
+    '';
   };
 
   services.journald.extraConfig = "SystemMaxUse=500M";
   services.printing.enable = true;
   services.timesyncd.enable = true;
+  services.redshift.enable = true;
 
   users.users.thilo = {
     uid = 1000;
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel"  "docker"  "libvirtd"  "qemu-libvirtd" ]; 
+    extraGroups = [ "audio" "wheel"  "docker"  "libvirtd"  "qemu-libvirtd" ]; 
   };
 
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableAllFirmware = true;
     enableRedistributableFirmware = true; 
+    steam-hardware.enable = true;
     pulseaudio = {
       enable = true;
       support32Bit = true;
@@ -89,6 +101,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     virtmanager
+    pulseaudioFull
   ];
 }
 

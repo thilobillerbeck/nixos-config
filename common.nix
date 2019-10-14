@@ -7,6 +7,10 @@ let
 in {
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.config.packageOverrides = pkgs: {
+        wine = (pkgs.winePackagesFor "wine64").minimal;
+  };
+
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "de";
@@ -30,11 +34,12 @@ in {
     ( neovim.override {
       configure = {
         packages.myVimPackage = with pkgs.vimPlugins; {
-          start = [ nerdtree fugitive vim-nix ];
+          start = [ nerdtree fugitive vim-nix coc-nvim ];
           opt = [ ];
         };
       };
     })
+    wine
     zsh
     chromium
     vscode
@@ -45,6 +50,8 @@ in {
     spotify
     numix-gtk-theme
     numix-icon-theme-circle
+    adapta-gtk-theme
+    adapta-kde-theme
     gnupg
     curl
     unzip
@@ -57,8 +64,14 @@ in {
     vagrant
     kubectl
     steam
+    steam-run
     python3
     discord
+    nox
+    inkscape
+    scala
+    erlang
+    lutris
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
@@ -75,6 +88,7 @@ in {
     };
     shellAliases = {
       cccda-weechat = "ssh -t avocadoom@shells.darmstadt.ccc.de \"tmux attach -t weechat\"";
+      wine = "wine64";
     };
     shellInit = ''
       npm set prefix ~/.npm-global
