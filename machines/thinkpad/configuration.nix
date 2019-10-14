@@ -73,7 +73,7 @@ in {
   
   sound.enable = true;
                                                            
-  boot.kernelPackages = pkgs.linuxPackages_testing;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   virtualisation = {
     docker = {
