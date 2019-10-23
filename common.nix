@@ -14,6 +14,7 @@ in {
   };
 
   nix = {
+    autoOptimiseStore = true;
     gc.automatic = true;
     optimise.automatic = true;
   };
@@ -96,6 +97,7 @@ in {
     shellInit = ''
       npm set prefix ~/.npm-global
       PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
+      export LC_ALL=${config.i18n.defaultLocale}
     '';
   };
 
@@ -108,6 +110,12 @@ in {
     fonts = with pkgs; [
       terminus_font
       source-code-pro
+      powerline-fonts
+      google-fonts
+      noto-fonts
+      fira
+      fira-mono
+      fira-code
     ];
   };
 }
