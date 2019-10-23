@@ -6,6 +6,7 @@ let
   };
 in {
   networking.hostName = "thilo-laptop"; 
+  networking.networkmanager.enable = true;
 
   system = {
     autoUpgrade.enable = true;
@@ -38,8 +39,21 @@ in {
     enable = true;
     layout = "de";
 
+    libinput.enable = true;
+
     displayManager.gdm.enable = true;
     desktopManager.gnome3.enable = true;
+    # windowManager.i3 = {
+    #   enable = true;
+    #   configFile = "/etc/i3.conf";
+    #   extraPackages = with pkgs; [
+    #     dmenu #application launcher most people use
+    #     i3status # gives you the default i3 status bar
+    #     i3lock #default i3 screen locker
+    #     i3blocks #if you are planning on using i3blocks over i3status
+    #  ];
+    # };
+
     enableCtrlAltBackspace = true;
     videoDrivers = [ "amdgpu" ];
   };
@@ -53,7 +67,7 @@ in {
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel"  "docker" ]; 
+    extraGroups = [ "wheel"  "docker" "networkmanager" ]; 
   };
 
   hardware = {
@@ -70,7 +84,10 @@ in {
       driSupport32Bit = true;
     };
   };
-  
+
+  environment.variables.EDITOR = "termite";
+  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix {};
+
   sound.enable = true;
                                                            
   boot.kernelPackages = pkgs.linuxPackages_latest;

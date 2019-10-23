@@ -7,10 +7,6 @@ let
 in {
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.config.packageOverrides = pkgs: {
-        wine = (pkgs.winePackagesFor "wine64").minimal;
-  };
-
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "de";
@@ -72,6 +68,8 @@ in {
     scala
     erlang
     lutris
+    ntfs3g
+    mpv
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate

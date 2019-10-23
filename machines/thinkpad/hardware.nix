@@ -13,7 +13,7 @@
   boot.kernelModules = [ "kvm-amd" ];
   # boot.extraModulePackages = [ config.boot.kernelPackages.rtlwifi_new ];
   boot.extraModulePackages = [ pkgs.rtlwifi_new-firmware ];
-
+  boot.supportedFilesystems = [ "ntfs " ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/ec99f556-6f81-4def-b57a-23364682c739";
