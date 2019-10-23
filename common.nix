@@ -7,9 +7,9 @@ let
 in {
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.config.packageOverrides = pkgs: {
-        wine = (pkgs.winePackagesFor "wine64").minimal;
-  };
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #      wine = (pkgs.winePackagesFor "wine64").minimal;
+  # };
 
   i18n = {
     consoleFont = "Lat2-Terminus16";
@@ -72,6 +72,11 @@ in {
     scala
     erlang
     lutris
+    yosys
+    nextpnr
+    icestorm
+    verilog
+    trellis
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
@@ -92,7 +97,7 @@ in {
     };
     shellInit = ''
       npm set prefix ~/.npm-global
-      PATH=$PATH:$HOME/.npm-global/bin
+      PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
     '';
   };
 
