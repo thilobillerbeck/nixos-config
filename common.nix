@@ -70,6 +70,11 @@ in {
     lutris
     ntfs3g
     mpv
+    yosys
+    nextpnr
+    icestorm
+    verilog
+    trellis
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
@@ -90,7 +95,7 @@ in {
     };
     shellInit = ''
       npm set prefix ~/.npm-global
-      PATH=$PATH:$HOME/.npm-global/bin
+      PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
     '';
   };
 

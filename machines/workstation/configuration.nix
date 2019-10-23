@@ -6,6 +6,7 @@ let
   };
 in {
   networking.hostName = "thilo-pc"; 
+  networking.networkmanager.enable = true;
 
   system = {
     autoUpgrade.enable = true;
@@ -36,7 +37,7 @@ in {
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
+    passwordAuthentication = true;
     challengeResponseAuthentication = false;
   };
 
@@ -64,7 +65,7 @@ in {
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "audio" "wheel"  "docker"  "libvirtd"  "qemu-libvirtd" ]; 
+    extraGroups = [ "audio" "wheel"  "docker"  "libvirtd" "networkmanager" "qemu-libvirtd" ]; 
   };
 
   hardware = {
