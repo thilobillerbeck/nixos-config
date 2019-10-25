@@ -76,6 +76,7 @@ in {
     icestorm
     verilog
     trellis
+    bat
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
@@ -89,6 +90,16 @@ in {
     ohMyZsh = {
       enable = true;
       theme = "fishy";
+      plugins = [
+        "colorize"
+        "colored-man-pages"
+        "command-not-found"
+        "cp"
+        "extract"
+        "git"
+        "gitignore"
+        "sbt"
+      ];
     };
     shellAliases = {
       cccda-weechat = "ssh -t avocadoom@shells.darmstadt.ccc.de \"tmux attach -t weechat\"";
