@@ -18,6 +18,10 @@ in {
     efi.canTouchEfiVariables = true;
   };
 
+  environment.systemPackages = with pkgs; [
+    # lemonbar
+  ];
+
   time.timeZone = "Europe/Berlin";
 
   environment.etc."xdg/gtk-3.0/settings.ini" = {
@@ -26,6 +30,16 @@ in {
       gtk-icon-theme-name=Numix-circle
       gtk-theme-name=Numix
       gtk-application-prefer-dark-theme = true
+    '';
+  };
+
+  environment.etc."config/polybar" = {
+    text = ''
+     [bar/example]
+     width = 100%
+     height = 27
+     radius = 6.0
+     fixed-center = false 
     '';
   };
 
@@ -41,18 +55,20 @@ in {
 
     libinput.enable = true;
 
-    displayManager.gdm.enable = true;
-    desktopManager.gnome3.enable = true;
-    # windowManager.i3 = {
-    #   enable = true;
-    #   configFile = "/etc/i3.conf";
-    #   extraPackages = with pkgs; [
-    #     dmenu #application launcher most people use
-    #     i3status # gives you the default i3 status bar
-    #     i3lock #default i3 screen locker
-    #     i3blocks #if you are planning on using i3blocks over i3status
-    #  ];
-    # };
+    desktopManager.xterm.enable = false;
+    displayManager.lightdm.enable = true;
+    
+    windowManager.i3 = {
+      enable = true;
+      configFile = "/etc/i3.conf";
+      extraPackages = with pkgs; [
+        i3status # gives you the default i3 status bar
+        i3lock #default i3 screen locker
+        i3blocks #if you are planning on using i3blocks over i3status
+        polybar 
+        rofi
+      ];
+    };
 
     enableCtrlAltBackspace = true;
     videoDrivers = [ "amdgpu" ];
