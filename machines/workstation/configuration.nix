@@ -2,7 +2,7 @@
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  imports = [ ./../../configs/common.nix ./hardware.nix ];
+  imports = [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
 
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
@@ -25,15 +25,6 @@ in {
 
   time.timeZone = "Europe/Berlin";
 
-  environment.etc."xdg/gtk-3.0/settings.ini" = {
-    text = ''
-      [Settings]
-      gtk-icon-theme-name=Numix-circle
-      gtk-theme-name=Numix
-      gtk-application-prefer-dark-theme = true
-    '';
-  };
-
   services.openssh = {
     enable = true;
     passwordAuthentication = true;
@@ -54,6 +45,7 @@ in {
     '';
   };
 
+  environment.variables.EDITOR = "nvim";
   services.journald.extraConfig = "SystemMaxUse=500M";
   services.printing.enable = true;
   services.timesyncd.enable = true;

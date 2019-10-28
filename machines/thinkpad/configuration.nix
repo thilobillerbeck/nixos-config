@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 
-imports = [ ./../../configs/common.nix ./hardware.nix ];                                    
-
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
+  imports = [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
+  
   networking.hostName = "thilo-laptop";
   networking.networkmanager.enable = true;
 
@@ -17,21 +17,7 @@ in {
     efi.canTouchEfiVariables = true;
   };
 
-  environment.systemPackages = with pkgs;
-    [
-      # lemonbar
-    ];
-
   time.timeZone = "Europe/Berlin";
-
-  environment.etc."xdg/gtk-3.0/settings.ini" = {
-    text = ''
-      [Settings]
-      gtk-icon-theme-name=Numix-circle
-      gtk-theme-name=Numix
-      gtk-application-prefer-dark-theme = true
-    '';
-  };
 
   environment.etc."config/polybar" = {
     text = ''
@@ -101,7 +87,7 @@ in {
     };
   };
 
-  environment.variables.EDITOR = "termite";
+  environment.variables.EDITOR = "nvim";
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
 
   sound.enable = true;
