@@ -2,6 +2,8 @@
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
+  imports = [ ./../../configs/common.nix ./hardware.nix ];
+
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
 

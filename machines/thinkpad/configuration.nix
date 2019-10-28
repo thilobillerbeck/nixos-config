@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 
+imports = [ ./../../configs/common.nix ./hardware.nix ];                                    
+
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   networking.hostName = "thilo-laptop";
