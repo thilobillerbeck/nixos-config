@@ -59,15 +59,6 @@ in {
   services.timesyncd.enable = true;
   services.redshift.enable = true;
 
-  users.users.thilo = {
-    uid = 1000;
-    description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    extraGroups =
-      [ "audio" "wheel" "docker" "libvirtd" "networkmanager" "qemu-libvirtd" ];
-  };
-
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableAllFirmware = true;
