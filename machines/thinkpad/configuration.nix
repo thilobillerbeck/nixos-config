@@ -1,11 +1,8 @@
 { config, pkgs, ... }:
 
-let
-  unstable = import <nixos-unstable> {
-    config.allowUnfree = true;
-  };
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  networking.hostName = "thilo-laptop"; 
+  networking.hostName = "thilo-laptop";
   networking.networkmanager.enable = true;
 
   system = {
@@ -18,9 +15,10 @@ in {
     efi.canTouchEfiVariables = true;
   };
 
-  environment.systemPackages = with pkgs; [
-    # lemonbar
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      # lemonbar
+    ];
 
   time.timeZone = "Europe/Berlin";
 
@@ -35,11 +33,11 @@ in {
 
   environment.etc."config/polybar" = {
     text = ''
-     [bar/example]
-     width = 100%
-     height = 27
-     radius = 6.0
-     fixed-center = false 
+      [bar/example]
+      width = 100%
+      height = 27
+      radius = 6.0
+      fixed-center = false 
     '';
   };
 
@@ -57,15 +55,15 @@ in {
 
     desktopManager.xterm.enable = false;
     displayManager.lightdm.enable = true;
-    
+
     windowManager.i3 = {
       enable = true;
       configFile = "/etc/i3.conf";
       extraPackages = with pkgs; [
         i3status # gives you the default i3 status bar
-        i3lock #default i3 screen locker
-        i3blocks #if you are planning on using i3blocks over i3status
-        polybar 
+        i3lock # default i3 screen locker
+        i3blocks # if you are planning on using i3blocks over i3status
+        polybar
         rofi
       ];
     };
@@ -83,13 +81,13 @@ in {
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel"  "docker" "networkmanager" ]; 
+    extraGroups = [ "wheel" "docker" "networkmanager" ];
   };
 
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableAllFirmware = true;
-    enableRedistributableFirmware = true; 
+    enableRedistributableFirmware = true;
     pulseaudio = {
       enable = true;
       support32Bit = true;
@@ -102,10 +100,10 @@ in {
   };
 
   environment.variables.EDITOR = "termite";
-  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix {};
+  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
 
   sound.enable = true;
-                                                           
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   virtualisation = {

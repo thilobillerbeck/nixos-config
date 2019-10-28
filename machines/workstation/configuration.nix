@@ -1,11 +1,8 @@
 { config, pkgs, ... }:
 
-let
-  unstable = import <nixos-unstable> {
-    config.allowUnfree = true;
-  };
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  networking.hostName = "thilo-pc"; 
+  networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
 
   system = {
@@ -45,8 +42,8 @@ in {
     enable = true;
     layout = "de";
 
-    displayManager.sddm.enable = true;
-    desktopManager.plasma5.enable = true;
+    displayManager.lightdm.enable = true;
+    desktopManager.xfce4-14.enable = true;
     enableCtrlAltBackspace = true;
     videoDrivers = [ "amdgpu" ];
 
@@ -65,13 +62,14 @@ in {
     description = "Thilo Billerbeck <thilo.billerbeck@officerent.de>";
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "audio" "wheel"  "docker"  "libvirtd" "networkmanager" "qemu-libvirtd" ]; 
+    extraGroups =
+      [ "audio" "wheel" "docker" "libvirtd" "networkmanager" "qemu-libvirtd" ];
   };
 
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableAllFirmware = true;
-    enableRedistributableFirmware = true; 
+    enableRedistributableFirmware = true;
     steam-hardware.enable = true;
     pulseaudio = {
       enable = true;
@@ -83,9 +81,9 @@ in {
       driSupport32Bit = true;
     };
   };
-  
+
   sound.enable = true;
-                                                           
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   virtualisation = {
@@ -100,9 +98,6 @@ in {
   };
   security.sudo.wheelNeedsPassword = false;
 
-  environment.systemPackages = with pkgs; [
-    virtmanager
-    pulseaudioFull
-  ];
+  environment.systemPackages = with pkgs; [ virtmanager pulseaudioFull ];
 }
 

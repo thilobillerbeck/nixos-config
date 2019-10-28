@@ -4,35 +4,34 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-    ];
+  imports = [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules =
+    [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+  boot.kernelModules =
+    [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
   boot.extraModulePackages = [ ];
   boot.kernelParams = [ "amd_iommu=on" ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/0e41bf24-12ec-4c0a-92ee-113f5e598726";
-      fsType = "ext4";
-      options = [ "noatime" "discard" ];
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/0e41bf24-12ec-4c0a-92ee-113f5e598726";
+    fsType = "ext4";
+    options = [ "noatime" "discard" ];
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/D610-7363";
-      fsType = "vfat";
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/D610-7363";
+    fsType = "vfat";
+  };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/43f4d7e7-8c79-42cd-8fbb-75d98f059de5";
-      fsType = "ext4";
-    };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/43f4d7e7-8c79-42cd-8fbb-75d98f059de5";
+    fsType = "ext4";
+  };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }];
 
   nix.maxJobs = lib.mkDefault 16;
 }

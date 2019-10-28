@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
-let
-  unstable = import <nixos-unstable> {
-    config.allowUnfree = true;
-  };
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   nixpkgs.config.allowUnfree = true;
 
@@ -28,7 +25,7 @@ in {
     tree
     wget
     vim
-    ( neovim.override {
+    (neovim.override {
       configure = {
         packages.myVimPackage = with pkgs.vimPlugins; {
           start = [ nerdtree fugitive vim-nix coc-nvim ];
@@ -85,7 +82,7 @@ in {
     unstable.jetbrains.webstorm
   ];
 
-  programs.zsh =  {
+  programs.zsh = {
     enable = true;
     ohMyZsh = {
       enable = true;
@@ -102,7 +99,8 @@ in {
       ];
     };
     shellAliases = {
-      cccda-weechat = "ssh -t avocadoom@shells.darmstadt.ccc.de \"tmux attach -t weechat\"";
+      cccda-weechat =
+        ''ssh -t avocadoom@shells.darmstadt.ccc.de "tmux attach -t weechat"'';
       w17-door-summer = "ssh summer@door.w17.io";
       w17-door-open = "ssh open@door.w17.io";
       w17-door-close = "ssh close@door.w17.io";
