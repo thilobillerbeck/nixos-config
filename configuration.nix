@@ -1,1 +1,0 @@
-machines/workstation/configuration.nix
