@@ -2,7 +2,8 @@
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  imports = [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
+  imports =
+    [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
 
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
@@ -17,59 +18,36 @@ in {
     longitude = 8.9421667;
   };
 
-  # boot.extraModprobeConfig = "options vfio-pci ids=1002:687f,1002:aaf8,1022:145c";
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-  };
-
   time.timeZone = "Europe/Berlin";
 
-  services.openssh = {
-    enable = true;
-    passwordAuthentication = true;
-    challengeResponseAuthentication = false;
-  };
-
-  services.xserver = {
-    enable = true;
-    layout = "de";
-
-    displayManager.lightdm.enable = true;
-    desktopManager.xfce4-14.enable = true;
-    enableCtrlAltBackspace = true;
-    videoDrivers = [ "amdgpu" ];
-
-    serverFlagsSection = ''
-      Option "AutoAddGPU" "off"
-    '';
-  };
-
-  environment.variables.EDITOR = "nvim";
-  services.journald.extraConfig = "SystemMaxUse=500M";
-  services.printing.enable = true;
-  services.timesyncd.enable = true;
-  services.redshift.enable = true;
-
-  hardware = {
-    cpu.amd.updateMicrocode = true;
-    enableAllFirmware = true;
-    enableRedistributableFirmware = true;
-    steam-hardware.enable = true;
-    pulseaudio = {
+  services = {
+    openssh = {
       enable = true;
-      support32Bit = true;
+      passwordAuthentication = true;
+      challengeResponseAuthentication = false;
     };
-    opengl = {
+
+    xserver = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
+      layout = "de";
+
+      displayManager.lightdm.enable = true;
+      desktopManager.xfce4-14.enable = true;
+      enableCtrlAltBackspace = true;
+      videoDrivers = [ "amdgpu" ];
+
+      serverFlagsSection = ''
+        Option "AutoAddGPU" "off"
+      '';
     };
+
+    journald.extraConfig = "SystemMaxUse=500M";
+    printing.enable = true;
+    timesyncd.enable = true;
+    redshift.enable = true;
   };
 
   sound.enable = true;
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   virtualisation = {
     docker = {
@@ -81,8 +59,8 @@ in {
       qemuOvmf = true;
     };
   };
-  security.sudo.wheelNeedsPassword = false;
 
+  environment.variables.EDITOR = "nvim";
   environment.systemPackages = with pkgs; [ virtmanager pulseaudioFull ];
 }
 

@@ -6,13 +6,19 @@
 {
   imports = [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
 
-  boot.initrd.availableKernelModules =
-    [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  # boot.extraModulePackages = [ config.boot.kernelPackages.rtlwifi_new ];
-  boot.extraModulePackages = [ pkgs.rtlwifi_new-firmware ];
-  boot.supportedFilesystems = [ "ntfs " ];
+  boot = {
+    initrd.availableKernelModules =
+      [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
+    initrd.kernelModules = [ ];
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ pkgs.rtlwifi_new-firmware ];
+    supportedFilesystems = [ "ntfs " ];
+    kernelPackages = pkgs.linuxPackages_latest;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/ec99f556-6f81-4def-b57a-23364682c739";
@@ -27,8 +33,20 @@
   swapDevices =
     [{ device = "/dev/disk/by-uuid/6a67c51a-e8cc-4d35-b75a-8dd5d5aeaa25"; }];
 
-  nix.maxJobs = lib.mkDefault 8;
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    enableAllFirmware = true;
+    enableRedistributableFirmware = true;
+    pulseaudio = {
+      enable = true;
+      support32Bit = true;
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
 
-  hardware.opengl.driSupport32Bit = true;
-  hardware.pulseaudio.support32Bit = true;
+  nix.maxJobs = lib.mkDefault 8;
 }

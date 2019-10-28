@@ -6,13 +6,23 @@
 {
   imports = [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
 
-  boot.initrd.availableKernelModules =
-    [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules =
-    [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
-  boot.extraModulePackages = [ ];
-  boot.kernelParams = [ "amd_iommu=on" ];
+  boot = {
+    initrd = {
+      availableKernelModules =
+        [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
+      kernelModules = [ ];
+    };
+    kernelModules =
+      [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+    extraModulePackages = [ ];
+    kernelParams = [ "amd_iommu=on" ];
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    # extraModprobeConfig = "options vfio-pci ids=1002:687f,1002:aaf8,1022:145c";
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/0e41bf24-12ec-4c0a-92ee-113f5e598726";
@@ -32,6 +42,22 @@
 
   swapDevices =
     [{ device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }];
+
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    enableAllFirmware = true;
+    enableRedistributableFirmware = true;
+    steam-hardware.enable = true;
+    pulseaudio = {
+      enable = true;
+      support32Bit = true;
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
 
   nix.maxJobs = lib.mkDefault 16;
 }
