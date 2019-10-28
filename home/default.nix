@@ -10,5 +10,13 @@ in {
 
   home-manager.users.thilo = { ... }: {
     services.network-manager-applet.enable = true;
+    services.blueman-applet.enable = true;
+    services.network-manager-applet.enable = true;
+
+    programs.git = {
+      enable = true;
+      userName = "Thilo Billerbeck";
+      userEmail = "thilo.billerbeck@officerent.de";
+    };
   };
 }
