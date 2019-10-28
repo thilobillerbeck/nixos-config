@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   fonts = {
     enableFontDir = true;
     enableGhostscriptFonts = true;
