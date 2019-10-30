@@ -26,7 +26,7 @@
       configOptions = {
         concurrent = 1;
         runners = [{
-          name = "gitlab-runner-1";
+          name = "nixos-gitlab-runner-1";
           url = "https://git.thilo-billerbeck.com/";
           token = "2zWyrsJ3zDD4z1bXsZWv";
           executor = "docker";
