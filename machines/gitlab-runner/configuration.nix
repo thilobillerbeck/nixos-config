@@ -21,6 +21,25 @@
     }; 
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
+    gitlab-runner = {
+      enable = true;
+      configOptions = {
+        concurrent = 1;
+        runners = [{
+          name = "gitlab-runner-1";
+          url = "https://git.thilo-billerbeck.com/";
+          token = "2zWyrsJ3zDD4z1bXsZWv";
+          executor = "docker";
+          builds_dir = "";
+          docker = {
+            host = "";
+            image = "alpine";
+            privileged = true;
+            disable_cache = true;
+            cache_dir = "";
+          };
+        }];
+    };
   };
 
   virtualisation = {
