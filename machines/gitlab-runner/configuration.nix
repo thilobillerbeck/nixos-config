@@ -18,9 +18,7 @@
       enable = true;
       passwordAuthentication = false;
       challengeResponseAuthentication = false;
-    };  environment.systemPackages = with pkgs; [ virtmanager pulseaudioFull ];
-
-
+    }; 
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
   };
