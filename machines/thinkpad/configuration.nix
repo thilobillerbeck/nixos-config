@@ -3,7 +3,7 @@
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
+  [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
 
   networking.hostName = "thilo-laptop";
   networking.networkmanager.enable = true;
@@ -55,6 +55,7 @@ in {
     timesyncd.enable = true;
   };
 
+  environment.variables.TERM = "xterm-256color";
   environment.variables.EDITOR = "nvim";
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
 
