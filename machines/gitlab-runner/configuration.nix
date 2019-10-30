@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ ./hardware.nix ./../../users/thilo.nix ];
+    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
 
   networking.hostName = "gitlab-runner-1"; # Define your hostname.
 
@@ -21,6 +21,13 @@
     }; 
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
+  };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune.enable = true;
+    };
   };
 
   environment.variables.EDITOR = "nvim";
