@@ -6,7 +6,7 @@ check_interval = 0
 
 [[runners]]
   name = "nixos-gitlab-runner-1"
-  url = "https://git.thilo-billerbeck.com"
+  url = "https://git.thilo-billerbeck.com/"
   token = "gu9-HVLbWCmWBnznS2Y_"
   executor = "docker"
   environment = ["DOCKER_DRIVER=overlay2"]
