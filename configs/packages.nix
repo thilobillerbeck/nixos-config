@@ -60,7 +60,8 @@ in {
     verilog
     trellis
     bat
-
+    xorg.xf86videoamdgpu
+    
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
     unstable.jetbrains.phpstorm

@@ -34,10 +34,7 @@
   bindsym $mod+Right focus right
 
   # move focused window
-  bindsym $mod+Shift+j move left
-  bindsym $mod+Shift+k move down
-  bindsym $mod+Shift+l move up
-  bindsym $mod+Shift+semicolon move right
+  bindsym $mod+Shift+l exec "i3lock-fancy -g"
 
   # alternatively, you can use the cursor keys:
   bindsym $mod+Shift+Left move left
@@ -102,6 +99,9 @@
   # exit i3 (logs you out of your X session)
   bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+  bindsym XF86MonBrightnessUp exec xbacklight -inc 10  # increase screen brightness
+  bindsym XF86MonBrightnessDown exec xbacklight -dec 10  # decrease screen brightness
+
   # resize window (you can also use the mouse for that)
   mode "resize" {
           # These bindings trigger as soon as you enter the resize mode
@@ -137,7 +137,5 @@
 
   client.background       #FFFFFF
 
-  # Start i3bar to display a workspace bar (plus the system information i3status
-  # finds out, if available)
-  exec --no-startup-id polybar 
+  for_window [class=".*"] border pixel 0
 ''
