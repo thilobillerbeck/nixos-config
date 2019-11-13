@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import <nixpkgs> {};
+with import <nixpkgs> { };
 
 let
   home-manager = builtins.fetchGit {
@@ -121,23 +121,23 @@ in {
       font = "Roboto 16";
       separator = "solid";
       colors = {
-          window = {
+        window = {
+          background = "#000000";
+          border = "#DD8500";
+          separator = "#DD8500";
+        };
+        rows = {
+          normal = {
             background = "#000000";
-            border = "#DD8500";
-            separator = "#DD8500";
-          };
-          rows = {
-            normal = {
-              background = "#000000";
-              foreground = "#DD8500";
-              backgroundAlt = "#000000";
-              highlight = {
-                background = "#DD8500";
-                foreground = "#ffffff";
-              };
+            foreground = "#DD8500";
+            backgroundAlt = "#000000";
+            highlight = {
+              background = "#DD8500";
+              foreground = "#ffffff";
             };
           };
         };
+      };
     };
 
     programs.git = {
@@ -174,11 +174,7 @@ in {
         package = pkgs.papirus-icon-theme;
         name = "Papirus";
       };
-      gtk3 = {
-        extraConfig = {
-          gtk-application-prefer-dark-theme = true;
-        };
-      };
+      gtk3 = { extraConfig = { gtk-application-prefer-dark-theme = true; }; };
     };
   };
 }

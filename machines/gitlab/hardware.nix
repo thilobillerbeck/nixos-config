@@ -4,11 +4,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ <nixpkgs/nixos/modules/profiles/qemu-guest.nix>
-    ];
+  imports = [ <nixpkgs/nixos/modules/profiles/qemu-guest.nix> ];
 
-  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules =
+    [ "ata_piix" "uhci_hcd" "virtio_pci" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
@@ -16,11 +15,10 @@
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda";
 
-
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/12fa5e41-c4ed-4863-b966-343c90b31489";
-      fsType = "ext4";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/12fa5e41-c4ed-4863-b966-343c90b31489";
+    fsType = "ext4";
+  };
 
   swapDevices = [ ];
 
