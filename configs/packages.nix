@@ -60,8 +60,14 @@ in {
     verilog
     trellis
     bat
-    xorg.xf86videoamdgpu
-    
+    arandr
+    nitrogen
+    gitAndTools.hub
+    gitAndTools.tig
+    up
+    thunderbird
+    termite
+
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
     unstable.jetbrains.phpstorm

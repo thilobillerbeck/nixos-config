@@ -40,12 +40,28 @@
     fsType = "ext4";
   };
 
+  fileSystems."/mnt/server002/data" = {
+    device = "//192.168.50.240/data";
+    fsType = "cifs";
+    options = let
+      automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+    in ["${automount_opts},credentials=/etc/nixos/smb-secrets"];
+  };
+
+  fileSystems."/mnt/server002/music" = {
+    device = "//192.168.50.240/music";
+    fsType = "cifs";
+    options = let
+      automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+    in ["${automount_opts},credentials=/etc/nixos/smb-secrets"];
+  };
+
+
   swapDevices =
     [{ device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }];
 
   hardware = {
     cpu.amd.updateMicrocode = true;
-    enableAllFirmware = true;
     enableRedistributableFirmware = true;
     steam-hardware.enable = true;
     pulseaudio = {
