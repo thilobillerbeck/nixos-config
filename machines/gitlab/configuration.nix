@@ -28,20 +28,19 @@
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
       virtualHosts."new.git.thilo-billerbeck.com" = {
-        # enableACME = true;
-        # forceSSL = true;
+        enableACME = true;
+        forceSSL = true;
         locations."/".proxyPass =
           "http://unix:/run/gitlab/gitlab-workhorse.socket";
       };
     };
     gitlab = {
       enable = true;
-      databaseUsername = "git";
       databasePasswordFile = "/var/keys/gitlab/db_password";
       initialRootPasswordFile = "/var/keys/gitlab/root_password";
-      https = false;
+      https = true;
       host = "new.git.thilo-billerbeck.com";
-      port = 80;
+      port = 443;
       user = "git";
       group = "git";
       smtp = {
