@@ -36,6 +36,7 @@
     };
     gitlab = {
       enable = true;
+      databaseUsername = "git";
       databasePasswordFile = "/var/keys/gitlab/db_password";
       initialRootPasswordFile = "/var/keys/gitlab/root_password";
       https = true;
