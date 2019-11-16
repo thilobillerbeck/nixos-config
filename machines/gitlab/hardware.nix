@@ -16,7 +16,7 @@
   boot.loader.grub.device = "/dev/sda";
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/12fa5e41-c4ed-4863-b966-343c90b31489";
+    device = "/dev/disk/by-uuid/13c06370-78db-4af1-bf57-2cb9013a5275";
     fsType = "ext4";
   };
 

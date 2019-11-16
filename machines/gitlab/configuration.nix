@@ -13,6 +13,8 @@
 
   time.timeZone = "Europe/Berlin";
 
+  networking.firewall.allowedTCPPorts = [ 25 80 443 ];
+
   services = {
     openssh = {
       enable = true;
@@ -21,13 +23,14 @@
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
+    dockerRegistry.enable = true;
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-      virtualHosts."new.git.thilo-billerbeck.com" = {
+      virtualHosts."git.thilo-billerbeck.com" = {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass =
@@ -38,8 +41,10 @@
       enable = true;
       databasePasswordFile = "/var/keys/gitlab/db_password";
       initialRootPasswordFile = "/var/keys/gitlab/root_password";
+      databaseUsername = "git";
+      backupPath = "/mnt/gitlab-backup";
       https = true;
-      host = "new.git.thilo-billerbeck.com";
+      host = "git.thilo-billerbeck.com";
       port = 443;
       user = "git";
       group = "git";
@@ -59,8 +64,17 @@
           email_from = "gitlab-no-reply@example.com";
           email_display_name = "Example GitLab";
           email_reply_to = "gitlab-no-reply@example.com";
-          default_projects_features = { builds = false; };
+          default_projects_features = {
+	    builds = false;
+	    container_registry = true;
+	  };
         };
+	registry = {
+  	  enabled = true;
+  	  host = "localhost";
+  	  port = 5000;
+  	  api_url = "http://localhost:5000/";
+	};
       };
     };
   };
