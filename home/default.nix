@@ -18,7 +18,12 @@ in {
 
     services.polybar = {
       enable = true;
-      config = (mkIf (config.networking.hostName == "thilo-pc") {
+      script = ''
+        polybar main &
+        polybar ext &
+      '';
+    } // (if (config.networking.hostName == "thilo-pc") then {
+      config = {
         "bar/main" = {
           monitor = "\${env:MONITOR:DisplayPort-0}";
           width = "100%";
@@ -104,12 +109,61 @@ in {
           click-left = "pactl set-sink-mute 0 toggle";
           click-right = "pavucontrol &";
         };
-      });
-      script = ''
-        polybar main &
-        polybar ext &
-      '';
-    };
+      };
+    } else {
+      config = {
+        "bar/main" = {
+          monitor = "\${env:MONITOR:eDP}";
+          width = "100%";
+          font-0 = "Roboto:size=11:weight=bold;2";
+          height = "3%";
+          radius = 0;
+          modules-center = "date";
+          modules-right = "battery";
+          module-margin-left = 1;
+          module-margin-right = 2;
+          background = "#000000";
+          foreground = "#DD8500";
+
+          line-color = "#DD8500";
+          line-size = 16;
+        };
+        "bar/ext" = {
+          monitor = "\${env:MONITOR:HDMI-A-0}";
+          width = "100%";
+          font-0 = "Roboto:size=11:weight=bold;2";
+          height = "3%";
+          radius = 0;
+          modules-center = "date";
+          modules-right = "backlight battery";
+          module-margin-left = 1;
+          module-margin-right = 2;
+          background = "#000000";
+          foreground = "#DD8500";
+
+          line-color = "#DD8500";
+          line-size = 16;
+        };
+        "module/date" = {
+          type = "internal/date";
+          internal = 5;
+          date = "%d.%m.%y";
+          time = "%H:%M";
+          label = "%time% | %date%";
+        };
+        "module/battery" = {
+          type = "internal/battery";
+          full-at = 99;
+          battery = "BAT0";
+          adapter = "AC";
+          poll-interval = 5;
+        };
+        "module/backlight" = {
+          type = "internal/backlight";
+          card = "amdgpu_bl0";
+        };
+      };
+    });
 
     programs.rofi = {
       enable = true;
