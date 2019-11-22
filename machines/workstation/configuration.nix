@@ -1,12 +1,15 @@
 { config, pkgs, ... }:
 
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/common.nix ./hardware.nix  ./../../home/default.nix ./../../users/thilo.nix ];
 
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
+
+  nixpkgs.config.packageOverrides = pkgs: { libvirt = pkgs.libvirt.override { enableIscsi = true; }; };
 
   system = {
     autoUpgrade.enable = true;
@@ -76,12 +79,22 @@ in {
     libvirtd = {
       enable = true;
       qemuOvmf = true;
+      qemuRunAsRoot = true;
+      qemuVerbatimConfig = ''
+        namespaces = []
+        dynamic_ownership = 0
+        security_driver = "none"
+        user = "root"
+        group = "root"
+        '';
     };
   };
 
   programs.sway = {
     enable = true;
   };
+
+  programs.adb.enable = true;
 
   environment.variables.EDITOR = "nvim";
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };

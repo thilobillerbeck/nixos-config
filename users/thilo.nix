@@ -10,7 +10,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9TwM1zgEQiU8Cl0OszpU/fba4NpG2rjNSoTvvm/Vcf thilo@thilo-pc"
     ];
     extraGroups =
-      [ "video" "audio" "wheel" "docker" "libvirtd" "networkmanager" "qemu-libvirtd" ];
+      [ "adbusers" "video" "audio" "wheel" "docker" "libvirtd" "libvirt" "networkmanager" "qemu-libvirtd" ];
   };
 }
 

@@ -67,11 +67,13 @@ in {
     up
     thunderbird
     termite
+    openiscsi
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
     unstable.jetbrains.phpstorm
     unstable.jetbrains.pycharm-professional
     unstable.jetbrains.webstorm
+    unstable.jetbrains.ruby-mine
   ];
 }
