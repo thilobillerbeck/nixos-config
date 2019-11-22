@@ -60,6 +60,8 @@ in {
     verilog
     trellis
     bat
+    pandoc
+    texlive.combined.scheme-full  
     arandr
     nitrogen
     gitAndTools.hub
