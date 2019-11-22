@@ -3,7 +3,7 @@
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ];
+    [ ./../../configs/common.nix ./hardware.nix  ./../../home/default.nix ./../../users/thilo.nix ];
 
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
@@ -27,12 +27,31 @@ in {
       challengeResponseAuthentication = false;
     };
 
+    fwupd = {
+      enable = true;
+      package = unstable.fwupd;
+    };
+
     xserver = {
       enable = true;
       layout = "de";
 
+      desktopManager.xterm.enable = false;
       displayManager.lightdm.enable = true;
-      desktopManager.xfce4-14.enable = true;
+
+      windowManager.i3 = {
+        enable = true;
+        configFile = "/etc/i3.conf";
+        package = pkgs.i3-gaps;
+        extraPackages = with pkgs; [
+          i3status # gives you the default i3 status bar
+          i3lock-fancy # default i3 screen locker
+          i3blocks # if you are planning on using i3blocks over i3status
+          polybar
+          xorg.xbacklight
+        ];
+      };
+
       enableCtrlAltBackspace = true;
       videoDrivers = [ "amdgpu" ];
 
@@ -60,7 +79,13 @@ in {
     };
   };
 
+  programs.sway = {
+    enable = true;
+  };
+
   environment.variables.EDITOR = "nvim";
+  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
+  environment.etc."sway/config".text = pkgs.callPackage ./i3-config.nix { };
   environment.systemPackages = with pkgs; [ virtmanager pulseaudioFull ];
 }
 
