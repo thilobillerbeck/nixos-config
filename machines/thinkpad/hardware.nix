@@ -35,8 +35,8 @@
 
   hardware = {
     cpu.amd.updateMicrocode = true;
-    enableAllFirmware = true;
     enableRedistributableFirmware = true;
+    bluetooth.enable = true;
     pulseaudio = {
       enable = true;
       support32Bit = true;

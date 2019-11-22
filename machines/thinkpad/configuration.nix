@@ -26,6 +26,13 @@ in {
   };
 
   services = {
+    tlp.enable = true;
+    openssh = {
+      enable = true;
+      passwordAuthentication = true;
+      challengeResponseAuthentication = false;
+    };
+    
     dbus.packages = with pkgs; [ gnome3.dconf ];
     xserver = {
       enable = true;
@@ -55,6 +62,7 @@ in {
     journald.extraConfig = "SystemMaxUse=500M";
     printing.enable = true;
     timesyncd.enable = true;
+    blueman.enable = true;
   };
 
   environment.variables.TERM = "xterm-256color";
@@ -62,6 +70,7 @@ in {
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
 
   sound.enable = true;
+  hardware.bluetooth.enable = true;
 
   virtualisation = {
     docker = {

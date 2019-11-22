@@ -60,7 +60,8 @@ in {
     verilog
     trellis
     bat
-    xorg.xf86videoamdgpu
+    pandoc
+    texlive.combined.scheme-full  
     
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
