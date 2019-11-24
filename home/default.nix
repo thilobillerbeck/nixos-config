@@ -202,20 +202,26 @@ in {
 
     programs.termite = {
       enable = true;
+      allowBold = true;
+      backgroundColor = "#000000";
+      cursorColor = "#ffffff";
+      cursorForegroundColor = "#ffffff";
+      foregroundColor = "#ffffff";
       audibleBell = true;
       clickableUrl = true;
       dynamicTitle = true;
       scrollOnOutput = true;
       scrollOnKeystroke = true;
       font = "Monospace 16";
-      backgroundColor = "#000";
-      foregroundColor = "#fff";
-      hintsForegroundColor = "#DD8500";
+    };
+
+    programs.direnv = {
+      enable = true;
     };
 
     qt = {
       enable = false;
-      useGtkTheme = true;
+      platformTheme = "gtk";
     };
 
     gtk = {

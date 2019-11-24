@@ -27,6 +27,7 @@
       wine = "wine64";
     };
     shellInit = ''
+      export TERM=xterm-256color
       npm set prefix ~/.npm-global
       PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
       export LC_ALL=${config.i18n.defaultLocale}

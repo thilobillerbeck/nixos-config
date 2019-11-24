@@ -70,6 +70,15 @@ in {
     thunderbird
     termite
     openiscsi
+    ranger
+    ruby
+    mediainfo
+    mumble
+    nixfmt
+    lessc
+    pavucontrol
+    sbt
+    zip
 
     unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
