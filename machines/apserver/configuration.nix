@@ -13,7 +13,7 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
 
   services = {
     openssh = {
@@ -29,6 +29,10 @@
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
+    };
+    codimd = {
+      enable = true;
+      useCDN = false;
     };
   };
 
