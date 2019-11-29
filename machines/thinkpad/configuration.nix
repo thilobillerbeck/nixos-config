@@ -27,6 +27,7 @@ in {
 
   services = {
     tlp.enable = true;
+    fwupd.enable = true;
     openssh = {
       enable = true;
       passwordAuthentication = true;
