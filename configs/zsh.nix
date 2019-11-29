@@ -31,6 +31,7 @@
       npm set prefix ~/.npm-global
       PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
       export LC_ALL=${config.i18n.defaultLocale}
+      eval "$(direnv hook zsh)"
     '';
   };
 }

@@ -6,7 +6,7 @@ with import <nixpkgs> { };
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
-    rev = "b0544c8cded820fc1439c26b4fc7485846430516";
+    rev = "0e9b7aab3c6c27bf020402e0e2ef20b65c040552";
     ref = "master";
   };
 in {
@@ -164,6 +164,8 @@ in {
         };
       };
     });
+
+    services.lorri.enable = true;
 
     programs.rofi = {
       enable = true;
