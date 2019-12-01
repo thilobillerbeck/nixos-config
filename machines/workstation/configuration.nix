@@ -93,7 +93,9 @@ in {
   programs.sway = {
     enable = true;
   };
-
+  programs.mosh = {
+    enable = true;
+  };
   programs.adb.enable = true;
 
   environment.variables.EDITOR = "nvim";

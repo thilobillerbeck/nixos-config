@@ -66,6 +66,13 @@ in {
     blueman.enable = true;
   };
 
+  programs.sway = {
+    enable = true;
+  };
+  programs.mosh = {
+    enable = true;
+  };
+
   environment.variables.TERM = "xterm-256color";
   environment.variables.EDITOR = "nvim";
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
