@@ -99,8 +99,12 @@
   # exit i3 (logs you out of your X session)
   bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-  bindsym XF86MonBrightnessUp exec xbacklight -inc 10  # increase screen brightness
-  bindsym XF86MonBrightnessDown exec xbacklight -dec 10  # decrease screen brightness
+  bindsym XF86MonBrightnessUp exec brightnessctl s 10+  # increase screen brightness
+  bindsym XF86MonBrightnessDown exec brightnessctl s 10-  # decrease screen brightness
+  # Pulse Audio controls
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
   # resize window (you can also use the mouse for that)
   mode "resize" {
