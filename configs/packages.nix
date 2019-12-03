@@ -79,8 +79,9 @@ in {
     pavucontrol
     sbt
     zip
+    texmaker
 
-    unstable.jetbrains.goland
+    jetbrains.goland
     unstable.jetbrains.idea-ultimate
     unstable.jetbrains.phpstorm
     unstable.jetbrains.pycharm-professional

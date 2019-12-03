@@ -27,6 +27,7 @@ in {
 
   services = {
     tlp.enable = true;
+    fwupd.enable = true;
     openssh = {
       enable = true;
       passwordAuthentication = true;
@@ -58,11 +59,22 @@ in {
 
       enableCtrlAltBackspace = true;
       videoDrivers = [ "amdgpu" ];
+      serverFlagsSection = ''
+        Option  "Backlight"  "amdgpu_bl0"
+      '';
+
     };
     journald.extraConfig = "SystemMaxUse=500M";
     printing.enable = true;
     timesyncd.enable = true;
     blueman.enable = true;
+  };
+
+  programs.sway = {
+    enable = true;
+  };
+  programs.mosh = {
+    enable = true;
   };
 
   environment.variables.TERM = "xterm-256color";
@@ -71,7 +83,8 @@ in {
 
   sound.enable = true;
   hardware.bluetooth.enable = true;
-
+  hardware.brightnessctl.enable = true;
+  
   virtualisation = {
     docker = {
       enable = true;
