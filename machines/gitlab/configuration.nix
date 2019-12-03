@@ -13,7 +13,22 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 25 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 25 80 443 5005 ];
+
+  docker-containers = {
+    registry = {
+      image = "registry:latest";
+      ports = [ "5000:443" ];
+      volumes = [
+          "/var/lib/acme/registry.thilo-billerbeck.com:/certs"
+      ];
+      environment = {
+	REGISTRY_HTTP_ADDR = "0.0.0.0:443";
+        REGISTRY_HTTP_TLS_CERTIFICATE = "/certs/full.pem";
+        REGISTRY_HTTP_TLS_KEY = "/certs/key.pem";
+      };
+    };
+  };
 
   services = {
     openssh = {
@@ -23,18 +38,28 @@
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-    dockerRegistry.enable = true;
+    # dockerRegistry = {
+    #	enable = true;
+    #	listenAddress = "0.0.0.0";
+    #	port = 5000;
+    # };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-      virtualHosts."git.thilo-billerbeck.com" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/".proxyPass =
-          "http://unix:/run/gitlab/gitlab-workhorse.socket";
+      virtualHosts = {
+        "git.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass =
+            "http://unix:/run/gitlab/gitlab-workhorse.socket";
+        };
+	"registry.thilo-billerbeck.com" = {
+	  enableACME = true;
+          forceSSL = true;
+	};
       };
     };
     gitlab = {
@@ -71,9 +96,9 @@
         };
 	registry = {
   	  enabled = true;
-  	  host = "localhost";
-  	  port = 5000;
-  	  api_url = "http://localhost:5000/";
+  	  host = "registry.thilo-billerbeck.com";
+  	  port = 5005;
+  	  api_url = "https://localhost:5000/";
 	};
       };
     };
