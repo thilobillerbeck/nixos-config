@@ -13,7 +13,7 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   services = {
     openssh = {
@@ -29,10 +29,11 @@
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-    };
-    codimd = {
-      enable = true;
-      useCDN = false;
+      virtualHosts."thilo-billerbeck.com" = {
+        addSSL = true;
+        enableACME = true;
+        root = "/var/www/thilo-billerbeck.com";
+      };
     };
   };
 
