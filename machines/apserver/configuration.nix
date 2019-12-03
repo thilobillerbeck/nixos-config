@@ -35,6 +35,10 @@
       useCDN = false;
     };
   };
+  
+  programs.mosh = {
+    enable = true;
+  };
 
   environment.variables.EDITOR = "nvim";
 }
