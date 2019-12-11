@@ -13,7 +13,8 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 3000 996 7946 4789 2377 ];
+  networking.firewall.allowedUDPPorts = [ 7946 4789 2377 ];
 
   services = {
     openssh = {
@@ -23,17 +24,15 @@
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-    nginx = {
-      enable = true;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-    };
-    codimd = {
-      enable = true;
-      useCDN = false;
-    };
+  };
+  
+  programs.mosh = {
+    enable = true;
+  };
+  
+  virtualisation.docker = {
+    enable = true;
+    liveRestore = false;
   };
 
   environment.variables.EDITOR = "nvim";
