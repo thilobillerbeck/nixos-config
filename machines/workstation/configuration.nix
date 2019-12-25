@@ -80,16 +80,6 @@ in {
       enable = true;
       qemuOvmf = true;
       qemuRunAsRoot = true;
-      extraConfig = ''
-        unix_sock_rw_perms = "0777"
-      '';
-      qemuVerbatimConfig = ''
-        namespaces = []
-        dynamic_ownership = 0
-        security_driver = "none"
-        user = "root"
-        group = "root"
-        '';
     };
   };
 
