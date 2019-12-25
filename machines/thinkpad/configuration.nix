@@ -90,6 +90,12 @@ in {
       enable = true;
       autoPrune.enable = true;
     };
+
+    libvirtd = {
+      enable = true;
+      qemuOvmf = true;
+      qemuRunAsRoot = true;
+    };
   };
 }
 
