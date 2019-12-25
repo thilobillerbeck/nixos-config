@@ -80,13 +80,6 @@ in {
       enable = true;
       qemuOvmf = true;
       qemuRunAsRoot = true;
-      qemuVerbatimConfig = ''
-        namespaces = []
-        dynamic_ownership = 0
-        security_driver = "none"
-        user = "root"
-        group = "root"
-        '';
     };
   };
 
