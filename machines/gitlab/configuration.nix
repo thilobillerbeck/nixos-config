@@ -15,17 +15,17 @@
 
   networking.firewall.allowedTCPPorts = [ 25 80 443 4567 ];
 
-  docker-containers = {
-    registry = {
-      image = "registry:2";
-      ports = [ "5000:5000" ];
-      environment = {
-        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-      };
-    };
-  };
+  # docker-containers = {
+  #   registry = {
+  #     image = "registry:2";
+  #     ports = [ "5000:5000" ];
+  #     environment = {
+  #       REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+  #       REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+  #       REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+  #     };
+  #   };
+  # };
 
   services = {
     openssh = {
@@ -35,16 +35,16 @@
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-    # dockerRegistry = {
-    #	enable = true;
-    #	listenAddress = "127.0.0.1";
-    #	port = 5000;
-    #    extraConfig = {
-    #  REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-    #	  REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-    #	  REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-    #	};
-    # };
+    dockerRegistry = {
+      enable = true;
+      listenAddress = "127.0.0.1";
+      port = 5000;
+      extraConfig = {
+        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+      };
+    };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -104,9 +104,7 @@
           path = "/var/lib/docker-registry";
           issuer = "gitlab-issuer";
         };
-        packages = {
-          enabled = true;
-        };
+        packages = { enabled = true; };
       };
     };
   };
