@@ -46,10 +46,12 @@ in {
         REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/certs/registry/cert.pem";
       };
     };
     nginx = {
-      enable = true;
+      enable = true;/var/certs/registry
+
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
@@ -96,15 +98,16 @@ in {
           email_display_name = "Example GitLab";
           email_reply_to = "gitlab-no-reply@example.com";
           default_projects_features = {
-            builds = false;
+            builds = true;
             container_registry = true;
           };
         };
         registry = {
           enabled = true;
           host = "${registry_url}";
+          port = 443;
+          key = "/var/certs/registry/cert.pem";
           api_url = "http://localhost:${local_registry_port}";
-          path = "/var/lib/docker-registry";
           issuer = "gitlab-issuer";
         };
         packages = { enabled = true; };
