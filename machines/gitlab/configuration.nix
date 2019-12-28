@@ -2,7 +2,7 @@
 let 
   gitlab_url = "git.thilo-billerbeck.com";
   registry_url = "registry.thilo-billerbeck.com";
-  local_registry_port = 5000;
+  local_registry_port = "5000";
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
@@ -64,7 +64,7 @@ in {
         "${registry_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:5000";
+          locations."/".proxyPass = "http://localhost:${local_registry_port}";
         };
       };
     };
