@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
-
-{
+let 
+  gitlab_url = "git.thilo-billerbeck.com";
+  registry_url = "registry.thilo-billerbeck.com";
+  local_registry_port = 5000;
+in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
 
@@ -38,9 +41,9 @@
     dockerRegistry = {
       enable = true;
       listenAddress = "127.0.0.1";
-      port = 5000;
+      local_registry_port = 5000;
       extraConfig = {
-        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+        REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
       };
@@ -52,16 +55,16 @@
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
       virtualHosts = {
-        "git.thilo-billerbeck.com" = {
+        "${gitlab_url}" = {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass =
             "http://unix:/run/gitlab/gitlab-workhorse.socket";
         };
-        "registry.thilo-billerbeck.com" = {
+        "${registry_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:5000";
+          locations."/".proxyPass = "http://localhost:${local_registry_port}";
         };
       };
     };
@@ -72,7 +75,7 @@
       databaseUsername = "git";
       backupPath = "/mnt/gitlab-backup";
       https = true;
-      host = "git.thilo-billerbeck.com";
+      host = "${gitlab_url}";
       port = 443;
       user = "git";
       group = "git";
@@ -99,8 +102,8 @@
         };
         registry = {
           enabled = true;
-          host = "registry.thilo-billerbeck.com";
-          api_url = "http://localhost:5000";
+          host = "${registry_url}";
+          api_url = "http://localhost:${local_registry_port}";
           path = "/var/lib/docker-registry";
           issuer = "gitlab-issuer";
         };
