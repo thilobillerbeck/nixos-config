@@ -105,7 +105,7 @@ in {
           enabled = true;
           host = "${registry_url}";
           port = 443;
-          key = "/var/certs/registry/cert.pem";
+          key = "/var/certs/registry/key.pem";
           api_url = "http://localhost:${local_registry_port}";
           issuer = "gitlab-issuer";
         };
