@@ -13,19 +13,16 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 25 80 443 5005 ];
+  networking.firewall.allowedTCPPorts = [ 25 80 443 4567 ];
 
   docker-containers = {
     registry = {
-      image = "registry:latest";
-      ports = [ "5000:443" ];
-      volumes = [
-          "/var/lib/acme/registry.thilo-billerbeck.com:/certs"
-      ];
+      image = "registry:2";
+      ports = [ "5000:5000" ];
       environment = {
-	REGISTRY_HTTP_ADDR = "0.0.0.0:443";
-        REGISTRY_HTTP_TLS_CERTIFICATE = "/certs/full.pem";
-        REGISTRY_HTTP_TLS_KEY = "/certs/key.pem";
+     	  REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+          REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+          REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
       };
     };
   };
@@ -40,8 +37,13 @@
     timesyncd.enable = true;
     # dockerRegistry = {
     #	enable = true;
-    #	listenAddress = "0.0.0.0";
+    #	listenAddress = "127.0.0.1";
     #	port = 5000;
+    #    extraConfig = {
+    #  REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+    #	  REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+    #	  REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+    #	};
     # };
     nginx = {
       enable = true;
@@ -57,8 +59,10 @@
             "http://unix:/run/gitlab/gitlab-workhorse.socket";
         };
 	"registry.thilo-billerbeck.com" = {
-	  enableACME = true;
+          enableACME = true;
           forceSSL = true;
+          locations."/".proxyPass =
+            "http://localhost:5000";
 	};
       };
     };
@@ -96,16 +100,17 @@
         };
 	registry = {
   	  enabled = true;
-  	  host = "registry.thilo-billerbeck.com";
-  	  port = 5005;
-  	  api_url = "https://localhost:5000/";
+	  host = "registry.thilo-billerbeck.com";
+	  api_url = "http://localhost:5000";
+	  path = "/var/lib/docker-registry";
+	  issuer = "gitlab-issuer";
 	};
       };
     };
   };
 
   programs.mosh = {
-    enable = true;
+     enable = true;
   };
 
   environment.variables.EDITOR = "nvim";
