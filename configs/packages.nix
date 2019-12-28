@@ -2,6 +2,8 @@
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
+  services.udev.packages = with pkgs; [ qlcplus ola ];
+
   environment.systemPackages = with pkgs; [
     ddate
     file
@@ -80,6 +82,9 @@ in {
     sbt
     zip
     texmaker
+    qlcplus
+    libftdi
+    ola
 
     jetbrains.goland
     unstable.jetbrains.idea-ultimate

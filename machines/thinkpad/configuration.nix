@@ -8,6 +8,22 @@ in {
   networking.hostName = "thilo-laptop";
   networking.networkmanager.enable = true;
 
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "10.100.0.2/24" ];
+      privateKeyFile = "/var/keys/wg/private";
+      peers = [
+        # Mullvad fra-02
+        {
+          publicKey = "IX3pxu5Mkm3G6fAxvjn5p2A9Ve/6Yh17Ucaxrw5S0RE=";
+          allowedIPs = [ "0.0.0.0/0" ]; 
+          endpoint = "185.62.205.102:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
+
   system = {
     autoUpgrade.enable = true;
     stateVersion = "19.03";
@@ -84,11 +100,17 @@ in {
   sound.enable = true;
   hardware.bluetooth.enable = true;
   hardware.brightnessctl.enable = true;
-  
+
   virtualisation = {
     docker = {
       enable = true;
       autoPrune.enable = true;
+    };
+
+    libvirtd = {
+      enable = true;
+      qemuOvmf = true;
+      qemuRunAsRoot = true;
     };
   };
 }
