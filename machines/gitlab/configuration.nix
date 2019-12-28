@@ -41,7 +41,7 @@ in {
     dockerRegistry = {
       enable = true;
       listenAddress = "127.0.0.1";
-      local_registry_port = 5000;
+      port = local_registry_port;
       extraConfig = {
         REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
