@@ -50,8 +50,7 @@ in {
       };
     };
     nginx = {
-      enable = true;/var/certs/registry
-
+      enable = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
