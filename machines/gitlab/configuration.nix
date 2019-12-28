@@ -104,6 +104,9 @@
           path = "/var/lib/docker-registry";
           issuer = "gitlab-issuer";
         };
+        packages = {
+          enabled = true;
+        };
       };
     };
   };
