@@ -2,8 +2,12 @@
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  imports =
-  [ ./../../configs/common.nix ./hardware.nix ./../../users/thilo.nix ./../../home/default.nix ];
+  imports = [
+    ./../../configs/common.nix
+    ./hardware.nix
+    ./../../users/thilo.nix
+    ./../../home/default.nix
+  ];
 
   networking.hostName = "thilo-laptop";
   networking.networkmanager.enable = true;
@@ -16,7 +20,7 @@ in {
         # Mullvad fra-02
         {
           publicKey = "IX3pxu5Mkm3G6fAxvjn5p2A9Ve/6Yh17Ucaxrw5S0RE=";
-          allowedIPs = [ "0.0.0.0/0" ]; 
+          allowedIPs = [ "0.0.0.0/0" ];
           endpoint = "185.62.205.102:51820";
           persistentKeepalive = 25;
         }
@@ -49,7 +53,7 @@ in {
       passwordAuthentication = true;
       challengeResponseAuthentication = false;
     };
-    
+
     dbus.packages = with pkgs; [ gnome3.dconf ];
     xserver = {
       enable = true;
@@ -86,12 +90,8 @@ in {
     blueman.enable = true;
   };
 
-  programs.sway = {
-    enable = true;
-  };
-  programs.mosh = {
-    enable = true;
-  };
+  programs.sway = { enable = true; };
+  programs.mosh = { enable = true; };
 
   environment.variables.TERM = "xterm-256color";
   environment.variables.EDITOR = "nvim";

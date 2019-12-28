@@ -63,7 +63,7 @@ in {
     trellis
     bat
     pandoc
-    texlive.combined.scheme-full  
+    texlive.combined.scheme-full
     arandr
     nitrogen
     gitAndTools.hub

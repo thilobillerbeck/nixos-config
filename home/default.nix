@@ -217,9 +217,7 @@ in {
       font = "Monospace 16";
     };
 
-    programs.direnv = {
-      enable = true;
-    };
+    programs.direnv = { enable = true; };
 
     qt = {
       enable = false;

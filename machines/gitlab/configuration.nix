@@ -20,9 +20,9 @@
       image = "registry:2";
       ports = [ "5000:5000" ];
       environment = {
-     	  REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-          REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-          REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
       };
     };
   };
@@ -58,12 +58,11 @@
           locations."/".proxyPass =
             "http://unix:/run/gitlab/gitlab-workhorse.socket";
         };
-	"registry.thilo-billerbeck.com" = {
+        "registry.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass =
-            "http://localhost:5000";
-	};
+          locations."/".proxyPass = "http://localhost:5000";
+        };
       };
     };
     gitlab = {
@@ -94,24 +93,22 @@
           email_display_name = "Example GitLab";
           email_reply_to = "gitlab-no-reply@example.com";
           default_projects_features = {
-	    builds = false;
-	    container_registry = true;
-	  };
+            builds = false;
+            container_registry = true;
+          };
         };
-	registry = {
-  	  enabled = true;
-	  host = "registry.thilo-billerbeck.com";
-	  api_url = "http://localhost:5000";
-	  path = "/var/lib/docker-registry";
-	  issuer = "gitlab-issuer";
-	};
+        registry = {
+          enabled = true;
+          host = "registry.thilo-billerbeck.com";
+          api_url = "http://localhost:5000";
+          path = "/var/lib/docker-registry";
+          issuer = "gitlab-issuer";
+        };
       };
     };
   };
 
-  programs.mosh = {
-     enable = true;
-  };
+  programs.mosh = { enable = true; };
 
   environment.variables.EDITOR = "nvim";
 }

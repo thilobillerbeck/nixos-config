@@ -25,11 +25,9 @@
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
   };
-  
-  programs.mosh = {
-    enable = true;
-  };
-  
+
+  programs.mosh = { enable = true; };
+
   virtualisation.docker = {
     enable = true;
     liveRestore = false;

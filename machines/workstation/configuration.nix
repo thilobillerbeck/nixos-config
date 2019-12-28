@@ -1,15 +1,20 @@
 { config, pkgs, ... }:
 
-let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
-  imports =
-    [ ./../../configs/common.nix ./hardware.nix  ./../../home/default.nix ./../../users/thilo.nix ];
+  imports = [
+    ./../../configs/common.nix
+    ./hardware.nix
+    ./../../home/default.nix
+    ./../../users/thilo.nix
+  ];
 
   networking.hostName = "thilo-pc";
   networking.networkmanager.enable = true;
 
-  nixpkgs.config.packageOverrides = pkgs: { libvirt = pkgs.libvirt.override { enableIscsi = true; }; };
+  nixpkgs.config.packageOverrides = pkgs: {
+    libvirt = pkgs.libvirt.override { enableIscsi = true; };
+  };
 
   system = {
     autoUpgrade.enable = true;
@@ -83,12 +88,8 @@ in {
     };
   };
 
-  programs.sway = {
-    enable = true;
-  };
-  programs.mosh = {
-    enable = true;
-  };
+  programs.sway = { enable = true; };
+  programs.mosh = { enable = true; };
   programs.adb.enable = true;
 
   environment.variables.EDITOR = "nvim";

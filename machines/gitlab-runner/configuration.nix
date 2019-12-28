@@ -18,7 +18,7 @@
       enable = true;
       passwordAuthentication = false;
       challengeResponseAuthentication = false;
-    }; 
+    };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
     gitlab-runner = {
