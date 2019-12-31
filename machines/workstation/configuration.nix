@@ -69,9 +69,16 @@ in {
     };
 
     journald.extraConfig = "SystemMaxUse=500M";
-    printing.enable = true;
     timesyncd.enable = true;
     redshift.enable = true;
+    compton = {
+      enable = true;
+      vSync = true;
+    };
+    printing = {
+      enable = true;
+      drivers = [ pkgs.gutenprint ];
+    };
   };
 
   sound.enable = true;
@@ -80,6 +87,7 @@ in {
     docker = {
       enable = true;
       autoPrune.enable = true;
+      extraOptions = "--add-runtime runsc=${unstable.gvisor}/bin/runsc";
     };
     libvirtd = {
       enable = true;

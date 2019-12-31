@@ -22,6 +22,7 @@
     };
     # extraModprobeConfig = "options vfio-pci ids=1002:687f,1002:aaf8,1022:145c";
     kernelPackages = pkgs.linuxPackages_latest;
+    cleanTmpDir = true;
   };
 
   fileSystems."/" = {

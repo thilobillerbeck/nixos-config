@@ -13,23 +13,7 @@ in {
     tree
     wget
     zsh
-    git
-    (neovim.override {
-      configure = {
-        packages.myVimPackage = with pkgs.vimPlugins; {
-          start = [ 
-            nerdtree
-            fugitive
-            vim-nix
-            coc-nvim
-            ];
-          opt = [ ];
-        };
-      };
-    })
-
     wine
-    chromium
     vscode
     gnumake
     gcc
@@ -57,13 +41,11 @@ in {
     erlang
     lutris
     ntfs3g
-    mpv
     yosys
     nextpnr
     icestorm
     verilog
     trellis
-    bat
     pandoc
     texlive.combined.scheme-full
     arandr
