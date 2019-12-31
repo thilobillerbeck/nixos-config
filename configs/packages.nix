@@ -12,28 +12,31 @@ in {
     tmux
     tree
     wget
-    vim
+    zsh
+    git
     (neovim.override {
       configure = {
         packages.myVimPackage = with pkgs.vimPlugins; {
-          start = [ nerdtree fugitive vim-nix coc-nvim ];
+          start = [ 
+            nerdtree
+            fugitive
+            vim-nix
+            coc-nvim
+            ];
           opt = [ ];
         };
       };
     })
+
     wine
-    zsh
     chromium
     vscode
-    git
     gnumake
     gcc
     linuxHeaders
     spotify
     numix-gtk-theme
     numix-icon-theme-circle
-    adapta-gtk-theme
-    adapta-kde-theme
     gnupg
     curl
     unzip
@@ -42,7 +45,6 @@ in {
     unstable.go
     openjdk
     unstable.nodejs
-    watchman
     vagrant
     kubectl
     steam

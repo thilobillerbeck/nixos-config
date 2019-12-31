@@ -37,7 +37,7 @@ in {
           module-margin-right = 2;
           background = "#000000";
           foreground = "#DD8500";
-
+          tray-position = "right";
           line-color = "#DD8500";
           line-size = 16;
         };
@@ -115,17 +115,18 @@ in {
         "bar/main" = {
           monitor = "\${env:MONITOR:eDP}";
           width = "100%";
-          font-0 = "Roboto:size=11:weight=bold;2";
+          font-0 = "Roboto:size=12:weight=bold;2";
           height = "3%";
           radius = 0;
           modules-center = "date";
-          modules-right = "battery";
-          module-margin-left = 1;
-          module-margin-right = 2;
-          background = "#000000";
+          modules-right = "backlight battery";
+          module-margin-left = 3;
+          module-margin-right = 3;
+          background = "#aa000000";
           foreground = "#DD8500";
+          tray-position = "right";
 
-          line-color = "#DD8500";
+          line-color = "#aaDD8500";
           line-size = 16;
         };
         "bar/ext" = {
@@ -159,8 +160,18 @@ in {
           poll-interval = 5;
         };
         "module/backlight" = {
-          type = "internal/backlight";
-          card = "amdgpu_bl0";
+          type = "internal/xbacklight";
+        };
+        "module/i3" = {
+          type = "internal/i3";
+          pin-workspaces = true;
+          strip-wsnumbers = true;
+          index-sort = true;
+          enable-click = false;
+          enable-scroll = false;
+          wrapping-scroll = false;
+          reverse-scroll = false;
+          fuzzy-match = true;
         };
       };
     });
@@ -205,7 +216,7 @@ in {
     programs.termite = {
       enable = true;
       allowBold = true;
-      backgroundColor = "#000000";
+      backgroundColor = "rgba(0, 0, 0, 0.7)";
       cursorColor = "#ffffff";
       cursorForegroundColor = "#ffffff";
       foregroundColor = "#ffffff";
