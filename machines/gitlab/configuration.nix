@@ -29,7 +29,7 @@ in {
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
         REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/certs/registry.crt";
-        REGISTRY_STORAGE_DELETE_ENABLED = true;
+        REGISTRY_STORAGE_DELETE_ENABLED = "true";
       };
     };
   };
