@@ -18,7 +18,7 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 25 80 443 5000 ];
 
-  docker-containers = {
+/*   docker-containers = {
     registry = {
       image = "registry:2";
       ports = [ "5000:5000" ];
@@ -32,7 +32,7 @@ in {
         REGISTRY_STORAGE_DELETE_ENABLED = "true";
       };
     };
-  };
+  }; */
 
   services = {
     openssh = {
@@ -42,17 +42,19 @@ in {
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-/*     dockerRegistry = {
+    dockerRegistry = {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 5000;
       extraConfig = {
-        REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
+        REGISTRY_LOG_LEVEL = "info";
+        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/certs/registry/cert.crt";
+        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/certs/registry.crt";
+        REGISTRY_STORAGE_DELETE_ENABLED = "true";
       };
-    }; */
+    };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
