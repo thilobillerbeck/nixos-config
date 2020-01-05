@@ -46,6 +46,7 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 5000;
+      enableDelete = true;
       extraConfig = {
         REGISTRY_LOG_LEVEL = "info";
         REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
