@@ -46,7 +46,7 @@ in {
         REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/lib/acme/registry.thilo-billerbeck.com/full.pem";
+        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/certs/registry/cert.crt";
       };
     };
     nginx = {
@@ -105,7 +105,7 @@ in {
           enabled = true;
           host = "${registry_url}";
           port = 443;
-          key = "/var/lib/acme/registry.thilo-billerbeck.com/key.pem";
+          key = "/var/certs/registry/key.key";
           api_url = "http://localhost:${local_registry_port}";
           issuer = "gitlab-issuer";
         };
