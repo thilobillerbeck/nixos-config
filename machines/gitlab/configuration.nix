@@ -16,7 +16,7 @@ in {
 
   time.timeZone = "Europe/Berlin";
 
-  networking.firewall.allowedTCPPorts = [ 25 80 443 4567 ];
+  networking.firewall.allowedTCPPorts = [ 25 80 443 5000 ];
 
   # docker-containers = {
   #   registry = {
@@ -46,7 +46,7 @@ in {
         REGISTRY_AUTH_TOKEN_REALM = "https://${gitlab_url}/jwt/auth";
         REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/certs/registry/cert.pem";
+        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/lib/acme/registry.thilo-billerbeck.com/full.pem";
       };
     };
     nginx = {
@@ -105,7 +105,7 @@ in {
           enabled = true;
           host = "${registry_url}";
           port = 443;
-          key = "/var/certs/registry/key.pem";
+          key = "/var/lib/acme/registry.thilo-billerbeck.com/key.pem";
           api_url = "http://localhost:${local_registry_port}";
           issuer = "gitlab-issuer";
         };
