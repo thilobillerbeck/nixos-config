@@ -18,17 +18,21 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 25 80 443 5000 ];
 
-  # docker-containers = {
-  #   registry = {
-  #     image = "registry:2";
-  #     ports = [ "5000:5000" ];
-  #     environment = {
-  #       REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-  #       REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-  #       REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-  #     };
-  #   };
-  # };
+  docker-containers = {
+    registry = {
+      image = "registry:2";
+      ports = [ "5000:5000" ];
+      volumes = [ "/certs:/certs" ];
+      environment = {
+        REGISTRY_LOG_LEVEL = "info";
+        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
+        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
+        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
+        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/certs/registry.crt";
+        REGISTRY_STORAGE_DELETE_ENABLED = true;
+      };
+    };
+  };
 
   services = {
     openssh = {
@@ -38,7 +42,7 @@ in {
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-    dockerRegistry = {
+/*     dockerRegistry = {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 5000;
@@ -48,7 +52,7 @@ in {
         REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
         REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/var/certs/registry/cert.crt";
       };
-    };
+    }; */
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -105,7 +109,7 @@ in {
           enabled = true;
           host = "${registry_url}";
           port = 443;
-          key = "/var/certs/registry/key.key";
+          key = "/certs/registry.key";
           api_url = "http://localhost:${local_registry_port}";
           issuer = "gitlab-issuer";
         };
