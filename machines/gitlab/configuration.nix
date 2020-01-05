@@ -110,7 +110,7 @@ in {
           host = "${registry_url}";
           port = 443;
           key = "/certs/registry.key";
-          api_url = "http://localhost:${local_registry_port}";
+          api_url = "http://localhost:${local_registry_port}/";
           issuer = "gitlab-issuer";
         };
         packages = { enabled = true; };
