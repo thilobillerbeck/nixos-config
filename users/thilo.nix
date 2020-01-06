@@ -4,6 +4,7 @@
   users.users.thilo = {
     uid = 1000;
     description = "Thilo Billerbeck";
+    initialPassword = "1234";
     shell = pkgs.zsh;
     isNormalUser = true;
     openssh.authorizedKeys.keys = [

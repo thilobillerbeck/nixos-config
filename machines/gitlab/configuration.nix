@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 let 
-  gitlab_url = "git.thilo-billerbeck.com";
-  registry_url = "registry.thilo-billerbeck.com";
+  gitlab_url = "git.example.com";
+  registry_url = "registry.example.com";
   local_registry_port = "5000";
 in {
   imports =
@@ -18,44 +18,7 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 25 80 443 5000 ];
 
-/*   docker-containers = {
-    registry = {
-      image = "registry:2";
-      ports = [ "5000:5000" ];
-      volumes = [ "/certs:/certs" ];
-      environment = {
-        REGISTRY_LOG_LEVEL = "info";
-        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/certs/registry.crt";
-        REGISTRY_STORAGE_DELETE_ENABLED = "true";
-      };
-    };
-  }; */
-
   services = {
-    openssh = {
-      enable = true;
-      passwordAuthentication = false;
-      challengeResponseAuthentication = false;
-    };
-    journald.extraConfig = "SystemMaxUse=500M";
-    timesyncd.enable = true;
-    dockerRegistry = {
-      enable = true;
-      listenAddress = "127.0.0.1";
-      port = 5000;
-      enableDelete = true;
-      extraConfig = {
-        REGISTRY_LOG_LEVEL = "info";
-        REGISTRY_AUTH_TOKEN_REALM = "https://git.thilo-billerbeck.com/jwt/auth";
-        REGISTRY_AUTH_TOKEN_SERVICE = "container_registry";
-        REGISTRY_AUTH_TOKEN_ISSUER = "gitlab-issuer";
-        REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE = "/certs/registry.crt";
-        REGISTRY_STORAGE_DELETE_ENABLED = "true";
-      };
-    };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -92,6 +55,11 @@ in {
         address = "localhost";
         port = 25;
       };
+      registry = {
+        enable = true;
+        host = registry_url;
+        port =  443;
+      };  
       secrets = {
         dbFile = "/var/keys/gitlab/db";
         secretFile = "/var/keys/gitlab/secret";
@@ -100,28 +68,18 @@ in {
       };
       extraConfig = {
         gitlab = {
-          email_from = "gitlab-no-reply@example.com";
-          email_display_name = "Example GitLab";
-          email_reply_to = "gitlab-no-reply@example.com";
+          email_from = "noreply@thilo-billerbeck.com";
+          email_display_name = "Thilo's Gitlab";
+          email_reply_to = "mail@thilo-billerbeck.com";
           default_projects_features = {
             builds = true;
             container_registry = true;
           };
         };
-        registry = {
-          enabled = true;
-          host = "${registry_url}";
-          port = 443;
-          key = "/certs/registry.key";
-          api_url = "http://localhost:5000/";
-          issuer = "gitlab-issuer";
-        };
         packages = { enabled = true; };
       };
     };
   };
-
-  programs.mosh = { enable = true; };
 
   environment.variables.EDITOR = "nvim";
 }
