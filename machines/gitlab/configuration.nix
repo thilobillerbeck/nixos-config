@@ -27,14 +27,14 @@ in {
       recommendedTlsSettings = true;
       virtualHosts = {
         "${gitlab_url}" = {
-          enableACME = true;
-          forceSSL = true;
+          enableACME = false;
+          forceSSL = false;
           locations."/".proxyPass =
             "http://unix:/run/gitlab/gitlab-workhorse.socket";
         };
         "${registry_url}" = {
-          enableACME = true;
-          forceSSL = true;
+          enableACME = false;
+          forceSSL = false;
           locations."/".proxyPass = "http://localhost:${local_registry_port}";
         };
       };
@@ -45,9 +45,9 @@ in {
       initialRootPasswordFile = "/var/keys/gitlab/root_password";
       databaseUsername = "git";
       backupPath = "/mnt/gitlab-backup";
-      https = true;
+      https = false;
       host = "${gitlab_url}";
-      port = 443;
+      port = 80;
       user = "git";
       group = "git";
       smtp = {
@@ -58,7 +58,9 @@ in {
       registry = {
         enable = true;
         host = registry_url;
-        port =  443;
+        port =  80;
+        certFile = "/var/keys/gitlab/registry/cert.crt";
+        keyFile = "/var/keys/gitlab/registry/key.key";
       };  
       secrets = {
         dbFile = "/var/keys/gitlab/db";
