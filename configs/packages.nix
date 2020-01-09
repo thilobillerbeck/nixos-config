@@ -69,6 +69,7 @@ in {
     qlcplus
     libftdi
     ola
+    postman
 
     jetbrains.goland
     unstable.jetbrains.idea-ultimate

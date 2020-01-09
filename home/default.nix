@@ -16,6 +16,7 @@ in {
   home-manager.users.thilo = { ... }: {
     services.network-manager-applet.enable = true;
     services.blueman-applet.enable = true;
+    services.pasystray.enable = true;
 
     services = {
       polybar = {
