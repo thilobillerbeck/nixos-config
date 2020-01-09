@@ -10,6 +10,7 @@
     [ "ata_piix" "uhci_hcd" "virtio_pci" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
+  boot.kernelPackages = pkgs.linuxPackages_hardened;
   boot.extraModulePackages = [ ];
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
