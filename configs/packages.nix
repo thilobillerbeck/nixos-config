@@ -70,6 +70,8 @@ in {
     libftdi
     ola
     postman
+    php
+    phpPackages.composer
 
     jetbrains.goland
     unstable.jetbrains.idea-ultimate

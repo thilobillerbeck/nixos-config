@@ -4,6 +4,7 @@ let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports = [
     ./../../configs/common.nix
+    ./../../configs/cachix.nix
     ./hardware.nix
     ./../../home/default.nix
     ./../../users/thilo.nix

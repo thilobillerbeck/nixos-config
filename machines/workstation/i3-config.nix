@@ -3,7 +3,8 @@
 ''
     set $mod Mod4
 
-    font pango:Droid Sans 12
+    font pango:Montserrat Bold 12
+    title_align center
 
     # Use Mouse+$mod to drag floating windows to their wanted position
     floating_modifier $mod
@@ -16,10 +17,6 @@
 
     # start dmenu (a program launcher)
     bindsym $mod+d exec "rofi -combi-modi window,drun,ssh -show combi"
-    # There also is the (new) i3-dmenu-desktop which only displays applications
-    # shipping a .desktop file. It is a wrapper around dmenu, so you need that
-    # installed.
-    # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
     # change focus
     bindsym $mod+j focus left
@@ -155,5 +152,5 @@
   # for_window [class=".*"] border pixel 0
   exec --no-startup-id nitrogen --restore
 
-  exec --no-startup-id xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --off
+  # exec --no-startup-id xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --off
 ''
