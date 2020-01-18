@@ -45,7 +45,8 @@
       challengeResponseAuthentication = false;
     };
     xrdp.enable = true;
-    xrdp.defaultWindowManager = "${pkgs.icewm}/bin/icewm";
+    xrdp.defaultWindowManager = "${pkgs.xfce4-12.xfce4-session}/bin/xfce4-session";
+    xserver.desktopManager.xfce.enable = true;
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
     ympd.enable = true;
