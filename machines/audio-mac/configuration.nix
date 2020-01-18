@@ -1,11 +1,12 @@
 { config, pkgs, ... }:
-let 
-  gitlab_url = "git.thilo-billerbeck.com";
-  registry_url = "registry.thilo-billerbeck.com";
-  local_registry_port = "5000";
-in {
+
+{
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
+
+  nixpkgs.config.packageOverrides = pkgs: {
+    grub2 = (import <nixpkgs> {system = "i686-linux";}).grub2;
+  };
 
   system = {
     autoUpgrade.enable = true;
