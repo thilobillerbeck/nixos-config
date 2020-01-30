@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+let 
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   services.udev.packages = with pkgs; [ qlcplus ola ];
 
@@ -39,7 +40,6 @@ in {
     inkscape
     scala
     erlang
-    lutris
     ntfs3g
     yosys
     nextpnr
@@ -72,6 +72,11 @@ in {
     postman
     php
     phpPackages.composer
+    wineWowPackages.stable
+    lutris
+
+    minetest
+    minecraft
 
     jetbrains.goland
     unstable.jetbrains.idea-ultimate

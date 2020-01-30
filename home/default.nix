@@ -19,13 +19,11 @@ in {
     services.pasystray.enable = true;
 
     services = {
-      polybar = {
+      polybar = (if (config.networking.hostName == "thilo-pc") then {
         enable = true;
         script = ''
           polybar main &
-          polybar ext &
         '';
-      } // (if (config.networking.hostName == "thilo-pc") then {
         config = {
           "bar/main" = {
             monitor = "\${env:MONITOR:DisplayPort-0}";
@@ -114,6 +112,11 @@ in {
           };
         };
       } else {
+        enable = true;
+        script = ''
+          polybar main &
+          polybar ext &
+        '';
         config = {
           "bar/main" = {
             monitor = "\${env:MONITOR:eDP}";
