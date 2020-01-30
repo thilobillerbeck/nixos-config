@@ -15,12 +15,11 @@
     kernelModules =
       [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
     extraModulePackages = [ ];
-    kernelParams = [ "amd_iommu=on" ];
+    kernelParams = [ "amd_iommu=on" "iommu=pt" "processor.max_cstate=1" ];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # extraModprobeConfig = "options vfio-pci ids=1002:687f,1002:aaf8,1022:145c";
     kernelPackages = pkgs.linuxPackages_latest;
     cleanTmpDir = true;
   };
@@ -75,6 +74,10 @@
       driSupport = true;
       driSupport32Bit = true;
     };
+  };
+
+  powerManagement = {
+    cpuFreqGovernor = "performance";
   };
 
   nix.maxJobs = lib.mkDefault 16;

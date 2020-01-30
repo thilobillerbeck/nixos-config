@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, fetchFromGitHub, ... }:
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
@@ -8,19 +8,34 @@ in {
     ./hardware.nix
     ./../../home/default.nix
     ./../../users/thilo.nix
+    ./../../users/root.nix
   ];
 
-  networking.hostName = "thilo-pc";
-  networking.networkmanager.enable = true;
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    libvirt = pkgs.libvirt.override { enableIscsi = true; };
+  networking = {
+    hostName = "thilo-pc";
+    networkmanager = {
+      enable = true;
+    };
+    firewall = {
+      allowedTCPPorts = [ 27036 27037 6112 47624 ];
+      allowedUDPPorts = [ 27031 27036 6112 34197 ];
+      allowedUDPPortRanges = [
+        { from = 2300; to = 2400; }
+      ];
+      allowedTCPPortRanges = [
+        { from = 2300; to = 2400; }
+      ];
+    };
   };
+
+
 
   system = {
-    autoUpgrade.enable = true;
+    autoUpgrade.enable = false;
     stateVersion = "19.03";
   };
+
+  nix.trustedUsers = [ "root" "thilo" ];
 
   location = {
     latitude = 49.8217934;
@@ -47,7 +62,7 @@ in {
 
       desktopManager.xterm.enable = false;
       displayManager.lightdm.enable = true;
-
+      desktopManager.gnome3.enable = true;
       windowManager.i3 = {
         enable = true;
         configFile = "/etc/i3.conf";
@@ -78,8 +93,8 @@ in {
     };
     printing = {
       enable = true;
-      drivers = [ pkgs.gutenprint ];
     };
+    autorandr.enable = true;
   };
 
   sound.enable = true;
@@ -88,7 +103,7 @@ in {
     docker = {
       enable = true;
       autoPrune.enable = true;
-      extraOptions = "--add-runtime runsc=${unstable.gvisor}/bin/runsc";
+      extraOptions = "--add-runtime runsc=${unstable.gvisor}/bin/runsc --default-runtime=runsc";
     };
     libvirtd = {
       enable = true;

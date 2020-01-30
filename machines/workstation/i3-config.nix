@@ -149,8 +149,8 @@
   for_window [class="^com-intellij-updater-Runner$" title="^Update$"] floating enable
   for_window [instance="^sun-awt-X11-XDialogPeer$" title="^Complete Installation$"] floating enable
 
-  # for_window [class=".*"] border pixel 0
+  for_window [class=".*"] border pixel 0
   exec --no-startup-id nitrogen --restore
 
-  # exec --no-startup-id xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-D-0 --off
+  gaps inner all set 20
 ''
