@@ -58,7 +58,7 @@ in {
         "${registry_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:${local_registry_port}";
+          locations."/".proxyPass = "http://127.0.0.1:5000";
         };
       };
     };
