@@ -15,7 +15,7 @@ in {
 
   networking = {
     hostName = "nixos-gitlab";
-    firewall.allowedTCPPorts = [ 25 80 443 ];
+    firewall.allowedTCPPorts = [ 25 80 443 3000 ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -60,6 +60,11 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://127.0.0.1:5000";
         };
+        "notes.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://unix:/run/codimd.sock";
+        };
       };
     };
     gitlab = {
@@ -103,6 +108,16 @@ in {
           issuer = "gitlab-issuer";
         };
         packages = { enabled = true; };
+      };
+    };
+    codimd = {
+      enable = true;
+      configuration = {
+        domain = "notes.thilo-billerbeck.com";
+        useSSL = true;
+        useCDN = false;
+        allowAnonymous = false;
+        defaultPermission = "private";
       };
     };
   };
