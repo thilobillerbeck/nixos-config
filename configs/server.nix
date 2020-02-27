@@ -7,6 +7,7 @@
     autoOptimiseStore = true;
     gc.automatic = true;
     optimise.automatic = true;
+    trustedUsers = [ "root" "thilo" ];
   };
 }
 

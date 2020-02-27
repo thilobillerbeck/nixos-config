@@ -4,8 +4,22 @@ let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   services.udev.packages = with pkgs; [ qlcplus ola ];
-
   environment.systemPackages = with pkgs; [
+    # BASH TOOLS
+    gitAndTools.hub
+    gitAndTools.tig
+    up
+    termite
+    ranger
+    nox
+    vagrant
+    kubectl
+    gnupg
+    curl
+    unzip
+    zip
+    imagemagick
+    youtube-dl
     ddate
     file
     htop
@@ -19,66 +33,50 @@ in {
     gnumake
     gcc
     linuxHeaders
-    spotify
-    numix-gtk-theme
-    numix-icon-theme-circle
-    gnupg
-    curl
-    unzip
-    imagemagick
-    youtube-dl
-    unstable.go
-    openjdk
-    unstable.nodejs
-    vagrant
-    kubectl
-    steam
-    steam-run
-    python3
-    discord
-    nox
-    inkscape
-    scala
-    erlang
-    ntfs3g
+    nixfmt
+
+    # LANGUAGES & COMPILERS
+    ruby
+    lessc
+    sbt
+    php
+    phpPackages.composer
     yosys
     nextpnr
     icestorm
     verilog
     trellis
     pandoc
-    texlive.combined.scheme-full
+    scala
+    erlang
+    python3
+    unstable.go
+    openjdk
+    unstable.nodejs
+
+    # GUI TOOLS
+    thunderbird
+    mumble
+    pavucontrol
+    texmaker
+    postman
     arandr
     nitrogen
-    gitAndTools.hub
-    gitAndTools.tig
-    up
-    thunderbird
-    termite
-    openiscsi
-    ranger
-    ruby
-    mediainfo
-    mumble
-    nixfmt
-    lessc
-    pavucontrol
-    sbt
-    zip
-    texmaker
-    qlcplus
-    libftdi
-    ola
-    postman
-    php
-    phpPackages.composer
+    texlive.combined.scheme-full
     wineWowPackages.stable
-    lutris
+    inkscape
+    discord
+    spotify
 
+    # GAMING
+    lutris
     minetest
     minecraft
-
-    jetbrains.goland
+    steam
+    steam-run
+    
+    # JETBRAINS
+    unstable.jetbrains.goland
     unstable.jetbrains.idea-ultimate
     unstable.jetbrains.phpstorm
     unstable.jetbrains.pycharm-professional

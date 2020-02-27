@@ -9,7 +9,7 @@
   boot = {
     initrd = {
       availableKernelModules =
-        [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
+        [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
       kernelModules = [ ];
     };
     kernelModules =
@@ -19,35 +19,26 @@
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
+      timeout = 2;
     };
     kernelPackages = pkgs.linuxPackages_latest;
     cleanTmpDir = true;
   };
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/0e41bf24-12ec-4c0a-92ee-113f5e598726";
-    fsType = "ext4";
-    options = [ "noatime" "discard" ];
-  };
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/e2fb1479-2978-4ec1-b33b-defdae317394";
+      fsType = "ext4";
+    };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/D610-7363";
-    fsType = "vfat";
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/11A4-7CB7";
+      fsType = "vfat";
+    };
 
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/43f4d7e7-8c79-42cd-8fbb-75d98f059de5";
-    fsType = "ext4";
-  };
-
-  fileSystems."/mnt/server002/data" = {
-    device = "//192.168.50.240/data";
-    fsType = "cifs";
-    options = let
-      automount_opts =
-        "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-    in [ "${automount_opts},credentials=/etc/nixos/smb-secrets" ];
-  };
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/df90909f-710d-40e5-98f1-a160b686ecfb";
+      fsType = "ext4";
+    };
 
   fileSystems."/mnt/server002/music" = {
     device = "//192.168.50.240/music";
@@ -55,11 +46,13 @@
     options = let
       automount_opts =
         "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-    in [ "${automount_opts},credentials=/etc/nixos/smb-secrets" ];
+      in [ "${automount_opts},credentials=/etc/nixos/smb-secrets" ];
   };
 
+
   swapDevices =
-    [{ device = "/dev/disk/by-uuid/426d619a-2be9-404c-99ff-48892cbb09a9"; }];
+    [ { device = "/dev/disk/by-uuid/4352636e-d606-4c19-b0c6-c3ed8bf16ae5"; }
+    ];
 
   hardware = {
     cpu.amd.updateMicrocode = true;
@@ -73,6 +66,10 @@
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
+    };
+    logitech = {
+      enable = true;
+      enableGraphical = true;
     };
   };
 

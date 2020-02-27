@@ -11,31 +11,21 @@ in {
     ./../../users/root.nix
   ];
 
+  nixpkgs.config.packageOverrides = pkgs: {
+    mumble = pkgs.mumble.override { pulseSupport = true; };
+  };
+
   networking = {
     hostName = "thilo-pc";
     networkmanager = {
       enable = true;
     };
-    firewall = {
-      allowedTCPPorts = [ 27036 27037 6112 47624 ];
-      allowedUDPPorts = [ 27031 27036 6112 34197 ];
-      allowedUDPPortRanges = [
-        { from = 2300; to = 2400; }
-      ];
-      allowedTCPPortRanges = [
-        { from = 2300; to = 2400; }
-      ];
-    };
   };
-
-
 
   system = {
     autoUpgrade.enable = false;
     stateVersion = "19.03";
   };
-
-  nix.trustedUsers = [ "root" "thilo" ];
 
   location = {
     latitude = 49.8217934;
@@ -51,30 +41,13 @@ in {
       challengeResponseAuthentication = false;
     };
 
-    fwupd = {
-      enable = true;
-      package = unstable.fwupd;
-    };
-
     xserver = {
       enable = true;
       layout = "de";
 
       desktopManager.xterm.enable = false;
-      displayManager.lightdm.enable = true;
+      displayManager.gdm.enable = true;
       desktopManager.gnome3.enable = true;
-      windowManager.i3 = {
-        enable = true;
-        configFile = "/etc/i3.conf";
-        package = pkgs.i3-gaps;
-        extraPackages = with pkgs; [
-          i3status # gives you the default i3 status bar
-          i3lock-fancy # default i3 screen locker
-          i3blocks # if you are planning on using i3blocks over i3status
-          polybar
-          xorg.xbacklight
-        ];
-      };
 
       enableCtrlAltBackspace = true;
       videoDrivers = [ "amdgpu" ];
@@ -85,21 +58,28 @@ in {
     };
 
     journald.extraConfig = "SystemMaxUse=500M";
+    autorandr.enable = false;
     timesyncd.enable = true;
-    redshift.enable = true;
+    redshift.enable = false;
+    printing.enable = true;
+    fstrim.enable = true;
+    fwupd.enable = true;
     compton = {
-      enable = true;
+      enable = false;
       vSync = true;
     };
-    printing = {
-      enable = true;
-    };
-    autorandr.enable = true;
   };
 
   sound.enable = true;
 
   virtualisation = {
+    anbox = {
+      enable = true;
+    };
+    virtualbox.host = {
+      enable = true;
+      enableExtensionPack = true;
+    };
     docker = {
       enable = true;
       autoPrune.enable = true;
@@ -108,17 +88,37 @@ in {
     libvirtd = {
       enable = true;
       qemuOvmf = true;
-      qemuRunAsRoot = true;
+      qemuRunAsRoot = false;
+      onBoot = "ignore";
+      onShutdown = "shutdown";
     };
+  };  
+
+  programs = {
+    sway = { enable = true; };
+    mosh = { enable = true; };
   };
 
-  programs.sway = { enable = true; };
-  programs.mosh = { enable = true; };
-  programs.adb.enable = true;
-
-  environment.variables.EDITOR = "nvim";
-  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
-  environment.etc."sway/config".text = pkgs.callPackage ./i3-config.nix { };
-  environment.systemPackages = with pkgs; [ virtmanager pulseaudioFull ];
+  environment = {
+    variables = {
+      EDITOR = "nvim";
+      LC_ALL = config.i18n.defaultLocale;
+    };
+    shellAliases = {
+      cccda-weechat =
+        ''ssh -t avocadoom@shells.darmstadt.ccc.de "tmux attach -t weechat"'';
+      w17-door-summer = "ssh summer@door.w17.io";
+      w17-door-open = "ssh open@door.w17.io";
+      w17-door-close = "ssh close@door.w17.io";
+      wine = "wine64";
+    };
+    etc = {
+      "i3.conf".text = pkgs.callPackage ./i3-config.nix { };
+      "sway/config".text = pkgs.callPackage ./i3-config.nix { };
+    };
+    systemPackages = with pkgs; [
+      virtmanager
+    ];
+  };
 }
 

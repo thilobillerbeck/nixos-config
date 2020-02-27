@@ -84,6 +84,20 @@ in {
   environment.variables.TERM = "xterm-256color";
   environment.variables.EDITOR = "nvim";
   environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
+  environment = {
+    variables = {
+      EDITOR = "nvim";
+      LC_ALL = config.i18n.defaultLocale;
+    };
+    shellAliases = {
+      cccda-weechat =
+        ''ssh -t avocadoom@shells.darmstadt.ccc.de "tmux attach -t weechat"'';
+      w17-door-summer = "ssh summer@door.w17.io";
+      w17-door-open = "ssh open@door.w17.io";
+      w17-door-close = "ssh close@door.w17.io";
+      wine = "wine64";
+    };
+  };
 
   sound.enable = true;
   hardware.bluetooth.enable = true;

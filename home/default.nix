@@ -6,21 +6,21 @@ with import <nixpkgs> { };
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
-    rev = "711109d468aa72d327dc1d2f8beabbfe6d061085";
-    ref = "master";
+    rev = "f5c9303cedd67a57121f0cbe69b585fb74ba82d9";
+    ref = "release-19.09";
   };
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports = [ "${home-manager}/nixos" ];
 
   home-manager.users.thilo = { ... }: {
-    services.network-manager-applet.enable = true;
-    services.blueman-applet.enable = true;
-    services.pasystray.enable = true;
+    services.network-manager-applet.enable = if (config.networking.hostName == "thilo-pc") then false else true;
+    services.blueman-applet.enable =  if (config.networking.hostName == "thilo-pc") then false else true;
+    services.pasystray.enable = if (config.networking.hostName == "thilo-pc") then false else true;
 
     services = {
       polybar = (if (config.networking.hostName == "thilo-pc") then {
-        enable = true;
+        enable = false;
         script = ''
           polybar main &
         '';
@@ -264,7 +264,7 @@ in {
     };
 
     qt = {
-      enable = false;
+      enable = true;
       platformTheme = "gtk";
     };
 
@@ -278,7 +278,11 @@ in {
         package = pkgs.papirus-icon-theme;
         name = "Papirus";
       };
-      gtk3 = { extraConfig = { gtk-application-prefer-dark-theme = true; }; };
+      gtk3 = { extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+#        gtk-modules = "appmenu-gtk-module";
+        };
+      };
     };
   };
 }

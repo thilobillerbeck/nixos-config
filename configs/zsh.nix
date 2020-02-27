@@ -18,19 +18,10 @@
         "sbt"
       ];
     };
-    shellAliases = {
-      cccda-weechat =
-        ''ssh -t avocadoom@shells.darmstadt.ccc.de "tmux attach -t weechat"'';
-      w17-door-summer = "ssh summer@door.w17.io";
-      w17-door-open = "ssh open@door.w17.io";
-      w17-door-close = "ssh close@door.w17.io";
-      wine = "wine64";
-    };
     shellInit = ''
       export TERM=xterm-256color
       npm set prefix ~/.npm-global
       PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
-      export LC_ALL=${config.i18n.defaultLocale}
       eval "$(direnv hook zsh)"
     '';
   };
