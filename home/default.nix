@@ -237,7 +237,7 @@ in {
       chromium = {
         enable = true;
         extensions = [
-          "hdokiejnpimakedhajhdlcegeplioahd" # LastPass
+          "aeblfdkhhhdcdjpifhhbdiojplfjncoa" # LastPass
           "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
           "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock
         ];

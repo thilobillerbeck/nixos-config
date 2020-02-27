@@ -15,7 +15,7 @@
     kernelModules =
       [ "kvm-amd" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
     extraModulePackages = [ ];
-    kernelParams = [ "amd_iommu=on" "iommu=pt" "processor.max_cstate=1" ];
+    kernelParams = [ "amd_iommu=on" "iommu=pt" "processor.max_cstate=5" "idle=nomwait" ];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
