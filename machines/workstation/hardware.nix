@@ -66,10 +66,7 @@
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
-    };
-    logitech = {
-      enable = true;
-      enableGraphical = true;
+      extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
     };
   };
 

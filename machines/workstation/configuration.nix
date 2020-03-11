@@ -73,9 +73,6 @@ in {
   sound.enable = true;
 
   virtualisation = {
-    anbox = {
-      enable = true;
-    };
     virtualbox.host = {
       enable = true;
       enableExtensionPack = true;
@@ -119,6 +116,21 @@ in {
     systemPackages = with pkgs; [
       virtmanager
     ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "f /dev/shm/scream 0660 thilo qemu-libvirtd -"
+  ];
+
+  systemd.user.services.scream-ivshmem = {
+    enable = true;
+    description = "Scream IVSHMEM";
+    serviceConfig = {
+      ExecStart = "${pkgs.scream-receivers}/bin/scream-ivshmem-alsa /dev/shm/scream";
+      Restart = "always";
+    };
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "pulseaudio.service" ];
   };
 }
 

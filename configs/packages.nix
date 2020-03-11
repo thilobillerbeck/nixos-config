@@ -53,6 +53,8 @@ in {
     unstable.go
     openjdk
     unstable.nodejs
+    qt5.full
+    qtcreator
 
     # GUI TOOLS
     thunderbird
@@ -73,7 +75,6 @@ in {
     minetest
     minecraft
     steam
-    steam-run
     
     # JETBRAINS
     unstable.jetbrains.goland
