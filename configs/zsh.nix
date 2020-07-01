@@ -16,6 +16,7 @@
         "git"
         "gitignore"
         "sbt"
+        "helm"
       ];
     };
     shellInit = ''

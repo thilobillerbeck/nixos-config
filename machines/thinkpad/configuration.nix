@@ -19,16 +19,6 @@ in {
 
   time.timeZone = "Europe/Berlin";
 
-  environment.etc."config/polybar" = {
-    text = ''
-      [bar/example]
-      width = 100%
-      height = 27
-      radius = 6.0
-      fixed-center = false 
-    '';
-  };
-
   services = {
     tlp.enable = true;
     fwupd.enable = true;
@@ -81,11 +71,10 @@ in {
   programs.sway = { enable = true; };
   programs.mosh = { enable = true; };
 
-  environment.variables.TERM = "xterm-256color";
-  environment.variables.EDITOR = "nvim";
-  environment.etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
   environment = {
+    etc."i3.conf".text = pkgs.callPackage ./i3-config.nix { };
     variables = {
+      TERM = "xterm-256color";
       EDITOR = "nvim";
       LC_ALL = config.i18n.defaultLocale;
     };
@@ -101,7 +90,6 @@ in {
 
   sound.enable = true;
   hardware.bluetooth.enable = true;
-  hardware.brightnessctl.enable = true;
 
   virtualisation = {
     docker = {
@@ -116,5 +104,11 @@ in {
       qemuRunAsRoot = true;
     };
   };
+
+
+  programs.adb.enable = true;
+  services.udev.packages = [
+    pkgs.android-udev-rules
+  ];
 }
 

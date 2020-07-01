@@ -71,7 +71,6 @@ in {
     # GAMING
     lutris
     minetest
-    minecraft
     steam
     steam-run
     
@@ -82,5 +81,7 @@ in {
     unstable.jetbrains.pycharm-professional
     unstable.jetbrains.webstorm
     unstable.jetbrains.ruby-mine
+    android-studio
+    dart
   ];
 }

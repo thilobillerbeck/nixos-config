@@ -179,8 +179,6 @@ in {
           };
         };
       });
-
-      lorri.enable = true;
     };
 
     programs = {

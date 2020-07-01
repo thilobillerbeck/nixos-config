@@ -30,6 +30,15 @@
     fsType = "vfat";
   };
 
+  fileSystems."/mnt/openhab2" = {
+    device = "//192.168.50.3/openhab2";
+    fsType = "cifs";
+    options = let
+      automount_opts =
+        "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+      in [ "${automount_opts},credentials=/etc/nixos/smb-secrets,iocharset=utf8,gid=1000,uid=1000,file_mode=0777,dir_mode=0777 0 0" ];
+  };
+
   swapDevices =
     [{ device = "/dev/disk/by-uuid/6a67c51a-e8cc-4d35-b75a-8dd5d5aeaa25"; }];
 
