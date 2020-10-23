@@ -12,6 +12,10 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
+  boot.loader.grub.device = "/dev/sda";
+
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/62b2637c-0929-4e83-8b30-3efe9e6963d7";
