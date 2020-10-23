@@ -47,17 +47,17 @@ in {
         domain = "git.${config.machine.domain}";
         rootUrl = "http://git.${config.machine.domain}/";
         database = {
-            type = "mysql";
-            user = "git";
-            name = "gitea";
-            passwordFile = "/secret/gitea_db";
+          type = "postgres";                        # Database type
+          password = "gitea";                       # Set the password
         };
     };
     services.postgresql = {
-        enable = true;
-        package = pkgs.postgresql_11;
-        dataDir = "/data/postgresql";
-    }
+      enable = true;                # Ensure postgresql is enabled
+      identMap =                    # Map the gitea user to postgresql
+        ''
+          gitea-users gitea gitea
+        '';
+    };
   };
 
   programs.mosh = { enable = true; };
