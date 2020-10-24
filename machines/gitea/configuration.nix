@@ -49,6 +49,13 @@ in {
           type = "postgres";                        # Database type
           password = "gitea";                       # Set the password
         };
+        extraConfig = ''
+	  [service]
+          DISABLE_REGISTRATION = true
+
+	  [ui]
+          DEFAULT_THEME = arc-green
+	'';
     };
     postgresql = {
       enable = true;                # Ensure postgresql is enabled
