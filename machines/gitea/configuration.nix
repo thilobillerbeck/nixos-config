@@ -42,16 +42,15 @@ in {
     };
     gitea = {
         enable = true;
-        user = "git";
         cookieSecure = true;
-        domain = "git.${config.machine.domain}";
-        rootUrl = "http://git.${config.machine.domain}/";
+        domain = "git2.thilo-billerbeck.com";
+        rootUrl = "https://git2.thilo-billerbeck.com/";
         database = {
           type = "postgres";                        # Database type
           password = "gitea";                       # Set the password
         };
     };
-    services.postgresql = {
+    postgresql = {
       enable = true;                # Ensure postgresql is enabled
       identMap =                    # Map the gitea user to postgresql
         ''
@@ -64,12 +63,17 @@ in {
 
   environment.variables.EDITOR = "nvim";
 
-    users.users.git = {
+  users.users.gitea = {
     description = "Gitea Service";
     isNormalUser = true;
     home = config.services.gitea.stateDir;
     createHome = true;
     useDefaultShell = true;
+  };
+
+  security.acme = {
+    email = "thilo.billerbeck@officerent.de";
+    acceptTerms = true;
   };
 }
 
