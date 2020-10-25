@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
-let 
-  gitea_url = "git2.thilo-billerbeck.com";
+let gitea_url = "git2.thilo-billerbeck.com";
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
@@ -15,12 +14,25 @@ in {
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
+  docker-containers."drone" = {
+    image = "drone/drone:1";
+    environment = {
+      "DRONE_GITEA_SERVER" = "https://git2.thilo-billerbeck.com";
+      "DRONE_GITEA_CLIENT_ID" = "146c9b07-8c10-40c3-8cf4-e391258a6768";
+      "DRONE_GITEA_CLIENT_SECRET" =
+        "_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
+      "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
+      "DRONE_SERVER_HOST" = "ci.thilo-billerbeck.com";
+      "DRONE_SERVER_PROTO" = "https";
+    };
+    volumes = [ "/var/lib/drone:/data" ];
+    ports = [ "4000:80" "4001:443" ];
+  };
+
   time.timeZone = "Europe/Berlin";
 
   services = {
-    openssh = {
-      enable = true;
-    };
+    openssh = { enable = true; };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
     nginx = {
@@ -33,35 +45,41 @@ in {
         "${gitea_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass =
-            "http://localhost:3000/";
+          locations."/".proxyPass = "http://localhost:3000/";
+        };
+      };
+      virtualHosts = {
+        "ci.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://localhost:4000/";
         };
       };
     };
     gitea = {
-        enable = true;
-        cookieSecure = true;
-        appName = "Thilos SCM";
-        rootUrl = "https://git2.thilo-billerbeck.com/";
-      	log.level = "Warn";
-        database = {
-          type = "postgres";
-          password = "gitea";
-        };
-        extraConfig = ''
-	        APP_NAME = Thilos SCM
+      enable = true;
+      cookieSecure = true;
+      appName = "Thilos SCM";
+      rootUrl = "https://git2.thilo-billerbeck.com/";
+      log.level = "Warn";
+      database = {
+        type = "postgres";
+        password = "gitea";
+      };
+      extraConfig = ''
+        	        APP_NAME = Thilos SCM
 
-	        [service]
-          DISABLE_REGISTRATION = true
+        	        [service]
+                 DISABLE_REGISTRATION = true
 
-	        [ui]
-          DEFAULT_THEME = arc-green
-	        SHOW_USER_EMAIL = false
-	      '';
+        	        [ui]
+                  DEFAULT_THEME = arc-green
+        	        SHOW_USER_EMAIL = false
+        	      '';
     };
     postgresql = {
-      enable = true;                # Ensure postgresql is enabled
-      identMap =                    # Map the gitea user to postgresql
+      enable = true; # Ensure postgresql is enabled
+      identMap = # Map the gitea user to postgresql
         ''
           gitea-users gitea gitea
         '';
