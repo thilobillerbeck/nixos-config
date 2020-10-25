@@ -12,7 +12,7 @@ in {
 
   networking = {
     hostName = "gitea";
-    firewall.allowedTCPPorts = [ 80 443 ];
+    firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -20,8 +20,6 @@ in {
   services = {
     openssh = {
       enable = true;
-      passwordAuthentication = false;
-      challengeResponseAuthentication = false;
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
@@ -43,18 +41,37 @@ in {
     gitea = {
         enable = true;
         cookieSecure = true;
+	appName = "Thilos SCM";
         domain = "git2.thilo-billerbeck.com";
         rootUrl = "https://git2.thilo-billerbeck.com/";
+      	log.level = "Warn";
+	ssh = {
+	  enable = true;
+	  clonePort = 22;
+	};
         database = {
-          type = "postgres";                        # Database type
-          password = "gitea";                       # Set the password
+          type = "postgres";
+          password = "gitea";
         };
+	dump = {
+	  enable = true;
+	  interval = "15:19";
+	};
         extraConfig = ''
+	  APP_NAME = Thilos SCM
+
+          [repository]
+          DISABLE_HTTP_GIT = false
+
+          [security]
+          INSTALL_LOCK = true
+
 	  [service]
           DISABLE_REGISTRATION = true
 
 	  [ui]
           DEFAULT_THEME = arc-green
+	  SHOW_USER_EMAIL = false
 	'';
     };
     postgresql = {
