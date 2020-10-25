@@ -6,8 +6,11 @@ in {
 
   system = {
     autoUpgrade.enable = true;
+    autoUpgrade.allowReboot = true;
     stateVersion = "20.03";
   };
+
+  nix.gc.automatic = true;
 
   networking = {
     hostName = "gitea";
