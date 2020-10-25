@@ -41,38 +41,23 @@ in {
     gitea = {
         enable = true;
         cookieSecure = true;
-	appName = "Thilos SCM";
-        domain = "git2.thilo-billerbeck.com";
+        appName = "Thilos SCM";
         rootUrl = "https://git2.thilo-billerbeck.com/";
       	log.level = "Warn";
-	ssh = {
-	  enable = true;
-	  clonePort = 22;
-	};
         database = {
           type = "postgres";
           password = "gitea";
         };
-	dump = {
-	  enable = true;
-	  interval = "15:19";
-	};
         extraConfig = ''
-	  APP_NAME = Thilos SCM
+	        APP_NAME = Thilos SCM
 
-          [repository]
-          DISABLE_HTTP_GIT = false
-
-          [security]
-          INSTALL_LOCK = true
-
-	  [service]
+	        [service]
           DISABLE_REGISTRATION = true
 
-	  [ui]
+	        [ui]
           DEFAULT_THEME = arc-green
-	  SHOW_USER_EMAIL = false
-	'';
+	        SHOW_USER_EMAIL = false
+	      '';
     };
     postgresql = {
       enable = true;                # Ensure postgresql is enabled
@@ -86,14 +71,6 @@ in {
   programs.mosh = { enable = true; };
 
   environment.variables.EDITOR = "nvim";
-
-  users.users.gitea = {
-    description = "Gitea Service";
-    isNormalUser = true;
-    home = config.services.gitea.stateDir;
-    createHome = true;
-    useDefaultShell = true;
-  };
 
   security.acme = {
     email = "thilo.billerbeck@officerent.de";
