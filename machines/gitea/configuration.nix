@@ -74,6 +74,10 @@ in {
 
         	        [service]
                  	DISABLE_REGISTRATION = true
+			REGISTER_EMAIL_CONFIRM = true;
+			ENABLE_NOTIFY_MAIL = true;
+			DEFAULT_KEEP_EMAIL_PRIVATE = true;
+			DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
 
         	        [ui]
                   	DEFAULT_THEME = arc-green
@@ -84,9 +88,9 @@ in {
 
 			[mailer]
                     	ENABLED        = true
-                    	FROM           = git@officerent.de
+                    	FROM           = "Thilos Git" <git@officerent.de>
                     	MAILER_TYPE    = smtp
-                    	HOST           = mail.officerent.de:587
+                    	HOST           = mail.officerent.de:465
                    	IS_TLS_ENABLED = true
                     	USER           = git@officerent.de
                     	PASSWD         = `cogypost91`
