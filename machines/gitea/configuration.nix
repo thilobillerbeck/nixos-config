@@ -20,7 +20,7 @@ in {
   virtualisation.oci-containers.containers."drone" = {
     image = "drone/drone:1";
     environment = {
-      "DRONE_GITEA_SERVER" = "https://git.thilo-billerbeck.com";
+      "DRONE_GITEA_SERVER" = "https://${gitea_url}";
       "DRONE_GITEA_CLIENT_ID" = "146c9b07-8c10-40c3-8cf4-e391258a6768";
       "DRONE_GITEA_CLIENT_SECRET" =
         "_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
@@ -64,12 +64,12 @@ in {
       cookieSecure = true;
       disableRegistration = true;
       appName = "Thilos SCM";
-      rootUrl = "https://git.thilo-billerbeck.com/";
+      rootUrl = "https://${gitea_url}/";
       log.level = "Warn";
       mailerPasswordFile = "/var/lib/secrets/gitea/mailpw";
       database = {
         type = "postgres";
-        password = "gitea";
+        passwordFile = "/var/lib/secrets/gitea/dbpw";
       };
       settings = {
         service = {
