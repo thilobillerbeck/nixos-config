@@ -17,7 +17,7 @@ in {
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
-  docker-containers."drone" = {
+  virtualisation.oci-containers."drone" = {
     image = "drone/drone:1";
     environment = {
       "DRONE_GITEA_SERVER" = "https://git.thilo-billerbeck.com";
@@ -69,32 +69,32 @@ in {
         type = "postgres";
         password = "gitea";
       };
-      extraConfig = ''
-        	        APP_NAME = Thilos SCM
-
-        	        [service]
-                 	DISABLE_REGISTRATION = true
-			REGISTER_EMAIL_CONFIRM = true;
-			ENABLE_NOTIFY_MAIL = true;
-			DEFAULT_KEEP_EMAIL_PRIVATE = true;
-			DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
-
-        	        [ui]
-                  	DEFAULT_THEME = arc-green
-        	        SHOW_USER_EMAIL = false
-
-			[indexer]
-			REPO_INDEXER_ENABLED = true;
-
-			[mailer]
-                    	ENABLED        = true
-                    	FROM           = "Thilos Git" <git@officerent.de>
-                    	MAILER_TYPE    = smtp
-                    	HOST           = mail.officerent.de:465
-                   	IS_TLS_ENABLED = true
-                    	USER           = git@officerent.de
-                    	PASSWD         = `cogypost91`
-        	      '';
+      settings = {
+        APP_NAME = "Thilos SCM";
+        service = {
+          DISABLE_REGISTRATION = true;
+          REGISTER_EMAIL_CONFIRM = true;
+          ENABLE_NOTIFY_MAIL = true;
+          DEFAULT_KEEP_EMAIL_PRIVATE = true;
+          DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
+        };
+        ui = {
+          DEFAULT_THEME = "arc-green";
+        	SHOW_USER_EMAIL = false;
+        };
+        indexer = {
+          REPO_INDEXER_ENABLED = true;
+        };
+        mailer = {
+          ENABLED = true;
+          FROM = "\"Thilos Git\" <git@officerent.de>";
+          MAILER_TYPE = "smtp";
+          HOST = "mail.officerent.de:465";
+          IS_TLS_ENABLED = true;
+          USER = "git@officerent.de";
+          PASSWD = "`cogypost91`";
+        };
+      };
     };
     postgresql = {
       enable = true; # Ensure postgresql is enabled
