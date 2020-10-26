@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-let gitea_url = "git2.thilo-billerbeck.com";
+let gitea_url = "git.thilo-billerbeck.com";
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
@@ -20,7 +20,7 @@ in {
   docker-containers."drone" = {
     image = "drone/drone:1";
     environment = {
-      "DRONE_GITEA_SERVER" = "https://git2.thilo-billerbeck.com";
+      "DRONE_GITEA_SERVER" = "https://git.thilo-billerbeck.com";
       "DRONE_GITEA_CLIENT_ID" = "146c9b07-8c10-40c3-8cf4-e391258a6768";
       "DRONE_GITEA_CLIENT_SECRET" =
         "_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
@@ -63,7 +63,7 @@ in {
       enable = true;
       cookieSecure = true;
       appName = "Thilos SCM";
-      rootUrl = "https://git2.thilo-billerbeck.com/";
+      rootUrl = "https://git.thilo-billerbeck.com/";
       log.level = "Warn";
       database = {
         type = "postgres";
