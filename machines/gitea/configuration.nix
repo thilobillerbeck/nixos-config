@@ -62,6 +62,7 @@ in {
     gitea = {
       enable = true;
       cookieSecure = true;
+      disableRegistration = true;
       appName = "Thilos SCM";
       rootUrl = "https://git.thilo-billerbeck.com/";
       log.level = "Warn";
@@ -71,7 +72,6 @@ in {
       };
       settings = {
         service = {
-          DISABLE_REGISTRATION = true;
           REGISTER_EMAIL_CONFIRM = true;
           ENABLE_NOTIFY_MAIL = true;
           DEFAULT_KEEP_EMAIL_PRIVATE = true;
