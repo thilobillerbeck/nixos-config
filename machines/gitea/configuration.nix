@@ -70,7 +70,6 @@ in {
         password = "gitea";
       };
       settings = {
-        APP_NAME = "Thilos SCM";
         service = {
           DISABLE_REGISTRATION = true;
           REGISTER_EMAIL_CONFIRM = true;
