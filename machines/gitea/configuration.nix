@@ -66,6 +66,7 @@ in {
       appName = "Thilos SCM";
       rootUrl = "https://git.thilo-billerbeck.com/";
       log.level = "Warn";
+      mailerPasswordFile = /var/lib/secrets/gitea/mailpw;
       database = {
         type = "postgres";
         password = "gitea";
@@ -91,7 +92,6 @@ in {
           HOST = "mail.officerent.de:465";
           IS_TLS_ENABLED = true;
           USER = "git@officerent.de";
-          PASSWD = "`cogypost91`";
         };
       };
     };
