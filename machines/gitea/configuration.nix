@@ -78,6 +78,9 @@ in {
         	        [ui]
                   DEFAULT_THEME = arc-green
         	        SHOW_USER_EMAIL = false
+
+			[indexer]
+			REPO_INDEXER_ENABLED = true;
         	      '';
     };
     postgresql = {
