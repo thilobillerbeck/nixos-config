@@ -17,7 +17,7 @@ in {
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
-  virtualisation.oci-containers."drone" = {
+  virtualisation.oci-containers.containers."drone" = {
     image = "drone/drone:1";
     environment = {
       "DRONE_GITEA_SERVER" = "https://git.thilo-billerbeck.com";
