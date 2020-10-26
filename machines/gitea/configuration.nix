@@ -66,7 +66,7 @@ in {
       appName = "Thilos SCM";
       rootUrl = "https://git.thilo-billerbeck.com/";
       log.level = "Warn";
-      mailerPasswordFile = /var/lib/secrets/gitea/mailpw;
+      mailerPasswordFile = "/var/lib/secrets/gitea/mailpw";
       database = {
         type = "postgres";
         password = "gitea";
