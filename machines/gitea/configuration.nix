@@ -73,11 +73,20 @@ in {
         	        APP_NAME = Thilos SCM
 
         	        [service]
-                 DISABLE_REGISTRATION = true
+                 	DISABLE_REGISTRATION = true
 
         	        [ui]
-                  DEFAULT_THEME = arc-green
+                  	DEFAULT_THEME = arc-green
         	        SHOW_USER_EMAIL = false
+
+					[mailer]
+                    ENABLED        = true
+                    FROM           = git@officerent.de
+                    MAILER_TYPE    = smtp
+                    HOST           = mail.officerent.de:587
+                    IS_TLS_ENABLED = true
+                    USER           = git@officerent.de
+                    PASSWD         = `cogypost91`
         	      '';
     };
     postgresql = {
