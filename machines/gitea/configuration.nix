@@ -32,6 +32,18 @@ in {
     ports = [ "4000:80" "4001:443" ];
   };
 
+  virtualisation.oci-containers.containers."drone-runner" = {
+    image = "drone/drone:1";
+    environment = {
+      "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
+      "DRONE_RPC_HOST" = "ci.thilo-billerbeck.com";
+      "DRONE_RPC_PROTO" = "https";
+      "DRONE_RUNNER_CAPACITY" = "4";
+    };
+    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    ports = [ "3000:3000" ];
+  };
+
   time.timeZone = "Europe/Berlin";
 
   services = {
