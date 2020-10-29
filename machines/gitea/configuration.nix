@@ -28,6 +28,7 @@ in {
         "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
         "DRONE_SERVER_HOST" = "ci.thilo-billerbeck.com";
         "DRONE_SERVER_PROTO" = "https";
+        "DRONE_USER_CREATE"="username:thilobillerbeck,admin:true"
       };
       volumes = [ "/var/lib/drone:/data" ];
       ports = [ "4000:80" "4001:443" ];
