@@ -17,19 +17,31 @@ in {
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
-  virtualisation.oci-containers.containers."drone" = {
-    image = "drone/drone:1";
-    environment = {
-      "DRONE_GITEA_SERVER" = "https://${gitea_url}";
-      "DRONE_GITEA_CLIENT_ID" = "146c9b07-8c10-40c3-8cf4-e391258a6768";
-      "DRONE_GITEA_CLIENT_SECRET" =
-        "_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
-      "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
-      "DRONE_SERVER_HOST" = "ci.thilo-billerbeck.com";
-      "DRONE_SERVER_PROTO" = "https";
+  virtualisation.oci-containers.containers = {
+    "drone" = {
+      image = "drone/drone:1";
+      environment = {
+        "DRONE_GITEA_SERVER" = "https://${gitea_url}";
+        "DRONE_GITEA_CLIENT_ID" = "146c9b07-8c10-40c3-8cf4-e391258a6768";
+        "DRONE_GITEA_CLIENT_SECRET" =
+          "_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
+        "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
+        "DRONE_SERVER_HOST" = "ci.thilo-billerbeck.com";
+        "DRONE_SERVER_PROTO" = "https";
+      };
+      volumes = [ "/var/lib/drone:/data" ];
+      ports = [ "4000:80" "4001:443" ];
+    "drone-runner" = {
+      image = "drone/drone-runner-docker:1";
+      environment = {
+        "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
+        "DRONE_RPC_HOST" = "ci.thilo-billerbeck.com";
+        "DRONE_RPC_PROTO" = "https";
+        "DRONE_RUNNER_CAPACITY" = "4";
+      };
+      volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+      ports = [ "3000:3000" ];
     };
-    volumes = [ "/var/lib/drone:/data" ];
-    ports = [ "4000:80" "4001:443" ];
   };
 
   virtualisation.oci-containers.containers."drone-runner" = {
