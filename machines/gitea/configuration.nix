@@ -61,7 +61,7 @@ in {
         "${gitea_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:3000/";
+          locations."/".proxyPass = "http://localhost:3001/";
         };
       };
       virtualHosts = {
@@ -76,6 +76,7 @@ in {
       enable = true;
       cookieSecure = true;
       disableRegistration = true;
+      httpPort = 3001;
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       log.level = "Warn";
