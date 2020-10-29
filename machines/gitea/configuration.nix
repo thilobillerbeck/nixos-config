@@ -33,7 +33,7 @@ in {
   };
 
   virtualisation.oci-containers.containers."drone-runner" = {
-    image = "drone/drone:1";
+    image = "drone/drone-runner-docker:1";
     environment = {
       "DRONE_RPC_SECRET" = "65e33f4b929df4e4efcb00859e504e8d";
       "DRONE_RPC_HOST" = "ci.thilo-billerbeck.com";
