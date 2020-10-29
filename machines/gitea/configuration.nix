@@ -31,6 +31,7 @@ in {
       };
       volumes = [ "/var/lib/drone:/data" ];
       ports = [ "4000:80" "4001:443" ];
+    };
     "drone-runner" = {
       image = "drone/drone-runner-docker:1";
       environment = {
