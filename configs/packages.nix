@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let 
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  # unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   services.udev.packages = with pkgs; [ qlcplus ola ];
   environment.systemPackages = with pkgs; [
@@ -50,11 +50,11 @@ in {
     scala
     erlang
     python3
-    unstable.go
+    go
     openjdk
-    unstable.nodejs
-    qt5.full
-    qtcreator
+    nodejs
+    # qt5.full
+    # qtcreator
 
     # GUI TOOLS
     thunderbird
@@ -64,7 +64,7 @@ in {
     postman
     arandr
     nitrogen
-    texlive.combined.scheme-full
+    # texlive.combined.scheme-full
     wineWowPackages.stable
     inkscape
     discord
@@ -77,11 +77,14 @@ in {
     steam
     
     # JETBRAINS
-    unstable.jetbrains.goland
-    unstable.jetbrains.idea-ultimate
-    unstable.jetbrains.phpstorm
-    unstable.jetbrains.pycharm-professional
-    unstable.jetbrains.webstorm
-    unstable.jetbrains.ruby-mine
+    # jetbrains.goland
+    # unstable.jetbrains.idea-ultimate
+    # unstable.jetbrains.phpstorm
+    # unstable.jetbrains.pycharm-professional
+    # unstable.jetbrains.webstorm
+    # unstable.jetbrains.ruby-mine
+
+    # CDA LAN
+    tinc_pre
   ];
 }

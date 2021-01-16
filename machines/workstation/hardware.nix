@@ -26,33 +26,16 @@
   };
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/e2fb1479-2978-4ec1-b33b-defdae317394";
+    { device = "/dev/disk/by-uuid/06954d52-f66b-4273-ba0d-9836e40560b1";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/11A4-7CB7";
+    { device = "/dev/disk/by-uuid/89D9-19C7";
       fsType = "vfat";
-    };
+    }; 
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/df90909f-710d-40e5-98f1-a160b686ecfb";
-      fsType = "ext4";
-    };
-
-  fileSystems."/mnt/server002/music" = {
-    device = "//192.168.50.240/music";
-    fsType = "cifs";
-    options = let
-      automount_opts =
-        "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-      in [ "${automount_opts},credentials=/etc/nixos/smb-secrets" ];
-  };
-
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/4352636e-d606-4c19-b0c6-c3ed8bf16ae5"; }
-    ];
+  swapDevices = [ ];
 
   hardware = {
     cpu.amd.updateMicrocode = true;

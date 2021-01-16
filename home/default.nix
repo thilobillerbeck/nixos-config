@@ -6,8 +6,8 @@ with import <nixpkgs> { };
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
-    rev = "f5c9303cedd67a57121f0cbe69b585fb74ba82d9";
-    ref = "release-19.09";
+#    rev = "6dc8de259a36313ebd1ee25b075174e396f53329";
+    ref = "release-20.09";
   };
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
@@ -234,20 +234,20 @@ in {
         font = "Monospace 16";
       };
       bat = { enable = true; };
-      chromium = {
-        enable = true;
-        extensions = [
-          "aeblfdkhhhdcdjpifhhbdiojplfjncoa" # LastPass
-          "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
-          "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock
-        ];
-      };
+      # chromium = {
+      #   enable = true;
+      #   extensions = [
+      #     "aeblfdkhhhdcdjpifhhbdiojplfjncoa" # LastPass
+      #     "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
+      #     "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock
+      #   ];
+      # };
       fzf = { enable = true; };
       direnv = { enable = true; };
-      go = {
-        enable = true;
-        package = unstable.go;
-      };
+      # go = {
+      #   enable = true;
+      #   package = unstable.go;
+      # };
       htop = { enable = true; };
       jq = { enable = true; };
       mpv = { enable = true; };
