@@ -5,14 +5,23 @@ in {
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
 
   system = {
-    autoUpgrade.enable = true;
     autoUpgrade.allowReboot = true;
     stateVersion = "20.03";
   };
-
+	
   nix.gc.automatic = true;
 
+  networking.usePredictableInterfaceNames = false;
   networking = {
+    enableIPv6 = true;
+    interfaces.eth0.ipv6.addresses = [ {
+      address = "2a01:4f8:c2c:3c6e::1";
+      prefixLength = 64;
+    } ];
+    defaultGateway6 = {
+      address = "fe80::1";
+      interface = "eth0";
+    };
     hostName = "gitea";
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
