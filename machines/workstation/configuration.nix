@@ -1,6 +1,6 @@
 { config, pkgs, fetchFromGitHub, ... }:
 
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+let # unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports = [
     ./../../configs/common.nix
@@ -73,14 +73,14 @@ in {
   sound.enable = true;
 
   virtualisation = {
-    virtualbox.host = {
-      enable = true;
-      enableExtensionPack = true;
-    };
+    # virtualbox.host = {
+    #   enable = true;
+    #   enableExtensionPack = true;
+    # };
     docker = {
       enable = true;
       autoPrune.enable = true;
-      extraOptions = "--add-runtime runsc=${unstable.gvisor}/bin/runsc --default-runtime=runsc";
+      extraOptions = "--add-runtime runsc=${pkgs.gvisor}/bin/runsc --default-runtime=runsc";
     };
     libvirtd = {
       enable = true;
