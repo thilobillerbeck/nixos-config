@@ -32,14 +32,14 @@ in {
         EnvironmentFile = [ ];
         Environment = [
           "DRONE_GITEA=true"
-          "DRONE_GITEA_SERVER=https://${gitea_url}";
-          "DRONE_GITEA_CLIENT_ID=146c9b07-8c10-40c3-8cf4-e391258a6768";
-          "DRONE_GITEA_CLIENT_SECRET=_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU=";
-          "DRONE_RPC_SECRET=65e33f4b929df4e4efcb00859e504e8d";
-          "DRONE_SERVER_HOST=ci.thilo-billerbeck.com";
+          "DRONE_GITEA_SERVER=https://${gitea_url}"
+          "DRONE_GITEA_CLIENT_ID=146c9b07-8c10-40c3-8cf4-e391258a6768"
+          "DRONE_GITEA_CLIENT_SECRET=_48BPPhEFm-OJlbJRbXoKM1swcs_PStXJlKOUPPsuiU="
+          "DRONE_RPC_SECRET=65e33f4b929df4e4efcb00859e504e8d"
+          "DRONE_SERVER_HOST=ci.thilo-billerbeck.com"
           "DRONE_SERVER_PORT=:4000"
-          "DRONE_SERVER_PROTO=https";
-          "DRONE_USER_CREATE=username:thilobillerbeck,admin:true";
+          "DRONE_SERVER_PROTO=https"
+          "DRONE_USER_CREATE=username:thilobillerbeck,admin:true"
         ];
         ExecStart = "${pkgs.drone}/bin/drone-server";
         User = thilo;
