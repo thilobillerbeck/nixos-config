@@ -42,8 +42,8 @@ in {
           "DRONE_USER_CREATE=username:thilobillerbeck,admin:true"
         ];
         ExecStart = "${pkgs.drone}/bin/drone-server";
-        User = thilo;
-        Group = thilo;
+        User = droneserver;
+        Group = droneserver;
       };
     };
 
