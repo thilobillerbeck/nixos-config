@@ -52,9 +52,11 @@ in {
       enableCtrlAltBackspace = true;
       videoDrivers = [ "amdgpu" ];
 
+      /*
       serverFlagsSection = ''
         Option "AutoAddGPU" "off"
       '';
+      */
     };
 
     journald.extraConfig = "SystemMaxUse=500M";
@@ -68,15 +70,16 @@ in {
       enable = false;
       vSync = true;
     };
+    udev.packages = with pkgs; [ gnome3.gnome-settings-daemon ];
   };
 
   sound.enable = true;
 
   virtualisation = {
-    # virtualbox.host = {
-    #   enable = true;
-    #   enableExtensionPack = true;
-    # };
+    virtualbox.host = {
+    # enable = true;
+    # enableExtensionPack = true;
+    };
     docker = {
       enable = true;
       autoPrune.enable = true;
@@ -115,10 +118,13 @@ in {
     };
     systemPackages = with pkgs; [
       virtmanager
+      gnome-shell-extension-appindicator-32
     ];
   };
 
-  systemd.tmpfiles.rules = [
+
+
+/*   systemd.tmpfiles.rules = [
     "f /dev/shm/scream 0660 thilo qemu-libvirtd -"
   ];
 
@@ -131,6 +137,6 @@ in {
     };
     wantedBy = [ "multi-user.target" ];
     requires = [ "pulseaudio.service" ];
-  };
+  }; */
 }
 

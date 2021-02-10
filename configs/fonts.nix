@@ -14,6 +14,7 @@
       fira
       fira-mono
       fira-code
+      jetbrains-mono
     ];
   };
 }

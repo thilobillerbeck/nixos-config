@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let 
-  # unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   services.udev.packages = with pkgs; [ qlcplus ola ];
   environment.systemPackages = with pkgs; [
@@ -9,7 +9,6 @@ in {
     gitAndTools.hub
     gitAndTools.tig
     up
-    termite
     ranger
     nox
     vagrant
@@ -29,7 +28,6 @@ in {
     wget
     zsh
     wine
-    vscode
     gnumake
     gcc
     linuxHeaders
@@ -77,7 +75,7 @@ in {
     steam
     
     # JETBRAINS
-    # jetbrains.goland
+    # unstable.jetbrains.goland
     # unstable.jetbrains.idea-ultimate
     # unstable.jetbrains.phpstorm
     # unstable.jetbrains.pycharm-professional
@@ -85,6 +83,6 @@ in {
     # unstable.jetbrains.ruby-mine
 
     # CDA LAN
-    tinc_pre
+    # tinc_pre
   ];
 }
