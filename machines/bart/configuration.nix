@@ -25,7 +25,7 @@ in {
       address = "fe80::1";
       interface = "eth0";
     };
-    hostName = "gitea";
+    hostName = "bart";
     firewall.allowedTCPPorts = [ 22 80 443 9001 ];
   };
 
