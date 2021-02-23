@@ -83,7 +83,7 @@ in {
     docker = {
       enable = true;
       autoPrune.enable = true;
-      extraOptions = "--add-runtime runsc=${pkgs.gvisor}/bin/runsc --default-runtime=runsc";
+      # extraOptions = "--add-runtime runsc=${pkgs.gvisor}/bin/runsc --default-runtime=runsc";
     };
     libvirtd = {
       enable = true;
@@ -118,7 +118,7 @@ in {
     };
     systemPackages = with pkgs; [
       virtmanager
-      gnome-shell-extension-appindicator-32
+      # gnome-shell-extension-appindicator-32
     ];
   };
 
