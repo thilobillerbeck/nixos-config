@@ -120,6 +120,7 @@ in {
       rootUrl = "https://${gitea_url}/";
       log.level = "Warn";
       mailerPasswordFile = "/var/lib/secrets/gitea/mailpw";
+      dump.enable = true;
       database = {
         type = "postgres";
         passwordFile = "/var/lib/secrets/gitea/dbpw";
@@ -176,6 +177,19 @@ in {
           enable = true;
           enabledCollectors = [ "systemd" ];
           port = 9002;
+        };
+      };
+    };
+    restic.backups = {
+      remotebackup = {
+        passwordFile = "/etc/nixos/secrets/restic-password";
+        paths = [
+          "${config.services.gitea.dump.backupDir}"
+        ];
+        repository = "b2:thilobillerbeck-backup:bart";
+        timerConfig = {
+          OnCalendar = "00:30";
+          RandomizedDelaySec = "5h";
         };
       };
     };
