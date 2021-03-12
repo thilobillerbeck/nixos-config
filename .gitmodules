@@ -1,4 +1,3 @@
 [submodule "secrets"]
 	path = secrets
 	url = gitea@git.thilo-billerbeck.com:thilobillerbeck/nixos-secrets.git
-	branch = master
