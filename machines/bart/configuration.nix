@@ -82,6 +82,19 @@ in {
         B2_ACCOUNT_ID="${secrets.b2_backup.id}";
       };
     };
+
+    # CLEAN UP OLD BACKUPS
+    timers.gitea-backup-cleanup = {
+      wantedBy = [ "timers.target" ];
+      partOf = [ "simple-timer.service" ];
+      timerConfig.OnCalendar = "6h";
+    };
+    services.gitea-backup-cleanup = {
+      serviceConfig.Type = "oneshot";
+      script = ''
+        find ${config.services.gitea.dump.backupDir}/* -mtime +3 -exec rm {} \;
+      '';
+    };
   };
 
   users = {
