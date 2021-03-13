@@ -32,8 +32,8 @@ in {
   systemd.timers = {
     gitea-backup-cleanup = {
       wantedBy = [ "timers.target" ];
-      partOf = [ "simple-timer.service" ];
-      timerConfig.OnCalendar = "6h";
+      partOf = [ "gitea-backup-cleanup.service" ];
+      timerConfig.OnCalendar = "daily";
     };
   };
 
@@ -94,7 +94,7 @@ in {
     gitea-backup-cleanup = {
       serviceConfig.Type = "oneshot";
       script = ''
-        find ${config.services.gitea.dump.backupDir}/* -mtime +3 -exec rm {} \;
+         ls -td ${config.services.gitea.dump.backupDir}/* | tail -n +4 | xargs -I {} rm {}
       '';
     };
   };
