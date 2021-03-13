@@ -75,6 +75,13 @@ in {
         DynamicUser = true;
       };
     };
+
+    restic-backups-remotebackup = {
+      environment = {
+        B2_ACCOUNT_KEY="${secrets.b2_backup.key}";
+        B2_ACCOUNT_ID="${secrets.b2_backup.id}";
+      };
+    };
   };
 
   users = {
@@ -186,6 +193,10 @@ in {
         paths = [
           "${config.services.gitea.dump.backupDir}"
         ];
+	extraOptions = [
+	  "B2_ACCOUNT_ID=''"
+	  "B2_ACCOUNT_KEY=''"
+	];
         repository = "b2:thilobillerbeck-backup:bart";
         timerConfig = {
           OnCalendar = "00:30";
