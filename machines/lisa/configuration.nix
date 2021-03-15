@@ -45,31 +45,6 @@ in {
           proxyWebsockets = true;
         };
       };
-      virtualHosts."cloud.thilo-billerbeck.com" = {
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
-          proxyWebsockets = true;
-        };
-      };
-    };
-    nextcloud = {
-      enable = true;
-      hostName = "cloud.thilo-billerbeck.com";
-      nginx.enable = true;
-      https = true;
-      autoUpdateApps.enable = true;
-      autoUpdateApps.startAt = "05:00:00";
-      config = {
-        overwriteProtocol = "https";
-        dbtype = "pgsql";
-        dbuser = "nextcloud";
-        dbhost = "/run/postgresql"; # nextcloud will add /.s.PGSQL.5432 by itself
-        dbname = "nextcloud";
-        dbpass = secrets.nextcloud.dbpass;
-        adminpass = secrets.nextcloud.adminpass;
-        adminuser = "admin";
-      };
     };
     grafana = {
       enable = true;
@@ -96,26 +71,11 @@ in {
         };
       };
     };
-    postgresql = {
-      enable = true;
-
-      ensureDatabases = [ "nextcloud" ];
-      ensureUsers = [
-        { name = "nextcloud";
-          ensurePermissions."DATABASE nextcloud" = "ALL PRIVILEGES";
-        }
-      ];
-    };
   }; 
     
   programs.mosh = { enable = true; };
 
   environment.variables.EDITOR = "nvim";
-
-  systemd.services."nextcloud-setup" = {
-    requires = ["postgresql.service"];
-    after = ["postgresql.service"];
-  };
 
   security.acme = {
     email = "thilo.billerbeck@officerent.de";
