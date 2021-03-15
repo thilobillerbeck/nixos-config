@@ -45,6 +45,24 @@ in {
           proxyWebsockets = true;
         };
       };
+      virtualHosts."zabbix.thilo-billerbeck.com" = {
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString config.services.zabbixWeb.server.port }";
+          proxyWebsockets = true;
+        };
+      };
+    };
+    zabbixServer = {
+      enable = true;
+      openFirewall = true;
+    };
+    zabbixWeb = {
+      enable = true;
+    };
+    zabbixAgent = {
+      enable = true;
+      server = "localhost";
     };
     grafana = {
       enable = true;
