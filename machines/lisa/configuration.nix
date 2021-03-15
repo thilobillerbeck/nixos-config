@@ -40,6 +40,7 @@ in {
       recommendedTlsSettings = true;
       virtualHosts.${config.services.grafana.domain} = {
         enableACME = true;
+        forceSSL = true;
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
           proxyWebsockets = true;
@@ -47,8 +48,9 @@ in {
       };
       virtualHosts."zabbix.thilo-billerbeck.com" = {
         enableACME = true;
+        forceSSL = true;
         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.zabbixWeb.server.port }";
+          proxyPass = "http://127.0.0.1:8080";
           proxyWebsockets = true;
         };
       };
@@ -58,7 +60,17 @@ in {
       openFirewall = true;
     };
     zabbixWeb = {
-      enable = true;
+     virtualHost = {
+       # hostName = "zabbix.thilo-billerbeck.com";
+       adminAddr = "webmaster@localhost";
+       listen = [
+           {
+    ip = "*";
+    port = 8080;
+  }
+       ];
+     }; 
+     enable = true;
     };
     zabbixAgent = {
       enable = true;
