@@ -6,7 +6,7 @@ with import <nixpkgs> { };
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
-#    rev = "6dc8de259a36313ebd1ee25b075174e396f53329";
+    #    rev = "6dc8de259a36313ebd1ee25b075174e396f53329";
     ref = "release-20.09";
   };
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
@@ -24,9 +24,12 @@ in {
       ./programs/termite.nix
     ];
 
-    services.network-manager-applet.enable = if (config.networking.hostName == "thilo-pc") then false else true;
-    services.blueman-applet.enable =  if (config.networking.hostName == "thilo-pc") then false else true;
-    services.pasystray.enable = if (config.networking.hostName == "thilo-pc") then false else true;
+    services.network-manager-applet.enable =
+      if (config.networking.hostName == "thilo-pc") then false else true;
+    services.blueman-applet.enable =
+      if (config.networking.hostName == "thilo-pc") then false else true;
+    services.pasystray.enable =
+      if (config.networking.hostName == "thilo-pc") then false else true;
     services.lorri.enable = true;
 
     programs = {
@@ -64,9 +67,10 @@ in {
         package = pkgs.pop-icon-theme;
         name = "Pop";
       };
-      gtk3 = { extraConfig = {
-        gtk-application-prefer-dark-theme = true;
-#        gtk-modules = "appmenu-gtk-module";
+      gtk3 = {
+        extraConfig = {
+          gtk-application-prefer-dark-theme = true;
+          #        gtk-modules = "appmenu-gtk-module";
         };
       };
     };

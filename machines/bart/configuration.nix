@@ -131,6 +131,11 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:${toString drone_port}/";
         };
+        "auth.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://localhost:${toString config.services.keycloak.httpPort}/";
+        };
       };
     };
     gitea = {
@@ -171,15 +176,28 @@ in {
     };
     postgresql = {
       enable = true; # Ensure postgresql is enabled
-      ensureDatabases = [ "droneserver" "gitea" ];
-      ensureUsers = [{
-        name = "droneserver";
-        ensurePermissions = { "DATABASE droneserver" = "ALL PRIVILEGES"; };
-      }];
+      ensureDatabases = [ "droneserver" "gitea" "keycloak" ];
+      ensureUsers = [
+        {
+          name = "droneserver";
+          ensurePermissions = { "DATABASE droneserver" = "ALL PRIVILEGES"; };
+        }
+        {
+          name = "keycloak";
+          ensurePermissions = { "DATABASE keycloak" = "ALL PRIVILEGES"; };
+        }
+      ];
       identMap = # Map the gitea user to postgresql
         ''
           gitea-users gitea gitea
         '';
+    };
+    keycloak = {
+      enable = true;
+      initialAdminPassword = "${secrets.keycloak.initalAdminPassword}";  # change on first login
+      frontendUrl = "https://auth.thilo-billerbeck.com/auth";
+      forceBackendUrlToFrontendUrl = true;
+      database.passwordFile = "/etc/nixos/secrets/keycloak-password";
     };
     prometheus = {
       enable = true;
