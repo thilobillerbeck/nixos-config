@@ -185,7 +185,7 @@ in {
       enable = true;
       port = 9001;
       scrapeConfigs = [{
-        job_name = "gitea_and_ci";
+        job_name = "node";
         static_configs = [{
           targets = [
             "127.0.0.1:${
@@ -227,6 +227,10 @@ in {
       autoPrune.enable = true;
       # extraOptions = "--add-runtime runsc=${pkgs.gvisor}/bin/runsc --default-runtime=runsc";
     };
+  };
+  security.acme = {
+    email = "thilo.billerbeck@officerent.de";
+    acceptTerms = true;
   };
 }
 
