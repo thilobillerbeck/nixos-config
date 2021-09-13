@@ -94,7 +94,7 @@ in {
     gitea-backup-cleanup = {
       serviceConfig.Type = "oneshot";
       script = ''
-         ls -td ${config.services.gitea.dump.backupDir}/* | tail -n +4 | xargs -I {} rm {}
+         ls -td ${config.services.gitea.dump.backupDir}/* | tail -n +1 | xargs -I {} rm {}
       '';
     };
   };
