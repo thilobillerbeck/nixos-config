@@ -29,7 +29,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 ];
+    firewall.allowedTCPPorts = [ 22 80 443 3003 ];
   };
 
   systemd.timers = {
@@ -69,6 +69,37 @@ in {
       volumes = [
         "/var/lib/uptimekuma:/app/data"
       ];
+    };
+    woodpecker-server = {
+      image = "woodpeckerci/woodpecker-server:latest";
+      ports = ["3003:8000"];
+      volumes = [
+        "/var/lib/woodpecker:/var/lib/woodpecker"
+      ];
+      environment = {
+        	WOODPECKER_GITEA = true;
+          WOODPECKER_GITEA_URL = "https://${gitea_url}";
+          WOODPECKER_GITEA_CLIENT = "${secrets.drone.gitea_client_id}";
+          WOODPECKER_GITEA_SECRET = "${secrets.drone.gitea_client_secret}";
+          WOODPECKER_DATABASE_DATASOURCE = "postgres:///droneserver?host=/run/postgresql";
+          WOODPECKER_DATABASE_DRIVER = "postgres";
+          WOODPECKER_AGENT_SECRET = "${secrets.drone.rpc_secret}";
+          WOODPECKER_HOST = "${drone_url}";
+          WOODPECKER_ADMIN = "thilobillerbeck";
+      };
+    };
+    woodpecker-agent = {
+      image = "woodpeckerci/woodpecker-agent:latest"; 
+      volumes = [
+        "/var/run/docker.sock:/var/run/docker.sock"
+      ];
+      dependsOn = [ "woodpecker-server" ];
+      cmd = ["agent"];
+      environment = {
+          WOODPECKER_SERVER = "localhost:3003";
+          WOODPECKER_AGENT_SECRET = "${WOODPECKER_AGENT_SECRET}";
+          WOODPECKER_AGENT_SECRET = "${secrets.drone.rpc_secret}";
+      };
     };
   };
 
