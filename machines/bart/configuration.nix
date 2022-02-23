@@ -29,7 +29,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 3001 9001 ];
+    firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
   systemd.timers = {
@@ -57,9 +57,15 @@ in {
   };
 
   virtualisation.oci-containers.containers = {
+    watchtower = {
+      image = "containrrr/watchtower:latest";
+      volumes = [
+        "/var/run/docker.sock:/var/run/docker.sock"
+      ];
+    };
     uptimekuma = {
       image = "louislam/uptime-kuma:1";
-      ports = ["3001:3001"];
+      ports = ["3002:3001"];
       volumes = [
         "/var/lib/uptimekuma:/app/data"
       ];
@@ -92,6 +98,14 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:${toString config.services.gitea.httpPort}/";
+        };
+        "status.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:3002/";
+            proxyWebsockets = true;
+          };
         };
       };
     };
