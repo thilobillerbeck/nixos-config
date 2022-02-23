@@ -5,9 +5,12 @@ let
   drone_port = 4000;
   drone_proto = "https";
   secrets = import ./../../secrets/secrets.nix;
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ];
+
+  nixpkgs.config.allowUnfree = true;
 
   system = {
     autoUpgrade.allowReboot = true;
@@ -26,7 +29,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9001 ];
+    firewall.allowedTCPPorts = [ 22 80 443 3001 9001 ];
   };
 
   systemd.timers = {
@@ -38,51 +41,51 @@ in {
   };
 
   systemd.services = {
-    drone-server = {
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        EnvironmentFile = [ ];
-        Environment = [
-          "DRONE_GITEA=true"
-          "DRONE_GITEA_SERVER=https://${gitea_url}"
-          "DRONE_GITEA_CLIENT_ID=${secrets.drone.gitea_client_id}"
-          "DRONE_GITEA_CLIENT_SECRET=${secrets.drone.gitea_client_secret}"
-          "DRONE_DATABASE_DATASOURCE=postgres:///droneserver?host=/run/postgresql"
-          "DRONE_DATABASE_DRIVER=postgres"
-          "DRONE_RPC_SECRET=${secrets.drone.rpc_secret}"
-          "DRONE_SERVER_HOST=${drone_url}"
-          "DRONE_SERVER_PORT=:${toString drone_port}"
-          "DRONE_SERVER_PROTO=${drone_proto}"
-          "DRONE_USER_CREATE=username:thilobillerbeck,admin:true"
-        ];
-        ExecStart = "${pkgs.drone}/bin/drone-server";
-        User = "droneserver";
-        Group = "droneserver";
-      };
-    };
+#    drone-server = {
+#      wantedBy = [ "multi-user.target" ];
+#      serviceConfig = {
+#        EnvironmentFile = [ ];
+#        Environment = [
+#          "DRONE_GITEA=true"
+#          "DRONE_GITEA_SERVER=https://${gitea_url}"
+#          "DRONE_GITEA_CLIENT_ID=${secrets.drone.gitea_client_id}"
+#          "DRONE_GITEA_CLIENT_SECRET=${secrets.drone.gitea_client_secret}"
+#          "DRONE_DATABASE_DATASOURCE=postgres:///droneserver?host=/run/postgresql"
+#          "DRONE_DATABASE_DRIVER=postgres"
+#          "DRONE_RPC_SECRET=${secrets.drone.rpc_secret}"
+#          "DRONE_SERVER_HOST=${drone_url}"
+#          "DRONE_SERVER_PORT=:${toString drone_port}"
+#          "DRONE_SERVER_PROTO=${drone_proto}"
+#          "DRONE_USER_CREATE=username:thilobillerbeck,admin:true"
+#        ];
+#        ExecStart = "${pkgs.drone}/bin/drone-server";
+#        User = "droneserver";
+#        Group = "droneserver";
+#      };
+#    };
 
-    drone-agent = {
-      wantedBy = [ "multi-user.target" ];
-      # might break deployment
-      restartIfChanged = true;
-      serviceConfig = {
-        Environment = [
-          "DRONE_RPC_SECRET=${secrets.drone.rpc_secret}"
-          "DRONE_RPC_HOST=${drone_url}"
-          "DRONE_RPC_PROTO=${drone_proto}"
-          "DRONE_SERBER_PORT=${toString drone_port}"
-          "DRONE_SERVER=${drone_proto}://${drone_url}"
-          "DRONE_RUNNER_CAPACITY=2"
-          "DRONE_NAME=runner"
-        ];
-        EnvironmentFile = [ ];
-        ExecStart = "${pkgs.drone}/bin/drone-agent";
-        User = "drone-agent";
-        Group = "drone-agent";
-        SupplementaryGroups = [ "docker" ];
-        DynamicUser = true;
-      };
-    };
+#    drone-agent = {
+#      wantedBy = [ "multi-user.target" ];
+#      # might break deployment
+#      restartIfChanged = true;
+#      serviceConfig = {
+#        Environment = [
+#          "DRONE_RPC_SECRET=${secrets.drone.rpc_secret}"
+#          "DRONE_RPC_HOST=${drone_url}"
+#          "DRONE_RPC_PROTO=${drone_proto}"
+#          "DRONE_SERBER_PORT=${toString drone_port}"
+#          "DRONE_SERVER=${drone_proto}://${drone_url}"
+#          "DRONE_RUNNER_CAPACITY=2"
+#          "DRONE_NAME=runner"
+#        ];
+#        EnvironmentFile = [ ];
+#        ExecStart = "${pkgs.drone}/bin/drone-agent";
+#        User = "drone-agent";
+#        Group = "drone-agent";
+#        SupplementaryGroups = [ "docker" ];
+#       DynamicUser = true;
+#     };
+#    };
 
     restic-backups-remotebackup = {
       environment = {
@@ -98,6 +101,16 @@ in {
       '';
     };
   };
+
+#  virtualisation.oci-containers.containers = {
+#     uptimekuma = {
+#       image = "louislam/uptime-kuma:latest";
+#       ports = ["3001:3001"];
+#       volumes = [
+#         "uptime-kuma:/app/data"
+#       ];
+#     };
+#   };
 
   users = {
     users.droneserver = {
@@ -134,7 +147,7 @@ in {
         "auth.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:${toString config.services.keycloak.httpPort}/";
+          locations."/".proxyPass = "http://localhost:8080/";
         };
       };
     };
@@ -143,6 +156,7 @@ in {
       cookieSecure = true;
       disableRegistration = true;
       httpPort = 3001;
+      package = unstable.gitea;
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       log.level = "Warn";
@@ -192,13 +206,14 @@ in {
           gitea-users gitea gitea
         '';
     };
-    keycloak = {
-      enable = true;
-      initialAdminPassword = "${secrets.keycloak.initalAdminPassword}";  # change on first login
-      frontendUrl = "https://auth.thilo-billerbeck.com/auth";
-      forceBackendUrlToFrontendUrl = true;
-      database.passwordFile = "/etc/nixos/secrets/keycloak-password";
-    };
+#    keycloak = {
+#      enable = true;
+#      initialAdminPassword = "${secrets.keycloak.initalAdminPassword}";  # change on first login
+#      frontendUrl = "https://auth.thilo-billerbeck.com/auth";
+#      forceBackendUrlToFrontendUrl = true;
+#      database.passwordFile = "/etc/nixos/secrets/keycloak-password";
+#      httpPort = "8080";
+#    };
     prometheus = {
       enable = true;
       port = 9001;
