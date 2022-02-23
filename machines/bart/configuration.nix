@@ -56,15 +56,15 @@ in {
     };
   };
 
-#  virtualisation.oci-containers.containers = {
-#     uptimekuma = {
-#       image = "louislam/uptime-kuma:latest";
-#       ports = ["3001:3001"];
-#       volumes = [
-#         "uptime-kuma:/app/data"
-#       ];
-#     };
-#   };
+  virtualisation.oci-containers.containers = {
+    uptimekuma = {
+      image = "louislam/uptime-kuma:1";
+      ports = ["3001:3001"];
+      volumes = [
+        "/var/lib/uptimekuma:/app/data"
+      ];
+    };
+  };
 
   users = {
     users.droneserver = {
