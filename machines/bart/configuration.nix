@@ -14,6 +14,8 @@ in {
 
   time.timeZone = "Europe/Berlin";
 
+  system.stateVersion = "20.03";
+
   networking = {
     usePredictableInterfaceNames = false;
     enableIPv6 = true;
