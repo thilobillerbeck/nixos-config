@@ -16,7 +16,7 @@
   environment.variables.EDITOR = "nvim";
 
   security.acme = {
-    email = "thilo.billerbeck@officerent.de";
+    defaults.email = "thilo.billerbeck@officerent.de";
     acceptTerms = true;
   };
 }

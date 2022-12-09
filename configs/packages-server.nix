@@ -4,7 +4,7 @@
   environment.systemPackages = with pkgs; [
     file
     htop
-    manpages
+    man-pages
     tmux
     tree
     wget

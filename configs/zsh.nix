@@ -21,9 +21,9 @@
     };
     shellInit = ''
       export TERM=xterm-256color
-      npm set prefix ~/.npm-global
+      # npm set prefix ~/.npm-global
       PATH=$PATH:$HOME/.npm-global/bin:$HOME/.config/composer/vendor/bin
-      eval "$(direnv hook zsh)"
+      # eval "$(direnv hook zsh)"
     '';
   };
 }
