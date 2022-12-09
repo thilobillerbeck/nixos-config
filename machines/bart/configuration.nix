@@ -12,19 +12,7 @@ in {
     ./modules/woodpecker-agent.nix 
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
-  nixpkgs.config.allowUnfree = true;
   time.timeZone = "Europe/Berlin";
-
-  system = {
-    autoUpgrade = {
-      enable = true;
-      allowReboot = true;
-      flags = [
-        "--upgrade-all"
-      ];
-    };
-    stateVersion = "20.03";
-  };
 
   networking = {
     usePredictableInterfaceNames = false;
@@ -65,9 +53,6 @@ in {
   };
 
   services = {
-    openssh = { enable = true; };
-    journald.extraConfig = "SystemMaxUse=500M";
-    timesyncd.enable = true;
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -227,9 +212,5 @@ in {
       enable = true;
       autoPrune.enable = true;
     };
-  };
-  security.acme = {
-    defaults.email = "thilo.billerbeck@officerent.de";
-    acceptTerms = true;
   };
 }

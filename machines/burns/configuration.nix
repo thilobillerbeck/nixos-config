@@ -22,6 +22,7 @@ in {
   ];
 
   time.timeZone = "Europe/Berlin";
+  system.stateVersion = "21.11";
 
   networking = {
     useDHCP = false;
@@ -30,28 +31,6 @@ in {
     hostName = "burns";
     domain = "avocadoom.de";
     firewall.allowedTCPPorts = [ 80 443 ];
-  };
-
-  services.openssh = {
-    enable = true;
-    permitRootLogin = "no";
-  };
-
-  system = {
-    stateVersion = "21.11";
-    autoUpgrade = {
-      enable = true;
-      allowReboot = true;
-      rebootWindow = {
-        lower = "05:00";
-        upper = "06:00";
-      };
-    };
-  };
-
-  nix.gc = {
-    automatic = true;
-    dates = "daily";
   };
 
   services = {
@@ -160,7 +139,7 @@ in {
           domain = "avocadoom.de";
           async_media = false;
         };
-	bridge = {
+	      bridge = {
           displayname_template = "{{ if .FullName }} {{ .FullName }} {{ else if .PushName}}{{.PushName}}{{else if .BusinessName}}{{.BusinessName}}{{else}}{{.JID}}{{end}} (WA)";
           personal_filtering_spaces = true;
           delivery_receipts = true;
@@ -188,10 +167,5 @@ in {
         };
       };
     };
-  };
-
-  security.acme = {
-    defaults.email = "thilo.billerbeck@officerent.de";
-    acceptTerms = true;
   };
 }
