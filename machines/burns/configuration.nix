@@ -28,7 +28,7 @@ in {
     useDHCP = false;
     interfaces.eth0.useDHCP = true;
     usePredictableInterfaceNames = false;
-    hostName = "burns";
+    hostName = "matrix";
     domain = "avocadoom.de";
     firewall.allowedTCPPorts = [ 80 443 ];
   };
