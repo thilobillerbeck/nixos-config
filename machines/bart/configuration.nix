@@ -28,7 +28,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 ];
+    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 ];
   };
 
   systemd = {
