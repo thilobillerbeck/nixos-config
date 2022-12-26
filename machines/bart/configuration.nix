@@ -28,7 +28,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 ];
+    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 9000 ];
   };
 
   systemd = {
@@ -108,10 +108,6 @@ in {
       };
       giteaClientIdFile = /var/lib/secrets/woodpecker/giteClientId;
       giteaClientSecretFile = /var/lib/secrets/woodpecker/giteClientSecret;
-      agentSecretFile = /var/lib/secrets/woodpecker/agentSecret;
-    };
-    woodpecker-agent = {
-      enable = true;
       agentSecretFile = /var/lib/secrets/woodpecker/agentSecret;
     };
     vscode-server.enable = true;
