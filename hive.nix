@@ -3,12 +3,15 @@
     nixpkgs = <nixpkgs>;
   };
 
-  defaults = { pkgs, ... }: { };
-
-  bart = { 
-    imports = [ ./machines/bart/configuration.nix ]; 
-    deployment.targetHost = "bart.thilo-billerbeck.com";
-    deployment.targetUser = "thilo";
+  defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
+    deployment.allowLocalDeployment = true;
+
+    nix.nixPath = [ "nixpkgs=channel:nixos-22.11" ];
+  };
+
+  bart = { name, nodes, pkgs, ... }: { 
+    imports = [ ./machines/${name}/configuration.nix ]; 
+    deployment.targetHost = "${name}.thilo-billerbeck.com";
   };
 }
