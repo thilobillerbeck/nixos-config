@@ -19,7 +19,7 @@
   services = {
     openssh = {
       enable = true;
-      permitRootLogin = "no";
+      permitRootLogin = "yes";
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;

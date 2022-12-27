@@ -4,11 +4,10 @@ let
   drone_url = "ci.thilo-billerbeck.com";
   drone_port = 4000;
   drone_proto = "https";
-  secrets = import ./../../secrets/secrets.nix;
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./modules/woodpecker-server.nix 
+    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./modules/woodpecker-server.nix 
     ./modules/woodpecker-agent.nix 
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
@@ -28,7 +27,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 ];
+    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 9000 ];
   };
 
   systemd = {
@@ -37,14 +36,6 @@ in {
         wantedBy = [ "timers.target" ];
         partOf = [ "gitea-backup-cleanup.service" ];
         timerConfig.OnCalendar = "daily";
-      };
-    };
-    services = {
-      restic-backups-remotebackup = {
-        environment = {
-          B2_ACCOUNT_KEY="${secrets.b2_backup.key}";
-          B2_ACCOUNT_ID="${secrets.b2_backup.id}";
-        };
       };
     };
     tmpfiles.rules = [
@@ -106,13 +97,9 @@ in {
       database = {
         type = "postgres";
       };
-      giteaClientIdFile = /var/lib/secrets/woodpecker/giteClientId;
-      giteaClientSecretFile = /var/lib/secrets/woodpecker/giteClientSecret;
-      agentSecretFile = /var/lib/secrets/woodpecker/agentSecret;
-    };
-    woodpecker-agent = {
-      enable = true;
-      agentSecretFile = /var/lib/secrets/woodpecker/agentSecret;
+      giteaClientIdFile = "/var/lib/secrets/woodpecker/giteClientId";
+      giteaClientSecretFile = "/var/lib/secrets/woodpecker/giteClientSecret";
+      agentSecretFile = "/var/lib/secrets/woodpecker/agentSecret";
     };
     vscode-server.enable = true;
     grocy = {
@@ -206,13 +193,6 @@ in {
           RandomizedDelaySec = "5h";
         };
       };
-    };
-  };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-      autoPrune.enable = true;
     };
   };
 }
