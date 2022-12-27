@@ -13,6 +13,12 @@ in {
   zramSwap.enable = true;
   networking.hostName = "lisa";
   networking.domain = "lisa.thilo-billerbeck.com";
+  networking = {
+    nameservers = [ "1.1.1.1" "1.0.0.1"  ];
+    firewall = {
+      allowedTCPPorts = [ 5555 ];
+    };
+  };
   services.openssh.enable = true;
   services = {
     vscode-server.enable = true;
