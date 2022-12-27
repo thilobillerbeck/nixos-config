@@ -8,7 +8,7 @@ let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./modules/woodpecker-server.nix 
+    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./modules/woodpecker-server.nix 
     ./modules/woodpecker-agent.nix 
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
@@ -202,13 +202,6 @@ in {
           RandomizedDelaySec = "5h";
         };
       };
-    };
-  };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-      autoPrune.enable = true;
     };
   };
 }
