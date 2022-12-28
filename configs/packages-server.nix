@@ -14,5 +14,6 @@
     git
     curl
     unzip
+    ncdu
   ];
 }
