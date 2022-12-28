@@ -24,7 +24,7 @@ in {
     vscode-server.enable = true;
     woodpecker-agent = {
       enable = true;
-      agentSecretFile = /var/lib/secrets/woodpecker/agentSecret;
+      agentSecretFile = "/var/lib/secrets/woodpecker/agentSecret";
       server = "bart.thilo-billerbeck.com:9000";
     };
   };

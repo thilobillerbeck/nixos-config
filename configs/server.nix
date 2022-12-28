@@ -34,11 +34,9 @@
 
   system = {
     autoUpgrade = {
-      enable = true;
+      enable = false;
       allowReboot = true;
-      flags = [
-        "--upgrade-all"
-      ];
+      flags = [ "--upgrade-all" ];
       rebootWindow = {
         lower = "05:00";
         upper = "06:00";
