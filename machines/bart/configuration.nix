@@ -7,8 +7,8 @@ let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./modules/woodpecker-server.nix 
-    ./modules/woodpecker-agent.nix 
+    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./../../modules/woodpecker-server.nix 
+    ./../../modules/woodpecker-agent.nix 
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
   time.timeZone = "Europe/Berlin";

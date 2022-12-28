@@ -13,7 +13,7 @@ let
 in {
   imports = [ # Include the results of the hardware scan.
     ./hardware.nix
-    ./modules/mautrix-whatsapp.nix
+    ./../../modules/mautrix-whatsapp.nix
     ./../../configs/server.nix
     ./../../users/thilo.nix
     ./../../users/root.nix

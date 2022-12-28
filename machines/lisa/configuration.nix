@@ -3,7 +3,7 @@ let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix ./../bart/modules/woodpecker-agent.nix
+    [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix ./../../modules/woodpecker-agent.nix
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
   time.timeZone = "Europe/Berlin";
