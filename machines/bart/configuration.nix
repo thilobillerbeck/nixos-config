@@ -9,11 +9,18 @@ in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./../../modules/woodpecker-server.nix 
     ./../../modules/woodpecker-agent.nix 
+    ./../../modules/colmena-upgrade.nix
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
   time.timeZone = "Europe/Berlin";
 
   system.stateVersion = "20.03";
+
+  system.colmenaAutoUpgrade = {
+    enable = true;
+    nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
+    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+  };
 
   networking = {
     usePredictableInterfaceNames = false;

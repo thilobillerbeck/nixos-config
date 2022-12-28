@@ -4,10 +4,17 @@ let
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
+    ./../../modules/colmena-upgrade.nix
     (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
+  
+  system.colmenaAutoUpgrade = {
+    enable = true;
+    nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
+    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+  };
 
   networking = {
     hostName = "krusty";
