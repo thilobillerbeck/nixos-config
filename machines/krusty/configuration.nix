@@ -18,7 +18,6 @@ in {
 
   networking = {
     hostName = "krusty";
-    domain = "krusty.thilo-billerbeck.com";
     firewall = {
       allowedTCPPorts = [ 22 80 443 ];
       interfaces = {

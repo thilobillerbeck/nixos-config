@@ -6,9 +6,9 @@
 
 let
   fqdn = let
-    join = hostName: domain:
-      hostName + lib.optionalString (domain != null) ".${domain}";
-  in join config.networking.hostName config.networking.domain;
+    join = domain:
+      "matrix" + lib.optionalString (domain != null) ".${domain}";
+  in join config.networking.domain;
   unstable = import <unstable> { };
 in {
   imports = [ # Include the results of the hardware scan.
@@ -29,7 +29,7 @@ in {
     useDHCP = false;
     interfaces.eth0.useDHCP = true;
     usePredictableInterfaceNames = false;
-    hostName = "matrix";
+    hostName = "burns";
     domain = "avocadoom.de";
     firewall.allowedTCPPorts = [ 80 443 ];
   };

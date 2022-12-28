@@ -22,7 +22,6 @@ in {
   
   networking = {
     hostName = "lisa";
-    domain = "lisa.thilo-billerbeck.com";
     nameservers = [ "1.1.1.1" "1.0.0.1"  ];
     firewall = {
       allowedTCPPorts = [ 5555 ];
