@@ -19,16 +19,18 @@ in {
 
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
-  networking.hostName = "lisa";
-  networking.domain = "lisa.thilo-billerbeck.com";
+  
   networking = {
+    hostName = "lisa";
+    domain = "lisa.thilo-billerbeck.com";
     nameservers = [ "1.1.1.1" "1.0.0.1"  ];
     firewall = {
       allowedTCPPorts = [ 5555 ];
     };
   };
-  services.openssh.enable = true;
+  
   services = {
+    openssh.enable = true;
     vscode-server.enable = true;
     woodpecker-agent = {
       enable = true;
@@ -38,6 +40,17 @@ in {
   };
 
   virtualisation = {
+    oci-containers = {
+      backend = "docker";
+      containers = {
+        "dikpostgres" = {
+          image = "docker.io/library/postgres:13";
+          ports = [ "5555:5432" ];
+          volumes = [ "/home/thilo/pg-temp/.pgdata:/var/lib/postgresql/data" ];
+          environmentFiles = [ "/var/lib/secrets/dikpostgres.env" ];
+        };
+      };
+    };
     docker = {
       enable = true;
       autoPrune.enable = true;
