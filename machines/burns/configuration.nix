@@ -14,6 +14,7 @@ in {
   imports = [ # Include the results of the hardware scan.
     ./hardware.nix
     ./../../modules/mautrix-whatsapp.nix
+    ./../../modules/colmena-upgrade.nix
     ./../../configs/server.nix
     ./../../users/thilo.nix
     ./../../users/root.nix
@@ -24,6 +25,12 @@ in {
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "21.11";
+
+  system.colmenaAutoUpgrade = {
+    enable = true;
+    nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
+    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+  };
 
   networking = {
     useDHCP = false;
