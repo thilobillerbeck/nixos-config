@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
-
-{
+let 
+  unstable = import <unstable> { config.allowUnfree = true; };
+in {
   imports = [ ./zsh.nix ./packages-server.nix ./i18n.nix ];
 
   nix = {
@@ -14,6 +15,11 @@
     trustedUsers = [ "root" "thilo" ];
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 19999 ];
+    allowedUDPPorts = [ 19999 ];
+  };
+
   programs.mosh = { enable = true; };
 
   services = {
@@ -23,6 +29,10 @@
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
+    netdata = {
+      enable = true;
+      package = unstable.netdata;
+    };
   };
 
   environment.variables.EDITOR = "nvim";
