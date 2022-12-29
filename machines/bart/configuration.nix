@@ -49,6 +49,8 @@ in {
       "L+ '${config.services.gitea.stateDir}/custom/templates/home.tmpl' - - - - ${./gitea/gitea-home.tmpl}"
       "L+ '${config.services.gitea.stateDir}/custom/templates/custom/extra_links_footer.tmpl' - - - - ${./gitea/extra_links_footer.tmpl}"
       "L+ '${config.services.gitea.stateDir}/custom/public/css/theme-dark-fire.css' - - - - ${./gitea/theme-dark-fire.css}" 
+      "L+ '${config.services.gitea.stateDir}/custom/public/img/logo.svg' - - - - ${./gitea/logo.svg}" 
+      "L+ '${config.services.gitea.stateDir}/custom/public/img/favicon.png' - - - - ${./gitea/favicon.png}" 
     ];
   };
 
