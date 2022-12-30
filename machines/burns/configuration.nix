@@ -21,7 +21,6 @@ in {
     ./../../users/root.nix
     (fetchTarball
       "https://github.com/msteen/nixos-vscode-server/tarball/master")
-    # ./heisenbridge.nix
   ];
 
   time.timeZone = "Europe/Berlin";
@@ -34,13 +33,19 @@ in {
   };
 
   networking = {
-    useDHCP = false;
-    interfaces.eth0.useDHCP = true;
     usePredictableInterfaceNames = false;
     hostName = "burns";
     domain = "avocadoom.de";
+    enableIPv6 = true;
     firewall.allowedTCPPorts = [ 80 443 ];
-    tempAddresses = "disabled"; # Linode specific hack
+    interfaces.ens3.ipv6.addresses = [{
+      address = "2a01:4f8:1c1b:1079::";
+      prefixLength = 64;
+    }];
+    defaultGateway6 = {
+      address = "fe80::1";
+      interface = "ens3";
+    };
   };
 
   services = {
@@ -54,7 +59,6 @@ in {
           LC_CTYPE = "C";
       '';
     };
-    vscode-server.enable = true;
     nginx = {
       enable = true;
       # only recommendedProxySettings and recommendedGzipSettings are strictly required,
@@ -116,7 +120,7 @@ in {
          forceSSL = true;
          locations."/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
-                 };
+        };
        };
       };
     };
@@ -148,7 +152,7 @@ in {
         ];
     };
     mautrix-whatsapp = {
-      enable = true;
+      enable = false;
       environmentFile = pkgs.emptyFile;
       settings = {
         homeserver = {
@@ -187,7 +191,7 @@ in {
     vaultwarden = {
       enable = true;
       dbBackend = "sqlite";
-      backupDir = "/var/lib/vaultwarden/backups";
+      # backupDir = "/var/lib/vaultwarden/backups";
       environmentFile = "/var/lib/vaultwarden/config.env";
       config = {
         DOMAIN = "https://${vaultwarden-domain}";
@@ -196,8 +200,8 @@ in {
         ROCKET_PORT = 8222;
         ROCKET_LOG = "critical";
         SMTP_HOST = "mail.officerent.de";
-        SMTP_PORT = 465;
-        SMTP_SECURITY = "force_tls";
+        SMTP_PORT = 587;
+        SMTP_SECURITY = "starttls";
         SMTP_FROM = "vw@officerent.de";
         SMTP_FROM_NAME = "vw.thilo-billerbeck.com";
         SMTP_AUTH_MECHANIS = "Login";

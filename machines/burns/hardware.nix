@@ -3,35 +3,10 @@
 
 {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-
-  boot = {
-    kernelParams = [ "console=ttyS0,19200n8" ];
-    loader.grub = {
-      enable = true;
-      version = 2;
-      forceInstall = true;
-      device = "nodev";
-      extraConfig = ''
-        serial --speed=19200 --unit=0 --word=8 --parity=no --stop=1;
-        terminal_input serial;
-        terminal_output serial
-      '';
-    };
-  };
-
-  boot.initrd.availableKernelModules =
-    [ "virtio_pci" "virtio_scsi" "ahci" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
-  boot.extraModulePackages = [ ];
-
-  fileSystems."/" = {
-    device = "/dev/sda";
-    fsType = "ext4";
-  };
-
-  swapDevices = [{ device = "/dev/sdb"; }];
-
-  hardware.cpu.amd.updateMicrocode =
-    lib.mkDefault config.hardware.enableRedistributableFirmware;
+  boot.loader.grub.device = "/dev/sda";
+  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" "vmw_pvscsi" ];
+  boot.initrd.kernelModules = [ "nvme" ];
+  boot.cleanTmpDir = true;
+  fileSystems."/" = { device = "/dev/sda1"; fsType = "ext4"; };
+  zramSwap.enable = true;
 }
