@@ -9,6 +9,7 @@ let
     join = domain:
       "matrix" + lib.optionalString (domain != null) ".${domain}";
   in join config.networking.domain;
+  vaultwarden-domain = "vw.thilo-billerbeck.com";
   unstable = import <unstable> { };
 in {
   imports = [ # Include the results of the hardware scan.
@@ -39,6 +40,7 @@ in {
     hostName = "burns";
     domain = "avocadoom.de";
     firewall.allowedTCPPorts = [ 80 443 ];
+    tempAddresses = "disabled"; # Linode specific hack
   };
 
   services = {
@@ -109,6 +111,13 @@ in {
             proxyPass = "http://[::1]:8008"; # without a trailing /
           };
         };
+        "${vaultwarden-domain}" = {
+         enableACME = true;
+         forceSSL = true;
+         locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+                 };
+       };
       };
     };
     heisenbridge = {
@@ -173,6 +182,27 @@ in {
             "@avocadoom:avocadoom.de" = "admin";
           };
         };
+      };
+    };
+    vaultwarden = {
+      enable = true;
+      dbBackend = "sqlite";
+      backupDir = "/var/lib/vaultwarden/backups";
+      environmentFile = "/var/lib/vaultwarden/config.env";
+      config = {
+        DOMAIN = "https://${vaultwarden-domain}";
+        SIGNUPS_ALLOWED = false;
+        ROCKET_ADDRESS = "127.0.0.1";
+        ROCKET_PORT = 8222;
+        ROCKET_LOG = "critical";
+        SMTP_HOST = "mail.officerent.de";
+        SMTP_PORT = 465;
+        SMTP_SECURITY = "force_tls";
+        SMTP_FROM = "vw@officerent.de";
+        SMTP_FROM_NAME = "vw.thilo-billerbeck.com";
+        SMTP_AUTH_MECHANIS = "Login";
+        SMTP_ACCEPT_INVALID_HOSTNAMES = true;
+        SMTP_ACCEPT_INVALID_CERTS = true;
       };
     };
   };
