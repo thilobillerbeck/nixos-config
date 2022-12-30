@@ -191,7 +191,7 @@ in {
     vaultwarden = {
       enable = true;
       dbBackend = "sqlite";
-      # backupDir = "/var/lib/vaultwarden/backups";
+      backupDir = "/var/lib/vaultwarden/backups";
       environmentFile = "/var/lib/vaultwarden/config.env";
       config = {
         DOMAIN = "https://${vaultwarden-domain}";
