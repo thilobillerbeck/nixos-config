@@ -38,7 +38,7 @@ in {
     domain = "avocadoom.de";
     enableIPv6 = true;
     firewall.allowedTCPPorts = [ 80 443 ];
-    interfaces.ens3.ipv6.addresses = [{
+    interfaces.eth0.ipv6.addresses = [{
       address = "2a01:4f8:1c1b:1079::";
       prefixLength = 64;
     }];
