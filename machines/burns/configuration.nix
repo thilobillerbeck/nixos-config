@@ -209,5 +209,22 @@ in {
         SMTP_ACCEPT_INVALID_CERTS = true;
       };
     };
+    restic.backups.burns = {
+      initialize = true;
+      passwordFile = "/var/lib/secrets/backup_password";
+      environmentFile = "/var/lib/secrets/backup_env";
+      paths = [
+        "/var/lib/vaultwarden/backups"
+        "/var/lib/matrix-synapse/homeserver.signing.key"
+        "/var/lib/heisenbridge/registration.yml"
+      ];
+      repository = "b2:backup-burns";
+      timerConfig = {
+        OnCalendar = "*-*-* 3:00:00";
+      };
+      pruneOpts = [
+        "--keep-daily 5"
+      ];
+    };
   };
 }

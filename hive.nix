@@ -39,7 +39,7 @@
   
   burns = { name, nodes, pkgs, ... }: { 
     imports = [ ./machines/${name}/configuration.nix ]; 
-    deployment.targetHost = "5.75.183.224";
+    deployment.targetHost = "${name}.thilo-billerbeck.com";
     networking.hostName = name;
   };
 }
