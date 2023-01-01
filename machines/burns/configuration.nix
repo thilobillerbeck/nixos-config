@@ -46,6 +46,20 @@ in {
     };
   };
 
+  age.secrets = {
+    vaultwardenConfigEnv = {
+      file = ./../../secrets/vaultwardenConfigEnv.age;
+      owner = "vaultwarden";
+      group = "vaultwarden";
+    };
+    burnsBackupEnv = {
+      file = ./../../secrets/burnsBackupEnv.age;
+    };
+    resticBackupPassword = {
+      file = ./../../secrets/resticBackupPassword.age;
+    };
+  };
+
   services = {
     postgresql = {
       enable = true;
@@ -190,7 +204,7 @@ in {
       enable = true;
       dbBackend = "sqlite";
       backupDir = "/var/lib/vaultwarden/backups";
-      environmentFile = "/var/lib/vaultwarden/config.env";
+      environmentFile = config.age.secrets.vaultwardenConfigEnv.path;
       config = {
         DOMAIN = "https://${vaultwarden-domain}";
         SIGNUPS_ALLOWED = false;
@@ -209,8 +223,8 @@ in {
     };
     restic.backups.burns = {
       initialize = true;
-      passwordFile = "/var/lib/secrets/backup_password";
-      environmentFile = "/var/lib/secrets/backup_env";
+      passwordFile = config.age.secrets.resticBackupPassword.path;
+      environmentFile = config.age.secrets.burnsBackupEnv.path;
       paths = [
         "/var/lib/vaultwarden/backups"
         "/var/lib/matrix-synapse/homeserver.signing.key"

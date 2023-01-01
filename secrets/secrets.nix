@@ -10,9 +10,17 @@ let
   systems = [ bart burns krusty lisa ];
 in
 {
-  "woodpecker-secret.age".publicKeys = users ++ [ bart lisa ];
+  # bart
   "woodpeckerGiteClientId.age".publicKeys = users ++ [ bart ];
   "woodpeckerGiteClientSecret.age".publicKeys = users ++ [ bart ];
   "giteaMailerPassword.age".publicKeys = users ++ [ bart ];
   "giteaDatabasePassword.age".publicKeys = users ++ [ bart ];
+
+  # burns
+  "burnsBackupEnv.age".publicKeys = users ++ [ burns ];
+  "vaultwardenConfigEnv.age".publicKeys = users ++ [ burns ];
+
+  # shared
+  "woodpecker-secret.age".publicKeys = users ++ [ bart lisa ];
+  "resticBackupPassword.age".publicKeys = users ++ systems;
 }
