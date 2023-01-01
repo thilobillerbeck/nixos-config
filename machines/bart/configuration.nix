@@ -55,7 +55,31 @@ in {
   };
 
   age.secrets = {
-    woodpeckerAgentSecret.file = ./../../secrets/woodpecker-secret.age;
+    woodpeckerAgentSecret = {
+      file = ./../../secrets/woodpecker-secret.age;
+      owner = "woodpecker-server";
+      group = "woodpecker-server";
+    };
+    woodpeckerGiteClientId = {
+      file = ./../../secrets/woodpeckerGiteClientId.age;
+      owner = "woodpecker-server";
+      group = "woodpecker-server";
+    };
+    woodpeckerGiteClientSecret = {
+      file = ./../../secrets/woodpeckerGiteClientSecret.age;
+      owner = "woodpecker-server";
+      group = "woodpecker-server";
+    };
+    giteaMailerPassword = {
+      file = ./../../secrets/giteaMailerPassword.age;
+      owner = "gitea";
+      group = "gitea";
+    };
+    giteaDatabasePassword = {
+      file = ./../../secrets/giteaDatabasePassword.age;
+      owner = "gitea";
+      group = "gitea";
+    };
   };
 
   services = {
@@ -105,13 +129,13 @@ in {
     woodpecker-server = {
       enable = true;
       rootUrl = "https://ci.thilo-billerbeck.com";
-      httpPort = 3333;
+      httpPort = 3333;  
       admins = "thilobillerbeck";
       database = {
         type = "postgres";
       };
-      giteaClientIdFile = "/var/lib/secrets/woodpecker/giteClientId";
-      giteaClientSecretFile = "/var/lib/secrets/woodpecker/giteClientSecret";
+      giteaClientIdFile = config.age.secrets.woodpeckerGiteClientId.path;
+      giteaClientSecretFile = config.age.secrets.woodpeckerGiteClientSecret.path;
       agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path; #"/var/lib/secrets/woodpecker/agentSecret";
     };
     vscode-server.enable = true;
@@ -133,10 +157,10 @@ in {
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
       log.level = "Warn";
-      mailerPasswordFile = "/var/lib/secrets/gitea/mailpw";
+      mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
         type = "postgres";
-        passwordFile = "/var/lib/secrets/gitea/dbpw";
+        passwordFile = config.age.secrets.giteaDatabasePassword.path;
       };
       settings = {
         service = {
@@ -188,23 +212,6 @@ in {
       enable = true;
       settings = {
         PORT = "3002";
-      };
-    };
-    restic.backups = {
-      remotebackup = {
-        passwordFile = "/etc/nixos/secrets/restic-password";
-        paths = [
-          "${config.services.gitea.dump.backupDir}"
-        ];
-        extraOptions = [
-          "B2_ACCOUNT_ID=''"
-          "B2_ACCOUNT_KEY=''"
-        ];
-        repository = "b2:thilobillerbeck-backup:bart";
-        timerConfig = {
-          OnCalendar = "00:30";
-          RandomizedDelaySec = "5h";
-        };
       };
     };
   };

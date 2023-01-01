@@ -11,4 +11,8 @@ let
 in
 {
   "woodpecker-secret.age".publicKeys = users ++ [ bart lisa ];
+  "woodpeckerGiteClientId.age".publicKeys = users ++ [ bart ];
+  "woodpeckerGiteClientSecret.age".publicKeys = users ++ [ bart ];
+  "giteaMailerPassword.age".publicKeys = users ++ [ bart ];
+  "giteaDatabasePassword.age".publicKeys = users ++ [ bart ];
 }
