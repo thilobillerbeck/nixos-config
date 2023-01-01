@@ -5,8 +5,7 @@ in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
     ./../../modules/woodpecker-agent.nix
-    ./../../modules/colmena-upgrade.nix
-    (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
+    ./../../modules/colmena-upgrade.nix ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
@@ -27,13 +26,20 @@ in {
       allowedTCPPorts = [ 5555 ];
     };
   };
+
+  age.secrets = {
+    woodpeckerAgentSecret = {
+      file = ./../../secrets/woodpecker-secret.age;
+      owner = "woodpecker-agent";
+      group = "woodpecker-agent";
+    };
+  };
   
   services = {
     openssh.enable = true;
-    vscode-server.enable = true;
     woodpecker-agent = {
       enable = true;
-      agentSecretFile = "/var/lib/secrets/woodpecker/agentSecret";
+      agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path;
       server = "bart.thilo-billerbeck.com:9000";
     };
   };

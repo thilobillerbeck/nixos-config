@@ -9,8 +9,7 @@ in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./../../modules/woodpecker-server.nix 
     ./../../modules/woodpecker-agent.nix 
-    ./../../modules/colmena-upgrade.nix
-    (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
+    ./../../modules/colmena-upgrade.nix ];
 
   time.timeZone = "Europe/Berlin";
 
@@ -138,7 +137,6 @@ in {
       giteaClientSecretFile = config.age.secrets.woodpeckerGiteClientSecret.path;
       agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path; #"/var/lib/secrets/woodpecker/agentSecret";
     };
-    vscode-server.enable = true;
     grocy = {
       enable = true;
       hostName = "grocy.thilo-billerbeck.com";

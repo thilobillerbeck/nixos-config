@@ -19,8 +19,6 @@ in {
     ./../../configs/server.nix
     ./../../users/thilo.nix
     ./../../users/root.nix
-    (fetchTarball
-      "https://github.com/msteen/nixos-vscode-server/tarball/master")
   ];
 
   time.timeZone = "Europe/Berlin";

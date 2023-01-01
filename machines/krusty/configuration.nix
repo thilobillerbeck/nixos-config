@@ -4,8 +4,7 @@ let
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
-    ./../../modules/colmena-upgrade.nix
-    (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master") ];
+    ./../../modules/colmena-upgrade.nix ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
@@ -30,7 +29,6 @@ in {
   };
 
   services = {
-    vscode-server.enable = true;
     n8n.enable = true;
     tailscale.enable = true;
     adguardhome = {
