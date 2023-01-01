@@ -2,7 +2,7 @@
 let 
   unstable = import <unstable> { config.allowUnfree = true; };
 in {
-  imports = [ ./zsh.nix ./packages-server.nix ./i18n.nix ];
+  imports = [ ./zsh.nix ./packages-server.nix ./i18n.nix "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/modules/age.nix" ];
 
   nix = {
     autoOptimiseStore = true;

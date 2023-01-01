@@ -54,6 +54,10 @@ in {
     ];
   };
 
+  age.secrets = {
+    woodpeckerAgentSecret.file = ./../../secrets/woodpecker-secret.age;
+  };
+
   services = {
     nginx = {
       enable = true;
@@ -108,7 +112,7 @@ in {
       };
       giteaClientIdFile = "/var/lib/secrets/woodpecker/giteClientId";
       giteaClientSecretFile = "/var/lib/secrets/woodpecker/giteClientSecret";
-      agentSecretFile = "/var/lib/secrets/woodpecker/agentSecret";
+      agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path; #"/var/lib/secrets/woodpecker/agentSecret";
     };
     vscode-server.enable = true;
     grocy = {
