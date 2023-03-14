@@ -37,12 +37,12 @@ in {
     enableIPv6 = true;
     firewall.allowedTCPPorts = [ 80 443 ];
     interfaces.eth0.ipv6.addresses = [{
-      address = "2a01:4f8:1c1b:1079::";
+      address = "2a01:4f8:1c1b:1079::1";
       prefixLength = 64;
     }];
     defaultGateway6 = {
       address = "fe80::1";
-      interface = "ens3";
+      interface = "eth0";
     };
   };
 
@@ -172,7 +172,7 @@ in {
           domain = "avocadoom.de";
           async_media = false;
         };
-	      bridge = {
+        bridge = {
           displayname_template = "{{ if .FullName }} {{ .FullName }} {{ else if .PushName}}{{.PushName}}{{else if .BusinessName}}{{.BusinessName}}{{else}}{{.JID}}{{end}} (WA)";
           personal_filtering_spaces = true;
           delivery_receipts = true;
