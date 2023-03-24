@@ -6,6 +6,7 @@ in {
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
     ./../../modules/woodpecker-agent.nix
     ./../../modules/gitea-runner.nix
+    ./../../modules/containers/watchtower.nix
     ./../../modules/colmena-upgrade.nix ];
 
   environment.systemPackages = with unstable; [ gitea-actions-runner ];
