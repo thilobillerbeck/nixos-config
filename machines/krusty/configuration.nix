@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <unstable> { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
@@ -15,33 +15,46 @@ in {
     gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
-  networking = {
-    hostName = "krusty";
-    firewall = {
-      allowedTCPPorts = [ 22 80 443 ];
-      interfaces = {
-        "tailscale0" = {
-          allowedUDPPorts = [ 53 3001 3000 ];
-          allowedTCPPorts = [ 53 3001 3000 ];
-        };
-      };
+  age.secrets = {
+    watchtowerEnv = {
+      file = ./../../secrets/watchtower-env.age;
     };
   };
 
-  services = {
-    n8n.enable = true;
-    tailscale.enable = true;
-    adguardhome = {
-      enable = true;
-      settings = {
-        dns = {
-          bind_hosts = [
-            "100.72.78.110"
-            "fd7a:115c:a1e0:ab12:4843:cd96:6248:4e6e"
+  virtualisation = {
+    oci-containers = {
+      backend = "docker";
+      containers = {
+        "n8n" = {
+          ports = [ "5678:5678" ];
+          image = "n8nio/n8n:latest";
+          volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
+        };
+        "watchtower" = {
+          image = "containrrr/watchtower:latest";
+          volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+          environmentFiles = [
+            config.age.secrets.watchtowerEnv.path
           ];
         };
       };
     };
+    docker = {
+      enable = true;
+      autoPrune.enable = true;
+    };
+  };
+
+
+  networking = {
+    hostName = "krusty";
+    nameservers = [ "1.1.1.1" "1.0.0.1" ];
+    firewall = {
+      allowedTCPPorts = [ 22 80 443 ];
+    };
+  };
+
+  services = {
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -53,8 +66,8 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:5678";
-        };
       };
     };
   };
+};
 }

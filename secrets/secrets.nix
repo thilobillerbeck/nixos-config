@@ -23,4 +23,7 @@ in
   # shared
   "woodpecker-secret.age".publicKeys = users ++ [ bart lisa ];
   "resticBackupPassword.age".publicKeys = users ++ systems;
+
+  # docker
+  "watchtower-env.age".publicKeys = users ++ systems;
 }
