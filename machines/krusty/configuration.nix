@@ -4,7 +4,9 @@ let
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
-    ./../../modules/colmena-upgrade.nix ];
+    ./../../modules/colmena-upgrade.nix
+    ./../../modules/containers/watchtower.nix
+     ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
@@ -15,12 +17,6 @@ in {
     gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
-  age.secrets = {
-    watchtowerEnv = {
-      file = ./../../secrets/watchtower-env.age;
-    };
-  };
-
   virtualisation = {
     oci-containers = {
       backend = "docker";
@@ -29,13 +25,6 @@ in {
           ports = [ "5678:5678" ];
           image = "n8nio/n8n:latest";
           volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
-        };
-        "watchtower" = {
-          image = "containrrr/watchtower:latest";
-          volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
-          environmentFiles = [
-            config.age.secrets.watchtowerEnv.path
-          ];
         };
       };
     };
