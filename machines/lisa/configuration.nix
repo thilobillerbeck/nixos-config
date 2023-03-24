@@ -1,11 +1,15 @@
 { config, pkgs, lib, ... }:
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <unstable> { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
     ./../../modules/woodpecker-agent.nix
+    ./../../modules/gitea-runner.nix
     ./../../modules/colmena-upgrade.nix ];
+
+  environment.systemPackages = with unstable; [ gitea-actions-runner ];
+
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
@@ -21,7 +25,7 @@ in {
   
   networking = {
     hostName = "lisa";
-    nameservers = [ "1.1.1.1" "1.0.0.1"  ];
+    nameservers = [ "1.1.1.1" "1.0.0.1" ];
     firewall = {
       allowedTCPPorts = [ 5555 ];
     };
@@ -42,6 +46,10 @@ in {
       agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path;
       server = "bart.thilo-billerbeck.com:9000";
     };
+    gitea-runner = {
+      enable = true;
+      package = unstable.gitea-actions-runner;
+    };
   };
 
   virtualisation = {
@@ -59,6 +67,9 @@ in {
     docker = {
       enable = true;
       autoPrune.enable = true;
+      daemon.settings = {
+        dns = config.networking.nameservers;
+      };
     };
   };
 }

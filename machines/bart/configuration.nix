@@ -4,13 +4,13 @@ let
   drone_url = "ci.thilo-billerbeck.com";
   drone_port = 4000;
   drone_proto = "https";
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <unstable> { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./../../modules/woodpecker-server.nix 
     ./../../modules/woodpecker-agent.nix 
     ./../../modules/colmena-upgrade.nix ];
-
+    
   time.timeZone = "Europe/Berlin";
 
   system.stateVersion = "20.03";
@@ -137,20 +137,12 @@ in {
       giteaClientSecretFile = config.age.secrets.woodpeckerGiteClientSecret.path;
       agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path; #"/var/lib/secrets/woodpecker/agentSecret";
     };
-    grocy = {
-      enable = true;
-      hostName = "grocy.thilo-billerbeck.com";
-      settings = {
-        currency = "EUR";
-        culture = "de";
-      };
-    };
     gitea = {
       enable = true;
       cookieSecure = true;
       disableRegistration = true;
       httpPort = 3001;
-      package = pkgs.gitea;
+      package = unstable.gitea;
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
@@ -182,6 +174,9 @@ in {
           SHOW_USER_EMAIL = false;
         };
         indexer = { REPO_INDEXER_ENABLED = true; };
+        actions = {
+          ENABLED = true;
+        };
         mailer = {
           ENABLED = true;
           FROM = ''"Thilos Git" <git@officerent.de>'';
