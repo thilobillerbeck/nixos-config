@@ -31,6 +31,11 @@ in {
     docker = {
       enable = true;
       autoPrune.enable = true;
+      daemon.settings = {
+        dns = config.networking.nameservers;
+        ipv6: true,
+        fixed-cidr-v6: "2001:db8:1::/64"
+      };
     };
   };
 
