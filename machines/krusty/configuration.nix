@@ -6,6 +6,7 @@ in {
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
     ./../../modules/colmena-upgrade.nix
     ./../../modules/containers/watchtower.nix
+    ./../../users/deploy.nix
      ];
 
   time.timeZone = "Europe/Berlin";
@@ -33,8 +34,6 @@ in {
       autoPrune.enable = true;
       daemon.settings = {
         dns = config.networking.nameservers;
-        ipv6: true,
-        fixed-cidr-v6: "2001:db8:1::/64"
       };
     };
   };
