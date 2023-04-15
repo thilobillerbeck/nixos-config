@@ -93,6 +93,9 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:${toString config.services.gitea.httpPort}/";
+          extraConfig = ''
+            client_max_body_size 0;
+          '';
         };
         "${drone_url}" = {
           enableACME = true;
