@@ -1,6 +1,8 @@
+{ sources ? import ./nix/sources.nix }:
+
 {
   meta = {
-    nixpkgs = <nixpkgs>;
+    nixpkgs = import sources.nixpkgs {};
   };
 
   defaults = { pkgs, ... }: {

@@ -5,6 +5,7 @@ pkgs.mkShell {
   nativeBuildInputs = [
     pkgs.colmena
     pkgs.nixfmt
+    pkgs.niv
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
   ];
   shellHook =

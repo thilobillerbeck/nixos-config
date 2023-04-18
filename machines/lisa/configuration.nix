@@ -1,6 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, fetchFromGitea, ... }:
+
 let
-  unstable = import <unstable> { config.allowUnfree = true; };
+  sources = import ./../../nix/sources.nix;
+  unstable = import sources.unstable { config.allowUnfree = true; };
 in {
   imports =
     [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
@@ -49,7 +51,7 @@ in {
     };
     gitea-runner = {
       enable = true;
-      package = unstable.gitea-actions-runner;
+      package =  pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };
     };
   };
 
