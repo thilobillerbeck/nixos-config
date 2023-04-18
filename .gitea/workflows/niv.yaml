@@ -13,7 +13,6 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: https://github.com/workflow/nix-shell-action@v3.2.1
         with:
-          packages: hello,docker
+          packages: niv
           script: |
-            hello
-            docker --help
+            niv update
