@@ -11,7 +11,9 @@ jobs:
       - uses: https://github.com/cachix/install-nix-action@v18
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - uses: https://github.com/dx-oss/nix-shell-action@v11
+      - uses: https://github.com/workflow/nix-shell-action@v3
         with:
+          packages: hello,docker
           script: |
-            which node
+            hello
+            docker --help
