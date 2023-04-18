@@ -13,6 +13,6 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: https://github.com/workflow/nix-shell-action@v3
         with:
-          packages: colmena niv
+          packages: niv
           script: |
             niv update
