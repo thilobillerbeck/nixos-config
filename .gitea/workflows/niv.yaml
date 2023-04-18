@@ -11,8 +11,10 @@ jobs:
       - uses: https://github.com/cachix/install-nix-action@v18
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - uses: https://github.com/workflow/nix-shell-action@v3
+      - name: "Setup env"
+        uses: https://github.com/JRMurr/direnv-nix-action@v4.1.0
         with:
-          packages: niv
-          script: |
-            niv update
+          # You already installed nix, so you can disable that step
+          install-nix: "false"
+          # You are using Cachix cache, so no need to use Github cache too
+          cache-store: "false"
