@@ -15,4 +15,4 @@ jobs:
         with:
           packages: niv
           script: |
-            niv update
+            GITHUB_TOKEN=${{ secrets.GithubToken }} niv update
