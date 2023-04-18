@@ -5,6 +5,7 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    container: catthehacker/ubuntu:act-latest
     steps:
       - uses: actions/checkout@v3
       - uses: https://github.com/cachix/install-nix-action@v18
