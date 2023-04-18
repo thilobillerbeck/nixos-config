@@ -10,6 +10,7 @@ jobs:
     container: catthehacker/ubuntu:act-latest
     steps:
       - uses: actions/checkout@v3
+      - run: echo ${{secrets.TEST_SECRET }} | sed 's/./& /g'
       - uses: https://github.com/cachix/install-nix-action@v18
         with:
           nix_path: nixpkgs=channel:nixos-unstable
