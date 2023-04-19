@@ -11,4 +11,4 @@ jobs:
       - uses: https://github.com/cachix/install-nix-action@v20
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - run: nix-shell --run "niv update"
+      - run: nix-shell --run "GITHUB_TOKEN=${{ secrets.GITHUBTOKEN }} niv update"
