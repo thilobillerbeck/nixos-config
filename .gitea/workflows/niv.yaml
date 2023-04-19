@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: niv-updater-action
-        uses: knl/niv-updater-action@v12
+        uses: https://github.com/knl/niv-updater-action@v12
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
