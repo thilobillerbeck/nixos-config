@@ -3,7 +3,8 @@ let
   unstable = import <unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
+    [ ./../../configs/server.nix
+    ./hardware.nix
     ./../../modules/colmena-upgrade.nix
     ./../../modules/containers/watchtower.nix
     ./../../users/deploy.nix
@@ -31,17 +32,12 @@ in {
     };
     docker = {
       enable = true;
-      autoPrune.enable = true;
-      daemon.settings = {
-        dns = config.networking.nameservers;
-      };
     };
   };
 
 
   networking = {
     hostName = "krusty";
-    nameservers = [ "1.1.1.1" "1.0.0.1" ];
     firewall = {
       allowedTCPPorts = [ 22 80 443 ];
     };

@@ -7,7 +7,7 @@ let
   unstable = import <unstable> { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/thilo.nix ./../../users/root.nix ./../../modules/woodpecker-server.nix 
+    [ ./../../configs/server.nix ./hardware.nix ./../../modules/woodpecker-server.nix 
     ./../../modules/woodpecker-agent.nix 
     ./../../modules/colmena-upgrade.nix ];
     

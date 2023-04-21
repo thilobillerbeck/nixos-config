@@ -17,8 +17,6 @@ in {
     ./../../modules/mautrix-whatsapp.nix
     ./../../modules/colmena-upgrade.nix
     ./../../configs/server.nix
-    ./../../users/thilo.nix
-    ./../../users/root.nix
   ];
 
   time.timeZone = "Europe/Berlin";

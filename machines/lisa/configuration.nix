@@ -5,7 +5,7 @@ let
   unstable = import sources.unstable { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../users/root.nix ./../../users/thilo.nix 
+    [ ./../../configs/server.nix ./hardware.nix
     ./../../modules/woodpecker-agent.nix
     ./../../modules/gitea-runner.nix
     ./../../modules/containers/watchtower.nix
@@ -28,7 +28,6 @@ in {
   
   networking = {
     hostName = "lisa";
-    nameservers = [ "8.8.8.8" "8.8.4.4" "2001:4860:4860::8888" "2001:4860:4860::8844"];
     firewall = {
       allowedTCPPorts = [ 5555 ];
     };
@@ -43,7 +42,6 @@ in {
   };
   
   services = {
-    openssh.enable = true;
     woodpecker-agent = {
       enable = true;
       agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path;
@@ -69,10 +67,6 @@ in {
     };
     docker = {
       enable = true;
-      autoPrune.enable = true;
-      daemon.settings = {
-        dns = config.networking.nameservers;
-      };
     };
   };
 }

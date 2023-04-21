@@ -1,8 +1,16 @@
 { config, pkgs, ... }:
 let 
-  unstable = import <unstable> { config.allowUnfree = true; };
+  sources = import ./../nix/sources.nix;
+  unstable = import sources.unstable { config.allowUnfree = true; };
 in {
-  imports = [ ./zsh.nix ./packages-server.nix ./i18n.nix "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/modules/age.nix" ];
+  imports = [ 
+    ./zsh.nix
+    ./packages-server.nix
+    ./i18n.nix
+     ./../users/root.nix 
+     ./../users/thilo.nix 
+    "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/modules/age.nix"
+    ];
 
   nix = {
     autoOptimiseStore = true;
@@ -15,9 +23,12 @@ in {
     trustedUsers = [ "root" "thilo" ];
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [ 19999 ];
-    allowedUDPPorts = [ 19999 ];
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 19999 ];
+      allowedUDPPorts = [ 19999 ];
+    };
+    nameservers = [ "8.8.8.8" "8.8.4.4" "2001:4860:4860::8888" "2001:4860:4860::8844"];
   };
 
   programs.mosh = { enable = true; };
@@ -42,14 +53,11 @@ in {
     acceptTerms = true;
   };
 
-  system = {
-    autoUpgrade = {
-      enable = false;
-      allowReboot = true;
-      flags = [ "--upgrade-all" ];
-      rebootWindow = {
-        lower = "05:00";
-        upper = "06:00";
+  virtualisation = {
+    docker = {
+      autoPrune.enable = true;
+      daemon.settings = {
+        dns = config.networking.nameservers;
       };
     };
   };
