@@ -11,7 +11,6 @@ in {
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.11";
-  boot.cleanTmpDir = true;
 
   system.colmenaAutoUpgrade = {
     enable = true;
