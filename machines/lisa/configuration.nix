@@ -4,15 +4,16 @@ let
   sources = import ./../../nix/sources.nix;
   unstable = import sources.unstable { config.allowUnfree = true; };
 in {
-  imports =
-    [ ./../../configs/server.nix ./hardware.nix
+  imports = [
+    ./../../configs/server.nix
+    ./hardware.nix
     ./../../modules/woodpecker-agent.nix
     ./../../modules/gitea-runner.nix
     ./../../modules/containers/watchtower.nix
-    ./../../modules/colmena-upgrade.nix ];
+    ./../../modules/colmena-upgrade.nix
+  ];
 
   environment.systemPackages = with unstable; [ gitea-actions-runner ];
-
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
@@ -20,17 +21,16 @@ in {
   system.colmenaAutoUpgrade = {
     enable = true;
     nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
-    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+    gitRepoUrl =
+      "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
-  
+
   networking = {
     hostName = "lisa";
-    firewall = {
-      allowedTCPPorts = [ 5555 ];
-    };
+    firewall = { allowedTCPPorts = [ 5555 ]; };
   };
 
   age.secrets = {
@@ -40,7 +40,7 @@ in {
       group = "woodpecker-agent";
     };
   };
-  
+
   services = {
     woodpecker-agent = {
       enable = true;
@@ -49,7 +49,7 @@ in {
     };
     gitea-runner = {
       enable = true;
-      package =  pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };
+      package = pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };
     };
     netdata = {
       enable = true;
@@ -69,8 +69,6 @@ in {
         };
       };
     };
-    docker = {
-      enable = true;
-    };
+    docker = { enable = true; };
   };
 }

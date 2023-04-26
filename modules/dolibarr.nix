@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 let
-  inherit (lib) any boolToString concatStringsSep isBool isString literalExpression mapAttrsToList mkDefault mkEnableOption mkIf mkOption optionalAttrs types;
+  inherit (lib)
+    any boolToString concatStringsSep isBool isString literalExpression
+    mapAttrsToList mkDefault mkEnableOption mkIf mkOption optionalAttrs types;
 
   package = pkgs.dolibarr.override { inherit (cfg) stateDir; };
 
@@ -10,20 +12,28 @@ let
   mkConfigFile = filename: settings:
     let
       # hack in special logic for secrets so we read them from a separate file avoiding the nix store
-      secretKeys = [ "force_install_databasepass" "dolibarr_main_db_pass" "dolibarr_main_instance_unique_id" ];
+      secretKeys = [
+        "force_install_databasepass"
+        "dolibarr_main_db_pass"
+        "dolibarr_main_instance_unique_id"
+      ];
 
       toStr = k: v:
-        if (any (str: k == str) secretKeys) then v
-        else if isString v then "'${v}'"
-        else if isBool v then boolToString v
-        else if isNull v then "null"
-        else toString v
-      ;
-    in
-      pkgs.writeText filename ''
-        <?php
-        ${concatStringsSep "\n" (mapAttrsToList (k: v: "\$${k} = ${toStr k v};") settings)}
-      '';
+        if (any (str: k == str) secretKeys) then
+          v
+        else if isString v then
+          "'${v}'"
+        else if isBool v then
+          boolToString v
+        else if isNull v then
+          "null"
+        else
+          toString v;
+    in pkgs.writeText filename ''
+      <?php
+      ${concatStringsSep "\n"
+      (mapAttrsToList (k: v: "\$${k} = ${toStr k v};") settings)}
+    '';
 
   # see https://github.com/Dolibarr/dolibarr/blob/develop/htdocs/install/install.forced.sample.php for all possible values
   install = {
@@ -42,10 +52,10 @@ let
     force_install_createuser = false;
     force_install_dolibarrlogin = null;
   } // optionalAttrs (cfg.database.passwordFile != null) {
-    force_install_databasepass = ''file_get_contents("${cfg.database.passwordFile}")'';
+    force_install_databasepass =
+      ''file_get_contents("${cfg.database.passwordFile}")'';
   };
-in
-{
+in {
   # interface
   options.services.dolibarr = {
     enable = mkEnableOption (lib.mdDoc "dolibarr");
@@ -124,27 +134,28 @@ in
       createLocally = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Create the database and database user locally.";
+        description =
+          lib.mdDoc "Create the database and database user locally.";
       };
     };
 
     settings = mkOption {
       type = with types; (attrsOf (oneOf [ bool int str ]));
       default = { };
-      description = lib.mdDoc "Dolibarr settings, see <https://github.com/Dolibarr/dolibarr/blob/develop/htdocs/conf/conf.php.example> for details.";
+      description = lib.mdDoc
+        "Dolibarr settings, see <https://github.com/Dolibarr/dolibarr/blob/develop/htdocs/conf/conf.php.example> for details.";
     };
 
     nginx = mkOption {
-      type = types.nullOr (types.submodule (
-        lib.recursiveUpdate
-          (import ../web-servers/nginx/vhost-options.nix { inherit config lib; })
-          {
-            # enable encryption by default,
-            # as sensitive login and Dolibarr (ERP) data should not be transmitted in clear text.
-            options.forceSSL.default = true;
-            options.enableACME.default = true;
-          }
-      ));
+      type = types.nullOr (types.submodule (lib.recursiveUpdate
+        (import ../web-servers/nginx/vhost-options.nix {
+          inherit config lib;
+        }) {
+          # enable encryption by default,
+          # as sensitive login and Dolibarr (ERP) data should not be transmitted in clear text.
+          options.forceSSL.default = true;
+          options.enableACME.default = true;
+        }));
       default = null;
       example = lib.literalExpression ''
         {
@@ -156,12 +167,12 @@ in
         }
       '';
       description = lib.mdDoc ''
-          With this option, you can customize an nginx virtual host which already has sensible defaults for Dolibarr.
-          Set to {} if you do not need any customization to the virtual host.
-          If enabled, then by default, the {option}`serverName` is
-          `''${domain}`,
-          SSL is active, and certificates are acquired via ACME.
-          If this is set to null (the default), no nginx virtualHost will be configured.
+        With this option, you can customize an nginx virtual host which already has sensible defaults for Dolibarr.
+        Set to {} if you do not need any customization to the virtual host.
+        If enabled, then by default, the {option}`serverName` is
+        `''${domain}`,
+        SSL is active, and certificates are acquired via ACME.
+        If this is set to null (the default), no nginx virtualHost will be configured.
       '';
     };
 
@@ -185,11 +196,11 @@ in
   # implementation
   config = mkIf cfg.enable {
 
-    assertions = [
-      { assertion = cfg.database.createLocally -> cfg.database.user == cfg.user;
-        message = "services.dolibarr.database.user must match services.dolibarr.user if the database is to be automatically provisioned";
-      }
-    ];
+    assertions = [{
+      assertion = cfg.database.createLocally -> cfg.database.user == cfg.user;
+      message =
+        "services.dolibarr.database.user must match services.dolibarr.user if the database is to be automatically provisioned";
+    }];
 
     services.dolibarr.settings = {
       dolibarr_main_url_root = "https://${cfg.domain}";
@@ -215,7 +226,8 @@ in
       # Security settings
       dolibarr_main_prod = true;
       dolibarr_main_force_https = vhostCfg.forceSSL;
-      dolibarr_main_restrict_os_commands = "${pkgs.mariadb}/bin/mysqldump, ${pkgs.mariadb}/bin/mysql";
+      dolibarr_main_restrict_os_commands =
+        "${pkgs.mariadb}/bin/mysqldump, ${pkgs.mariadb}/bin/mysql";
       dolibarr_nocsrfcheck = false;
       dolibarr_main_instance_unique_id = ''
         file_get_contents("${cfg.stateDir}/dolibarr_main_instance_unique_id")
@@ -227,36 +239,39 @@ in
       "d '${cfg.stateDir}' 0750 ${cfg.user} ${cfg.group}"
       "d '${cfg.stateDir}/documents' 0750 ${cfg.user} ${cfg.group}"
       "f '${cfg.stateDir}/conf.php' 0660 ${cfg.user} ${cfg.group}"
-      "L '${cfg.stateDir}/install.forced.php' - ${cfg.user} ${cfg.group} - ${mkConfigFile "install.forced.php" install}"
+      "L '${cfg.stateDir}/install.forced.php' - ${cfg.user} ${cfg.group} - ${
+        mkConfigFile "install.forced.php" install
+      }"
     ];
 
     services.mysql = mkIf cfg.database.createLocally {
       enable = mkDefault true;
       package = mkDefault pkgs.mariadb;
       ensureDatabases = [ cfg.database.name ];
-      ensureUsers = [
-        { name = cfg.database.user;
-          ensurePermissions = { "${cfg.database.name}.*" = "ALL PRIVILEGES"; };
-        }
-      ];
+      ensureUsers = [{
+        name = cfg.database.user;
+        ensurePermissions = { "${cfg.database.name}.*" = "ALL PRIVILEGES"; };
+      }];
     };
 
     services.nginx.enable = mkIf (cfg.nginx != null) true;
-    services.nginx.virtualHosts."${cfg.domain}" = mkIf (cfg.nginx != null) (lib.mkMerge [
-      cfg.nginx
-      ({
-        root = lib.mkForce "${package}/htdocs";
-        locations."/".index = "index.php";
-        locations."~ [^/]\\.php(/|$)" = {
-          extraConfig = ''
-            fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.dolibarr.socket};
-          '';
-        };
-      })
-    ]);
+    services.nginx.virtualHosts."${cfg.domain}" = mkIf (cfg.nginx != null)
+      (lib.mkMerge [
+        cfg.nginx
+        ({
+          root = lib.mkForce "${package}/htdocs";
+          locations."/".index = "index.php";
+          locations."~ [^/]\\.php(/|$)" = {
+            extraConfig = ''
+              fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+              fastcgi_pass unix:${config.services.phpfpm.pools.dolibarr.socket};
+            '';
+          };
+        })
+      ]);
 
-    systemd.services."phpfpm-dolibarr".after = mkIf cfg.database.createLocally [ "mysql.service" ];
+    systemd.services."phpfpm-dolibarr".after =
+      mkIf cfg.database.createLocally [ "mysql.service" ];
     services.phpfpm.pools.dolibarr = {
       inherit (cfg) user group;
       phpPackage = pkgs.php.buildEnv {
@@ -291,7 +306,9 @@ in
         ${pkgs.php}/bin/php -r "include '${cfg.stateDir}/conf.php'; file_put_contents('${cfg.stateDir}/dolibarr_main_instance_unique_id', \$dolibarr_main_instance_unique_id);"
 
         # replace configuration file generated by installer with the NixOS generated configuration file
-        install -m 644 ${mkConfigFile "conf.php" cfg.settings} '${cfg.stateDir}/conf.php'
+        install -m 644 ${
+          mkConfigFile "conf.php" cfg.settings
+        } '${cfg.stateDir}/conf.php'
       '';
 
       serviceConfig = {
@@ -301,19 +318,15 @@ in
         RemainAfterExit = "yes";
       };
 
-      unitConfig = {
-        ConditionFileNotEmpty = "${cfg.stateDir}/conf.php";
-      };
+      unitConfig = { ConditionFileNotEmpty = "${cfg.stateDir}/conf.php"; };
     };
 
-    users.users.dolibarr = mkIf (cfg.user == "dolibarr" ) {
+    users.users.dolibarr = mkIf (cfg.user == "dolibarr") {
       isSystemUser = true;
       group = cfg.group;
     };
 
-    users.groups = optionalAttrs (cfg.group == "dolibarr") {
-      dolibarr = { };
-    };
+    users.groups = optionalAttrs (cfg.group == "dolibarr") { dolibarr = { }; };
 
     users.users."${config.services.nginx.group}".extraGroups = [ cfg.group ];
   };

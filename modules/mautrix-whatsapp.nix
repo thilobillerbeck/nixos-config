@@ -1,21 +1,19 @@
-{
-  system,
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-with lib; let
+{ system, config, pkgs, lib, ... }:
+with lib;
+let
   dataDir = "/var/lib/mautrix-whatsapp";
   registrationFile = "${dataDir}/whatsapp-registration.yaml";
   cfg = config.services.mautrix-whatsapp;
-  settingsFormat = pkgs.formats.yaml {};
-  settingsFileUnsubstituted = settingsFormat.generate "mautrix-telegram-whatsapp-unsubstituted.yaml" cfg.settings;
+  settingsFormat = pkgs.formats.yaml { };
+  settingsFileUnsubstituted =
+    settingsFormat.generate "mautrix-telegram-whatsapp-unsubstituted.yaml"
+    cfg.settings;
   settingsFile = "${dataDir}/config.yaml";
 in {
   options = {
     services.mautrix-whatsapp = {
-      enable = mkEnableOption "Mautrix-Whatsapp, a Matrix-Whatsapp hybrid puppeting/relaybot bridge";
+      enable = mkEnableOption
+        "Mautrix-Whatsapp, a Matrix-Whatsapp hybrid puppeting/relaybot bridge";
       settings = mkOption rec {
         apply = recursiveUpdate default;
         inherit (settingsFormat) type;
@@ -31,9 +29,7 @@ in {
             as_token = "$AS_TOKEN";
             hs_token = "$HS_TOKEN";
           };
-          logging = {
-            file_name_format = null;
-          };
+          logging = { file_name_format = null; };
         };
       };
       environmentFile = mkOption {
@@ -55,8 +51,8 @@ in {
     systemd.services.mautrix-whatsapp-genregistration = {
       description = "Mautrix-Whatsapp Registration";
 
-      requiredBy = ["matrix-synapse.service"];
-      before = ["matrix-synapse.service"];
+      requiredBy = [ "matrix-synapse.service" ];
+      before = [ "matrix-synapse.service" ];
       script = ''
         # Not all secrets can be passed as environment variable (yet)
         # https://github.com/tulir/mautrix-telegram/issues/584
@@ -107,18 +103,20 @@ in {
         SystemCallFilter = "@system-service";
         WorkingDirectory = dataDir;
         StateDirectory = baseNameOf dataDir;
-        UMask = 0117;
+        UMask = 117;
         User = "mautrix-whatsapp";
         Group = "matrix-synapse";
         EnvironmentFile = cfg.environmentFile;
       };
-      restartTriggers = [settingsFileUnsubstituted cfg.environmentFile];
+      restartTriggers = [ settingsFileUnsubstituted cfg.environmentFile ];
     };
     systemd.services.mautrix-whatsapp = {
       description = "Mautrix-Whatsapp";
-      wantedBy = ["multi-user.target"];
-      wants = ["matrix-synapse.service" "mautrix-whatsapp-genregistration.service"];
-      after = ["matrix-synapse.service" "mautrix-whatsapp-genregistration.service"];
+      wantedBy = [ "multi-user.target" ];
+      wants =
+        [ "matrix-synapse.service" "mautrix-whatsapp-genregistration.service" ];
+      after =
+        [ "matrix-synapse.service" "mautrix-whatsapp-genregistration.service" ];
       serviceConfig = {
         Type = "simple";
         Restart = "always";
@@ -144,7 +142,7 @@ in {
         SystemCallFilter = "@system-service";
         WorkingDirectory = dataDir;
         StateDirectory = baseNameOf dataDir;
-        UMask = 0117;
+        UMask = 117;
         User = "mautrix-whatsapp";
         Group = "matrix-synapse";
         EnvironmentFile = cfg.environmentFile;
@@ -153,7 +151,7 @@ in {
             --config='${settingsFile}'
         '';
       };
-      restartTriggers = [cfg.environmentFile];
+      restartTriggers = [ cfg.environmentFile ];
     };
     users.users.mautrix-whatsapp = {
       description = "Mautrix Whatsapp bridge";
@@ -162,9 +160,8 @@ in {
       group = "matrix-synapse";
       isSystemUser = true;
     };
-    services.matrix-synapse.settings.app_service_config_files = [
-      registrationFile
-    ];
+    services.matrix-synapse.settings.app_service_config_files =
+      [ registrationFile ];
   };
 }
 

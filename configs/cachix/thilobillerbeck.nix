@@ -1,11 +1,8 @@
 {
   nix = {
-    binaryCaches = [
-      "https://thilobillerbeck.cachix.org"
-    ];
+    binaryCaches = [ "https://thilobillerbeck.cachix.org" ];
     binaryCachePublicKeys = [
-      
+
     ];
   };
 }
-    

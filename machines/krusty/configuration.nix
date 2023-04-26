@@ -1,22 +1,22 @@
 { config, pkgs, lib, ... }:
-let
-  unstable = import <unstable> { config.allowUnfree = true; };
+let unstable = import <unstable> { config.allowUnfree = true; };
 in {
-  imports =
-    [ ./../../configs/server.nix
+  imports = [
+    ./../../configs/server.nix
     ./hardware.nix
     ./../../modules/colmena-upgrade.nix
     ./../../modules/containers/watchtower.nix
     ./../../users/deploy.nix
-     ];
+  ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
-  
+
   system.colmenaAutoUpgrade = {
     enable = true;
     nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
-    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+    gitRepoUrl =
+      "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
   virtualisation = {
@@ -30,17 +30,12 @@ in {
         };
       };
     };
-    docker = {
-      enable = true;
-    };
+    docker = { enable = true; };
   };
-
 
   networking = {
     hostName = "krusty";
-    firewall = {
-      allowedTCPPorts = [ 22 80 443 ];
-    };
+    firewall = { allowedTCPPorts = [ 22 80 443 ]; };
   };
 
   services = {
@@ -55,12 +50,12 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:5678";
+        };
       };
     };
+    netdata = {
+      enable = true;
+      package = unstable.netdata;
+    };
   };
-  netdata = {
-    enable = true;
-    package = unstable.netdata;
-  };
-};
 }

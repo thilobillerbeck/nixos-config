@@ -3,10 +3,10 @@
 
 with lib;
 
-let cfg = config.services.woodpecker-agent;
-    servercfg = config.services.woodpecker-server;
-in
-{
+let
+  cfg = config.services.woodpecker-agent;
+  servercfg = config.services.woodpecker-server;
+in {
   options = {
     services.woodpecker-agent = {
       enable = mkOption {
@@ -25,7 +25,8 @@ in
       user = mkOption {
         type = types.str;
         default = "woodpecker-agent";
-        description = lib.mdDoc "User account under which woodpecker agent runs.";
+        description =
+          lib.mdDoc "User account under which woodpecker agent runs.";
       };
 
       agentSecretFile = mkOption {
@@ -43,12 +44,15 @@ in
       backend = mkOption {
         type = types.enum [ "auto-detect" "docker" "local" "ssh" ];
         default = "auto-detect";
-        description = lib.mdDoc "Configures the backend engine to run pipelines on.";
+        description =
+          lib.mdDoc "Configures the backend engine to run pipelines on.";
       };
 
       server = mkOption {
         type = types.str;
-        default = "localhost:${if servercfg.enable then toString servercfg.gRPCPort else "9000"}";
+        default = "localhost:${
+            if servercfg.enable then toString servercfg.gRPCPort else "9000"
+          }";
         description = lib.mdDoc "The gPRC address of the server.";
       };
     };
@@ -69,12 +73,12 @@ in
       };
       environment = mkMerge [
         {
-          WOODPECKER_SERVER=cfg.server;
-          WOODPECKER_MAX_PROCS=toString cfg.maxProcesses;
-          WOODPECKER_BACKEND=cfg.backend;
+          WOODPECKER_SERVER = cfg.server;
+          WOODPECKER_MAX_PROCS = toString cfg.maxProcesses;
+          WOODPECKER_BACKEND = cfg.backend;
         }
         (mkIf (cfg.agentSecretFile != null) {
-          WOODPECKER_AGENT_SECRET_FILE=cfg.agentSecretFile;
+          WOODPECKER_AGENT_SECRET_FILE = cfg.agentSecretFile;
         })
       ];
     };
@@ -89,6 +93,6 @@ in
         isSystemUser = true;
       };
     };
-    users.groups.woodpecker-agent = {  };
+    users.groups.woodpecker-agent = { };
   };
 }

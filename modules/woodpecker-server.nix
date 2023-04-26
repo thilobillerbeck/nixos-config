@@ -8,8 +8,7 @@ let
   useMysql = cfg.database.type == "mysql";
   usePostgresql = cfg.database.type == "postgres";
   useSqlite = cfg.database.type == "sqlite3";
-in
-{
+in {
   options = {
     services.woodpecker-server = {
       enable = mkOption {
@@ -34,7 +33,8 @@ in
       user = mkOption {
         type = types.str;
         default = "woodpecker-server";
-        description = lib.mdDoc "User account under which woodpecker server runs.";
+        description =
+          lib.mdDoc "User account under which woodpecker server runs.";
       };
 
       rootUrl = mkOption {
@@ -83,7 +83,8 @@ in
 
         port = mkOption {
           type = types.port;
-          default = (if !usePostgresql then 3306 else config.services.postgresql.port);
+          default =
+            (if !usePostgresql then 3306 else config.services.postgresql.port);
           defaultText = literalExpression ''
             if config.${opt.database.type} != "postgresql"
             then 3306
@@ -116,35 +117,45 @@ in
 
         socket = mkOption {
           type = types.nullOr types.path;
-          default = if (cfg.database.createDatabase && usePostgresql) then "/run/postgresql" else if (cfg.database.createDatabase && useMysql) then "/run/mysqld/mysqld.sock" else null;
+          default = if (cfg.database.createDatabase && usePostgresql) then
+            "/run/postgresql"
+          else if (cfg.database.createDatabase && useMysql) then
+            "/run/mysqld/mysqld.sock"
+          else
+            null;
           defaultText = literalExpression "null";
           example = "/run/mysqld/mysqld.sock";
-          description = lib.mdDoc "Path to the unix socket file to use for authentication.";
+          description =
+            lib.mdDoc "Path to the unix socket file to use for authentication.";
         };
 
         createDatabase = mkOption {
           type = types.bool;
           default = true;
-          description = lib.mdDoc "Whether to create a local database automatically.";
+          description =
+            lib.mdDoc "Whether to create a local database automatically.";
         };
       };
 
       limitMem = mkOption {
         type = types.int;
         default = 0;
-        description = lib.mdDoc "The maximum amount of memory a single pipeline container can use, configured in bytes. There is no limit if 0.";
+        description = lib.mdDoc
+          "The maximum amount of memory a single pipeline container can use, configured in bytes. There is no limit if 0.";
       };
 
       limitSwap = mkOption {
         type = types.int;
         default = 0;
-        description = lib.mdDoc "The maximum amount of memory a single pipeline container is allowed to swap to disk, configured in bytes. There is no limit if 0.";
+        description = lib.mdDoc
+          "The maximum amount of memory a single pipeline container is allowed to swap to disk, configured in bytes. There is no limit if 0.";
       };
 
       limitCPU = mkOption {
         type = types.int;
         default = 0;
-        description = lib.mdDoc "The number of microseconds per CPU period that the container is limited to before throttled. There is no limit if 0.";
+        description = lib.mdDoc
+          "The number of microseconds per CPU period that the container is limited to before throttled. There is no limit if 0.";
       };
 
       useGitea = mkOption {
@@ -172,15 +183,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      { assertion = cfg.database.createDatabase -> cfg.database.user == cfg.user;
-        message = "services.woodpecker-server.database.user must match services.woodpecker-server.user if the database is to be automatically provisioned";
-      }
-    ];
+    assertions = [{
+      assertion = cfg.database.createDatabase -> cfg.database.user == cfg.user;
+      message =
+        "services.woodpecker-server.database.user must match services.woodpecker-server.user if the database is to be automatically provisioned";
+    }];
 
     systemd.services.woodpecker-server = {
       description = "woodpecker-server";
-      after = [ "network.target" ] ++ lib.optional usePostgresql "postgresql.service" ++ lib.optional useMysql "mysql.service";
+      after = [ "network.target" ]
+        ++ lib.optional usePostgresql "postgresql.service"
+        ++ lib.optional useMysql "mysql.service";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = mkMerge [
         {
@@ -193,65 +206,70 @@ in
         }
         (if cfg.useGitea then {
           # HACK For some godforsaken reason this seems to be needed.
-          ExecStart="/bin/sh -c '" +
-                    "WOODPECKER_GITEA_CLIENT=$(cat \"${cfg.giteaClientIdFile}\") " +
-                    "WOODPECKER_GITEA_SECRET=$(cat \"${cfg.giteaClientSecretFile}\") " +
-                    "\"${cfg.package}/bin/woodpecker-server\"'";
+          ExecStart = "/bin/sh -c '"
+            + ''WOODPECKER_GITEA_CLIENT=$(cat "${cfg.giteaClientIdFile}") ''
+            + ''WOODPECKER_GITEA_SECRET=$(cat "${cfg.giteaClientSecretFile}") ''
+            + "\"${cfg.package}/bin/woodpecker-server\"'";
         } else {
           ExecStart = "${cfg.package}/bin/woodpecker-server";
         })
       ];
       environment = mkMerge [
         {
-          WOODPECKER_OPEN="false";
-          WOODPECKER_ADMIN=cfg.admins;
-          WOODPECKER_HOST=cfg.rootUrl;
-          WOODPECKER_SERVER_ADDR=":${toString cfg.httpPort}";
-          WOODPECKER_GRPC_ADDR=":${toString cfg.gRPCPort}";
-          WOODPECKER_LIMIT_MEM_SWAP=toString cfg.limitSwap;
-          WOODPECKER_LIMIT_MEM=toString cfg.limitMem;
-          WOODPECKER_LIMIT_CPU_QUOTA=toString cfg.limitCPU;
+          WOODPECKER_OPEN = "false";
+          WOODPECKER_ADMIN = cfg.admins;
+          WOODPECKER_HOST = cfg.rootUrl;
+          WOODPECKER_SERVER_ADDR = ":${toString cfg.httpPort}";
+          WOODPECKER_GRPC_ADDR = ":${toString cfg.gRPCPort}";
+          WOODPECKER_LIMIT_MEM_SWAP = toString cfg.limitSwap;
+          WOODPECKER_LIMIT_MEM = toString cfg.limitMem;
+          WOODPECKER_LIMIT_CPU_QUOTA = toString cfg.limitCPU;
         }
         (mkIf cfg.useGitea {
-          WOODPECKER_GITEA="true";
-          WOODPECKER_GITEA_URL=cfg.giteaUrl;
+          WOODPECKER_GITEA = "true";
+          WOODPECKER_GITEA_URL = cfg.giteaUrl;
           # WOODPECKER_GITEA_CLIENT_FILE=cfg.giteaClientIdFile;
           # WOODPECKER_GITEA_SECRET_FILE=cfg.giteaClientSecretFile;
         })
         (mkIf usePostgresql {
-          WOODPECKER_DATABASE_DRIVER="postgres";
-          WOODPECKER_DATABASE_DATASOURCE=
-            "postgres://${cfg.database.user}:${cfg.database.password}" +
-            "@/${cfg.database.name}" +
-            "?host=${if cfg.database.socket != null then cfg.database.socket else cfg.database.host + ":" + toString cfg.database.port}";
+          WOODPECKER_DATABASE_DRIVER = "postgres";
+          WOODPECKER_DATABASE_DATASOURCE =
+            "postgres://${cfg.database.user}:${cfg.database.password}"
+            + "@/${cfg.database.name}" + "?host=${
+              if cfg.database.socket != null then
+                cfg.database.socket
+              else
+                cfg.database.host + ":" + toString cfg.database.port
+            }";
         })
         (mkIf (cfg.agentSecretFile != null) {
-          WOODPECKER_AGENT_SECRET_FILE=cfg.agentSecretFile;
+          WOODPECKER_AGENT_SECRET_FILE = cfg.agentSecretFile;
         })
       ];
     };
 
-    services.postgresql = optionalAttrs (usePostgresql && cfg.database.createDatabase) {
-      enable = mkDefault true;
+    services.postgresql =
+      optionalAttrs (usePostgresql && cfg.database.createDatabase) {
+        enable = mkDefault true;
 
-      ensureDatabases = [ cfg.database.name ];
-      ensureUsers = [
-        { name = cfg.database.user;
-          ensurePermissions = { "DATABASE ${cfg.database.name}" = "ALL PRIVILEGES"; };
-        }
-      ];
-    };
+        ensureDatabases = [ cfg.database.name ];
+        ensureUsers = [{
+          name = cfg.database.user;
+          ensurePermissions = {
+            "DATABASE ${cfg.database.name}" = "ALL PRIVILEGES";
+          };
+        }];
+      };
 
     services.mysql = optionalAttrs (useMysql && cfg.database.createDatabase) {
       enable = mkDefault true;
       package = mkDefault pkgs.mariadb;
 
       ensureDatabases = [ cfg.database.name ];
-      ensureUsers = [
-        { name = cfg.database.user;
-          ensurePermissions = { "${cfg.database.name}.*" = "ALL PRIVILEGES"; };
-        }
-      ];
+      ensureUsers = [{
+        name = cfg.database.user;
+        ensurePermissions = { "${cfg.database.name}.*" = "ALL PRIVILEGES"; };
+      }];
     };
 
     users.users = mkIf (cfg.user == "woodpecker-server") {
@@ -264,6 +282,6 @@ in
         isSystemUser = true;
       };
     };
-    users.groups.woodpecker-server = {  };
+    users.groups.woodpecker-server = { };
   };
 }

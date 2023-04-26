@@ -1,5 +1,5 @@
 # save this as shell.nix
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
   nativeBuildInputs = [
@@ -7,10 +7,12 @@ pkgs.mkShell {
     pkgs.nixfmt
     pkgs.niv
     pkgs.arion
-    (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
+    (pkgs.callPackage "${
+        builtins.fetchTarball
+        "https://github.com/ryantm/agenix/archive/main.tar.gz"
+      }/pkgs/agenix.nix" { })
   ];
-  shellHook =
-  ''
+  shellHook = ''
     source .envrc
     echo $NIX_PATH
   '';

@@ -13,9 +13,7 @@ in {
         description = lib.mdDoc "Enable Gitea Runner.";
       };
 
-      package = mkOption {
-        type = types.package;
-      };
+      package = mkOption { type = types.package; };
 
       stateDir = mkOption {
         type = types.path;
@@ -54,6 +52,6 @@ in {
         isSystemUser = true;
       };
     };
-    users.groups.gitea-runner = {  };
+    users.groups.gitea-runner = { };
   };
 }

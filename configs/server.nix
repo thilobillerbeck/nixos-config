@@ -1,16 +1,19 @@
 { config, pkgs, ... }:
-let 
+let
   sources = import ./../nix/sources.nix;
   unstable = import sources.unstable { config.allowUnfree = true; };
 in {
-  imports = [ 
+  imports = [
     ./zsh.nix
     ./packages-server.nix
     ./i18n.nix
-     ./../users/root.nix 
-     ./../users/thilo.nix 
-    "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/modules/age.nix"
-    ];
+    ./../users/root.nix
+    ./../users/thilo.nix
+    "${
+      builtins.fetchTarball
+      "https://github.com/ryantm/agenix/archive/main.tar.gz"
+    }/modules/age.nix"
+  ];
 
   nix = {
     autoOptimiseStore = true;
@@ -28,7 +31,8 @@ in {
       allowedTCPPorts = [ 19999 ];
       allowedUDPPorts = [ 19999 ];
     };
-    nameservers = [ "8.8.8.8" "8.8.4.4" "2001:4860:4860::8888" "2001:4860:4860::8844"];
+    nameservers =
+      [ "8.8.8.8" "8.8.4.4" "2001:4860:4860::8888" "2001:4860:4860::8844" ];
   };
 
   programs.mosh = { enable = true; };
@@ -52,9 +56,7 @@ in {
   virtualisation = {
     docker = {
       autoPrune.enable = true;
-      daemon.settings = {
-        dns = config.networking.nameservers;
-      };
+      daemon.settings = { dns = config.networking.nameservers; };
     };
   };
 

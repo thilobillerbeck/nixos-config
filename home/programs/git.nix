@@ -3,9 +3,9 @@
 {
   programs = {
     git = {
-        enable = true;
-        userName = "Thilo Billerbeck";
-        userEmail = "thilo.billerbeck@officerent.de";
+      enable = true;
+      userName = "Thilo Billerbeck";
+      userEmail = "thilo.billerbeck@officerent.de";
     };
   };
 }

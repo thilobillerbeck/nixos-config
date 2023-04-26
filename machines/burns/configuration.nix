@@ -6,8 +6,7 @@
 
 let
   fqdn = let
-    join = domain:
-      "matrix" + lib.optionalString (domain != null) ".${domain}";
+    join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
   in join config.networking.domain;
   vaultwarden-domain = "vw.thilo-billerbeck.com";
   unstable = import <unstable> { };
@@ -25,7 +24,8 @@ in {
   system.colmenaAutoUpgrade = {
     enable = true;
     nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
-    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+    gitRepoUrl =
+      "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
   networking = {
@@ -50,12 +50,8 @@ in {
       owner = "vaultwarden";
       group = "vaultwarden";
     };
-    burnsBackupEnv = {
-      file = ./../../secrets/burnsBackupEnv.age;
-    };
-    resticBackupPassword = {
-      file = ./../../secrets/resticBackupPassword.age;
-    };
+    burnsBackupEnv = { file = ./../../secrets/burnsBackupEnv.age; };
+    resticBackupPassword = { file = ./../../secrets/resticBackupPassword.age; };
   };
 
   services = {
@@ -89,7 +85,7 @@ in {
           locations."= /.well-known/matrix/server".extraConfig = let
             # use 443 instead of the default 8448 port to unite
             # the client-server and server-server port for simplicity
-            server = { "m.server" = "${fqdn}\:443"; };
+            server = { "m.server" = "${fqdn}:443"; };
           in ''
             add_header Content-Type application/json;
             return 200 '${builtins.toJSON server}';
@@ -126,12 +122,14 @@ in {
           };
         };
         "${vaultwarden-domain}" = {
-         enableACME = true;
-         forceSSL = true;
-         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${
+                toString config.services.vaultwarden.config.ROCKET_PORT
+              }";
+          };
         };
-       };
       };
     };
     heisenbridge = {
@@ -157,9 +155,7 @@ in {
         }];
       }];
       settings.app_service_config_files =
-        [
-          "/var/lib/heisenbridge/registration.yml"
-        ];
+        [ "/var/lib/heisenbridge/registration.yml" ];
     };
     mautrix-whatsapp = {
       enable = false;
@@ -171,7 +167,8 @@ in {
           async_media = false;
         };
         bridge = {
-          displayname_template = "{{ if .FullName }} {{ .FullName }} {{ else if .PushName}}{{.PushName}}{{else if .BusinessName}}{{.BusinessName}}{{else}}{{.JID}}{{end}} (WA)";
+          displayname_template =
+            "{{ if .FullName }} {{ .FullName }} {{ else if .PushName}}{{.PushName}}{{else if .BusinessName}}{{.BusinessName}}{{else}}{{.JID}}{{end}} (WA)";
           personal_filtering_spaces = true;
           delivery_receipts = true;
           hystory_sync = {
@@ -179,8 +176,8 @@ in {
             request_full_sync = true;
           };
           send_presence_on_typing = true;
-          double_puppet_server_map = {};
-          login_shared_secret_map = {};
+          double_puppet_server_map = { };
+          login_shared_secret_map = { };
           private_chat_portal_meta = true;
           mute_bridging = true;
           pinned_tag = "m.favourite";
@@ -189,12 +186,8 @@ in {
           allow_user_invite = true;
           disappearing_messages_in_groups = true;
           url_previews = true;
-          encryption = {
-            allow = true;
-          };
-          permissions = {
-            "@avocadoom:avocadoom.de" = "admin";
-          };
+          encryption = { allow = true; };
+          permissions = { "@avocadoom:avocadoom.de" = "admin"; };
         };
       };
     };
@@ -229,12 +222,8 @@ in {
         "/var/lib/heisenbridge/registration.yml"
       ];
       repository = "b2:backup-burns";
-      timerConfig = {
-        OnCalendar = "*-*-* 3:00:00";
-      };
-      pruneOpts = [
-        "--keep-daily 5"
-      ];
+      timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
+      pruneOpts = [ "--keep-daily 5" ];
     };
     netdata = {
       enable = true;

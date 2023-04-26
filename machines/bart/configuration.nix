@@ -6,11 +6,14 @@ let
   drone_proto = "https";
   unstable = import <unstable> { config.allowUnfree = true; };
 in {
-  imports =
-    [ ./../../configs/server.nix ./hardware.nix ./../../modules/woodpecker-server.nix 
-    ./../../modules/woodpecker-agent.nix 
-    ./../../modules/colmena-upgrade.nix ];
-    
+  imports = [
+    ./../../configs/server.nix
+    ./hardware.nix
+    ./../../modules/woodpecker-server.nix
+    ./../../modules/woodpecker-agent.nix
+    ./../../modules/colmena-upgrade.nix
+  ];
+
   time.timeZone = "Europe/Berlin";
 
   system.stateVersion = "20.03";
@@ -18,7 +21,8 @@ in {
   system.colmenaAutoUpgrade = {
     enable = true;
     nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
-    gitRepoUrl = "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
+    gitRepoUrl =
+      "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
   networking = {
@@ -45,11 +49,21 @@ in {
       };
     };
     tmpfiles.rules = [
-      "L+ '${config.services.gitea.stateDir}/custom/templates/home.tmpl' - - - - ${./gitea/gitea-home.tmpl}"
-      "L+ '${config.services.gitea.stateDir}/custom/templates/custom/extra_links_footer.tmpl' - - - - ${./gitea/extra_links_footer.tmpl}"
-      "L+ '${config.services.gitea.stateDir}/custom/public/css/theme-dark-fire.css' - - - - ${./gitea/theme-dark-fire.css}" 
-      "L+ '${config.services.gitea.stateDir}/custom/public/img/logo.svg' - - - - ${./gitea/logo.svg}" 
-      "L+ '${config.services.gitea.stateDir}/custom/public/img/favicon.png' - - - - ${./gitea/favicon.png}" 
+      "L+ '${config.services.gitea.stateDir}/custom/templates/home.tmpl' - - - - ${
+        ./gitea/gitea-home.tmpl
+      }"
+      "L+ '${config.services.gitea.stateDir}/custom/templates/custom/extra_links_footer.tmpl' - - - - ${
+        ./gitea/extra_links_footer.tmpl
+      }"
+      "L+ '${config.services.gitea.stateDir}/custom/public/css/theme-dark-fire.css' - - - - ${
+        ./gitea/theme-dark-fire.css
+      }"
+      "L+ '${config.services.gitea.stateDir}/custom/public/img/logo.svg' - - - - ${
+        ./gitea/logo.svg
+      }"
+      "L+ '${config.services.gitea.stateDir}/custom/public/img/favicon.png' - - - - ${
+        ./gitea/favicon.png
+      }"
     ];
   };
 
@@ -92,7 +106,8 @@ in {
         "${gitea_url}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:${toString config.services.gitea.httpPort}/";
+          locations."/".proxyPass =
+            "http://localhost:${toString config.services.gitea.httpPort}/";
           extraConfig = ''
             client_max_body_size 0;
           '';
@@ -116,12 +131,12 @@ in {
           root = lib.mkForce "${pkgs.dolibarr}/htdocs";
           locations."/".index = "index.php";
           locations."~ [^/]\\.php(/|$)" = {
-              extraConfig = ''
-                fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-                fastcgi_pass unix:${config.services.phpfpm.pools.dolibarr.socket};
-              '';
-            };
+            extraConfig = ''
+              fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+              fastcgi_pass unix:${config.services.phpfpm.pools.dolibarr.socket};
+            '';
           };
+        };
       };
     };
     dolibarr = {
@@ -131,14 +146,14 @@ in {
     woodpecker-server = {
       enable = true;
       rootUrl = "https://ci.thilo-billerbeck.com";
-      httpPort = 3333;  
+      httpPort = 3333;
       admins = "thilobillerbeck";
-      database = {
-        type = "postgres";
-      };
+      database = { type = "postgres"; };
       giteaClientIdFile = config.age.secrets.woodpeckerGiteClientId.path;
-      giteaClientSecretFile = config.age.secrets.woodpeckerGiteClientSecret.path;
-      agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path; #"/var/lib/secrets/woodpecker/agentSecret";
+      giteaClientSecretFile =
+        config.age.secrets.woodpeckerGiteClientSecret.path;
+      agentSecretFile =
+        config.age.secrets.woodpeckerAgentSecret.path; # "/var/lib/secrets/woodpecker/agentSecret";
     };
     gitea = {
       enable = true;
@@ -165,21 +180,15 @@ in {
           #  DISABLE_USERS_PAGE = true;
           #};
         };
-        "service.explore" = {
-          DISABLE_USERS_PAGE = true;
-        };
-        federation = {
-          ENABLED = true;
-        };
+        "service.explore" = { DISABLE_USERS_PAGE = true; };
+        federation = { ENABLED = true; };
         ui = {
           DEFAULT_THEME = "dark-fire";
           THEMES = "gitea,dark-fire";
           SHOW_USER_EMAIL = false;
         };
         indexer = { REPO_INDEXER_ENABLED = true; };
-        actions = {
-          ENABLED = true;
-        };
+        actions = { ENABLED = true; };
         mailer = {
           ENABLED = true;
           FROM = ''"Thilos Git" <git@officerent.de>'';
@@ -193,12 +202,10 @@ in {
     postgresql = {
       enable = true; # Ensure postgresql is enabled
       ensureDatabases = [ "woodpecker" "gitea" "keycloak" "ninja" ];
-      ensureUsers = [
-        {
-          name = "woodpecker";
-          ensurePermissions = { "DATABASE woodpecker" = "ALL PRIVILEGES"; };
-        }
-      ];
+      ensureUsers = [{
+        name = "woodpecker";
+        ensurePermissions = { "DATABASE woodpecker" = "ALL PRIVILEGES"; };
+      }];
       identMap = # Map the gitea user to postgresql
         ''
           gitea-users gitea gitea
@@ -206,9 +213,7 @@ in {
     };
     uptime-kuma = {
       enable = true;
-      settings = {
-        PORT = "3002";
-      };
+      settings = { PORT = "3002"; };
     };
     netdata = {
       enable = true;

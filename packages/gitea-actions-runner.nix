@@ -1,7 +1,4 @@
-{ lib
-, fetchFromGitea
-, buildGoModule
-}:
+{ lib, fetchFromGitea, buildGoModule }:
 
 buildGoModule rec {
   pname = "gitea-actions-runner";
@@ -17,11 +14,8 @@ buildGoModule rec {
 
   vendorHash = "sha256-GBqt5qSM2mDAS7klWdJiC6t5HaVKaP0PjecYnHZBzrc=";
 
-  ldflags = [
-    "-s"
-    "-w"
-    "-X gitea.com/gitea/act_runner/cmd.version=${version}"
-  ];
+  ldflags =
+    [ "-s" "-w" "-X gitea.com/gitea/act_runner/cmd.version=${version}" ];
 
   meta = with lib; {
     mainProgram = "act_runner";

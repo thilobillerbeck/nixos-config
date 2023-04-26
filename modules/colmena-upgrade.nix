@@ -88,22 +88,26 @@ in {
           The default value of `null` means that reboots are allowed at any time.
         '';
         default = null;
-        example = { lower = "01:00"; upper = "05:00"; };
-        type = with types; nullOr (submodule {
-          options = {
-            lower = mkOption {
-              description = lib.mdDoc "Lower limit of the reboot window";
-              type = types.strMatching "[[:digit:]]{2}:[[:digit:]]{2}";
-              example = "01:00";
-            };
+        example = {
+          lower = "01:00";
+          upper = "05:00";
+        };
+        type = with types;
+          nullOr (submodule {
+            options = {
+              lower = mkOption {
+                description = lib.mdDoc "Lower limit of the reboot window";
+                type = types.strMatching "[[:digit:]]{2}:[[:digit:]]{2}";
+                example = "01:00";
+              };
 
-            upper = mkOption {
-              description = lib.mdDoc "Upper limit of the reboot window";
-              type = types.strMatching "[[:digit:]]{2}:[[:digit:]]{2}";
-              example = "05:00";
+              upper = mkOption {
+                description = lib.mdDoc "Upper limit of the reboot window";
+                type = types.strMatching "[[:digit:]]{2}:[[:digit:]]{2}";
+                example = "05:00";
+              };
             };
-          };
-        });
+          });
       };
 
       persistent = mkOption {
@@ -139,15 +143,11 @@ in {
         HOME = "/root";
       } // config.networking.proxy.envVars;
 
-      path = with pkgs; [
-        git
-        colmena
-        nix
-      ];
+      path = with pkgs; [ git colmena nix ];
 
       script = let
         colmenaBin = "${pkgs.colmena}/bin/colmena";
-        date     = "${pkgs.coreutils}/bin/date";
+        date = "${pkgs.coreutils}/bin/date";
         readlink = "${pkgs.coreutils}/bin/readlink";
         shutdown = "${config.systemd.package}/bin/shutdown";
       in if cfg.allowReboot then ''
@@ -157,7 +157,7 @@ in {
         else
           ${pkgs.git}/bin/git clone ${cfg.gitRepoUrl} ${cfg.configPath}
         fi
-        
+
         cd ${cfg.configPath}
 
         NIX_PATH=${cfg.nixPath} ${colmenaBin} apply-local --verbose
@@ -206,7 +206,7 @@ in {
         else
           ${pkgs.git}/bin/git clone ${cfg.gitRepoUrl} ${cfg.configPath}
         fi
-        
+
         cd ${cfg.configPath}
 
         NIX_PATH=${cfg.nixPath} ${colmenaBin} apply-local --verbose
