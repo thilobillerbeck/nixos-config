@@ -58,5 +58,9 @@ in {
       };
     };
   };
+  netdata = {
+    enable = true;
+    package = unstable.netdata;
+  };
 };
 }

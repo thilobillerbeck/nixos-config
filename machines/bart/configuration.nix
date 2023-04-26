@@ -210,5 +210,9 @@ in {
         PORT = "3002";
       };
     };
+    netdata = {
+      enable = true;
+      package = unstable.netdata;
+    };
   };
 }

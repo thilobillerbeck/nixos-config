@@ -6,6 +6,7 @@ pkgs.mkShell {
     pkgs.colmena
     pkgs.nixfmt
     pkgs.niv
+    pkgs.arion
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
   ];
   shellHook =

@@ -40,10 +40,6 @@ in {
     };
     journald.extraConfig = "SystemMaxUse=500M";
     timesyncd.enable = true;
-    netdata = {
-      enable = true;
-      package = unstable.netdata;
-    };
   };
 
   environment.variables.EDITOR = "nvim";

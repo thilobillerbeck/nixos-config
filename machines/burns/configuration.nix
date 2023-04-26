@@ -236,5 +236,9 @@ in {
         "--keep-daily 5"
       ];
     };
+    netdata = {
+      enable = true;
+      package = unstable.netdata;
+    };
   };
 }

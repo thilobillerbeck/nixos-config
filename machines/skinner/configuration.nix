@@ -5,8 +5,10 @@ let
   unstable = import sources.unstable { config.allowUnfree = true; };
 in {
   imports =
-    [ ./../../configs/server.nix
-    ./hardware.nix ];
+    [
+      ./../../configs/server.nix
+      ./hardware.nix
+    ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.11";

@@ -51,6 +51,10 @@ in {
       enable = true;
       package =  pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };
     };
+    netdata = {
+      enable = true;
+      package = unstable.netdata;
+    };
   };
 
   virtualisation = {
