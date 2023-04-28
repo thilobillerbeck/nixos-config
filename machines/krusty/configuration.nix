@@ -28,6 +28,14 @@ in {
           image = "n8nio/n8n:latest";
           volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
         };
+        "portainer_agent" = {
+          image = "portainer/agent:latest";
+          ports = [ "9001:9001" ];
+          volumes = [
+            "/var/run/docker.sock:/var/run/docker.sock"
+            "/var/lib/docker/volumes:/var/lib/docker/volumes"
+            ];
+        };
       };
     };
     docker = { enable = true; };
@@ -35,7 +43,7 @@ in {
 
   networking = {
     hostName = "krusty";
-    firewall = { allowedTCPPorts = [ 22 80 443 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 9001 ]; };
   };
 
   services = {
