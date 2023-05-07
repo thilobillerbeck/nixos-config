@@ -44,10 +44,12 @@
     networking.hostName = name;
   };
 
+  /*
   skinner = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
     nixpkgs.system = "aarch64-linux";
     networking.hostName = name;
   };
+  */
 }

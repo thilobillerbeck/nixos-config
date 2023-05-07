@@ -46,6 +46,21 @@ in {
     firewall = { allowedTCPPorts = [ 22 80 443 9001 ]; };
   };
 
+  systemd.services.invoicePocketbase = {
+      wantedBy = [ "multi-user.target" ]; 
+      after = [ "network.target" ];
+      description = "pocketbase";
+      serviceConfig = {
+        Type = "simple";
+        User = "root";
+        Group = "root";
+        LimitNOFILE = "4096";
+        Restart        = "always";
+        RestartSec     = "5s";
+        ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:3456 --dir /var/lib/pb/invoiceapi/data --publicDir /var/lib/pb/invoiceapi/public'';
+      };
+   };
+
   services = {
     nginx = {
       enable = true;
@@ -58,6 +73,11 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:5678";
+        };
+        "invoiceapi.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://localhost:3456";
         };
       };
     };

@@ -6,7 +6,7 @@
     device = "nodev";
   };
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/EC48-8808";
+    device = "/dev/disk/by-uuid/02FF-009A";
     fsType = "vfat";
   };
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
