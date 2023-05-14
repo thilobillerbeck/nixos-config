@@ -2,6 +2,7 @@ name: "Update pinned channels"
 on:
   schedule:
     - cron: "0 20 * * *"
+  workflow_dispatch:
 jobs:
   tests:
     runs-on: ubuntu-latest
