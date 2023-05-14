@@ -28,7 +28,7 @@ in {
 
       gitRepoUrl = mkOption {
         type = types.str;
-        default = "";
+        default = "https://github.com/thilobillerbeck/nixos-config";
         example = "";
         description = lib.mdDoc ''
           Repository URL for nixos config

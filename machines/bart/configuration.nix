@@ -20,9 +20,6 @@ in {
 
   system.colmenaAutoUpgrade = {
     enable = true;
-    nixPath = "nixpkgs=channel:nixos-22.11:unstable=channel:nixos-unstable";
-    gitRepoUrl =
-      "https://git.thilo-billerbeck.com/thilobillerbeck/nixos-config.git";
   };
 
   networking = {
