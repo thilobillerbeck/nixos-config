@@ -21,6 +21,7 @@ in {
       nixPath = mkOption {
         type = types.str;
         example = "unstable=channel:nixos-unstable";
+        default = "unstable=channel:nixos-unstable";
         description = lib.mdDoc ''
           Which nix path to apply
         '';

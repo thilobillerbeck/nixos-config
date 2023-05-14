@@ -6,9 +6,6 @@
   defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
     deployment.allowLocalDeployment = true;
-
-    nix.nixPath =
-      [ "nixpkgs=channel:nixos-22.11" "unstable=channel:nixos-unstable" ];
   };
 
   bart = { name, nodes, pkgs, ... }: {

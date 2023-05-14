@@ -1,26 +1,26 @@
 {
-    "nixpkgs": {
-        "branch": "nixos-22.11-small",
-        "description": "Nix Packages collection",
-        "homepage": "",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e28ffb8f487503362962f05718bec6b95f27a672",
-        "sha256": "0sm6f76flqqinskx5bmwikpjphicxdypp9gfkhqjli0fxzgd71fx",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/e28ffb8f487503362962f05718bec6b95f27a672.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "unstable": {
-        "branch": "nixos-unstable-small",
-        "description": "Nix Packages collection",
-        "homepage": "",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "3e2728f51a8ed5287f2577737c6b5505d56de3e9",
-        "sha256": "1xb0cqh07jlwwfbpjyqagawgxqvj3xzfdwz0jwf1x1hd01998ps4",
-        "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/3e2728f51a8ed5287f2577737c6b5505d56de3e9.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    }
+  "nixpkgs": {
+    "branch": "nixos-22.11-small",
+    "description": "Nix Packages collection",
+    "homepage": "",
+    "owner": "NixOS",
+    "repo": "nixpkgs",
+    "rev": "e28ffb8f487503362962f05718bec6b95f27a672",
+    "sha256": "0sm6f76flqqinskx5bmwikpjphicxdypp9gfkhqjli0fxzgd71fx",
+    "type": "tarball",
+    "url": "https://github.com/NixOS/nixpkgs/archive/e28ffb8f487503362962f05718bec6b95f27a672.tar.gz",
+    "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+  },
+  "unstable": {
+    "branch": "nixos-unstable-small",
+    "description": "Nix Packages collection",
+    "homepage": "",
+    "owner": "nixos",
+    "repo": "nixpkgs",
+    "rev": "57ace723895c43160e102cc126933d8b395391ea",
+    "sha256": "0rz5wjc52qh57nh83rq1saakpgfyvrlwlf63sk3rsjm6q669bnqw",
+    "type": "tarball",
+    "url": "https://github.com/nixos/nixpkgs/archive/57ace723895c43160e102cc126933d8b395391ea.tar.gz",
+    "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+  }
 }

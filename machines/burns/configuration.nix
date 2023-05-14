@@ -5,11 +5,12 @@
 { config, pkgs, lib, ... }:
 
 let
+  sources = import ./../../nix/sources.nix;
   fqdn = let
     join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
   in join config.networking.domain;
   vaultwarden-domain = "vw.thilo-billerbeck.com";
-  unstable = import <unstable> { };
+  unstable =  import sources.unstable { config.allowUnfree = true; };
 in {
   imports = [ # Include the results of the hardware scan.
     ./hardware.nix
@@ -139,7 +140,6 @@ in {
     matrix-synapse = {
       enable = true;
       settings.server_name = config.networking.domain;
-      # registration_shared_secret = "QmmgP1Gco31o3mMIft82j2VdKrSGlSIihgYfduZx8cR4eRHLmVEzWzCFpF3JDhWN";
       settings.listeners = [{
         port = 8008;
         # bind_address = "";

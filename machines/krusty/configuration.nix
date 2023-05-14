@@ -1,5 +1,7 @@
-{ config, pkgs, lib, ... }:
-let unstable = import <unstable> { config.allowUnfree = true; };
+{ config, pkgs, lib,  ... }:
+let 
+  sources = import ./../../nix/sources.nix;
+  unstable =  import sources.unstable { config.allowUnfree = true; };
 in {
   imports = [
     ./../../configs/server.nix

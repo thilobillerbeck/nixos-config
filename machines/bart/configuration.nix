@@ -1,10 +1,12 @@
 { config, pkgs, lib, ... }:
+
 let
   gitea_url = "git.thilo-billerbeck.com";
   drone_url = "ci.thilo-billerbeck.com";
   drone_port = 4000;
   drone_proto = "https";
-  unstable = import <unstable> { config.allowUnfree = true; };
+  sources = import ./../../nix/sources.nix;
+  unstable = import sources.unstable { config.allowUnfree = true; };
 in {
   imports = [
     ./../../configs/server.nix
