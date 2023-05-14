@@ -10,13 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Checkout
-      - uses: https://github.com/cachix/install-nix-action@v20
+      #      - uses: https://github.com/cachix/install-nix-action@v20
+      - uses: cachix/install-nix-action@v20
         name: Install Nix
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - run: nix-shell --run "GITHUB_TOKEN=${{ secrets.GITHUBTOKEN }} niv update"
         name: Run niv update
-      - uses: https://github.com/stefanzweifel/git-auto-commit-action@v4
+      #      - uses: https://github.com/stefanzweifel/git-auto-commit-action@v4
+      - uses: git-auto-commit-action@v4
         name: Commit changes
         with:
           commit_message: updated pinned channels
