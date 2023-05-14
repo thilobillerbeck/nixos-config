@@ -1,12 +1,11 @@
 name: "Update pinned channels"
 on:
   schedule:
-    - cron: "0 20 * * *"
+    - cron: "0 2 * * *"
   workflow_dispatch:
 jobs:
-  tests:
+  update-channels:
     runs-on: ubuntu-latest
-    #    container: catthehacker/ubuntu:act-latest
     steps:
       - uses: actions/checkout@v3
         name: Checkout
