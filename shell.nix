@@ -7,10 +7,7 @@ pkgs.mkShell {
     pkgs.nixfmt
     pkgs.niv
     pkgs.arion
-    (pkgs.callPackage "${
-        builtins.fetchTarball
-        "https://github.com/ryantm/agenix/archive/main.tar.gz"
-      }/pkgs/agenix.nix" { })
+    (pkgs.callPackage "${(import ./nix/sources.nix).agenix}/pkgs/agenix.nix" {})
   ];
   shellHook = ''
     echo $NIX_PATH

@@ -9,10 +9,7 @@ in {
     ./i18n.nix
     ./../users/root.nix
     ./../users/thilo.nix
-    "${
-      builtins.fetchTarball
-      "https://github.com/ryantm/agenix/archive/main.tar.gz"
-    }/modules/age.nix"
+    "${(import ./../nix/sources.nix).agenix}/modules/age.nix"
   ];
 
   nix = {
