@@ -22,10 +22,6 @@ in {
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "21.11";
 
-  system.colmenaAutoUpgrade = {
-    enable = true;
-  };
-
   networking = {
     usePredictableInterfaceNames = false;
     hostName = "burns";

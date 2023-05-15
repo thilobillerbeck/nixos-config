@@ -13,11 +13,7 @@ in {
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
-
-  system.colmenaAutoUpgrade = {
-    enable = true;
-  };
-
+  
   virtualisation = {
     oci-containers = {
       backend = "docker";

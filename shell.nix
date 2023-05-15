@@ -13,7 +13,6 @@ pkgs.mkShell {
       }/pkgs/agenix.nix" { })
   ];
   shellHook = ''
-    source .envrc
     echo $NIX_PATH
   '';
 }

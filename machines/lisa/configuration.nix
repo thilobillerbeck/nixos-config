@@ -18,10 +18,6 @@ in {
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
 
-  system.colmenaAutoUpgrade = {
-    enable = true;
-  };
-
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
 

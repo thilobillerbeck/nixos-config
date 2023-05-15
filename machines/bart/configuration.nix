@@ -20,10 +20,6 @@ in {
 
   system.stateVersion = "20.03";
 
-  system.colmenaAutoUpgrade = {
-    enable = true;
-  };
-
   networking = {
     usePredictableInterfaceNames = false;
     enableIPv6 = true;

@@ -6,6 +6,7 @@
   defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
     deployment.allowLocalDeployment = true;
+    nixpkgs.pkgs = import sources.nixpkgs { };
   };
 
   bart = { name, nodes, pkgs, ... }: {
