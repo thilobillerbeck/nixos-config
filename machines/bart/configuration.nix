@@ -11,7 +11,6 @@ in {
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
-    ./../../modules/woodpecker-server.nix
     ./../../modules/woodpecker-agent.nix
     ./../../modules/colmena-upgrade.nix
   ];
@@ -63,18 +62,8 @@ in {
   };
 
   age.secrets = {
-    woodpeckerAgentSecret = {
-      file = ./../../secrets/woodpecker-secret.age;
-      owner = "woodpecker-server";
-      group = "woodpecker-server";
-    };
-    woodpeckerGiteClientId = {
-      file = ./../../secrets/woodpeckerGiteClientId.age;
-      owner = "woodpecker-server";
-      group = "woodpecker-server";
-    };
-    woodpeckerGiteClientSecret = {
-      file = ./../../secrets/woodpeckerGiteClientSecret.age;
+    woodpeckerEnv = {
+      file = ./../../secrets/woodpeckerEnv.age;
       owner = "woodpecker-server";
       group = "woodpecker-server";
     };
@@ -140,15 +129,8 @@ in {
     };
     woodpecker-server = {
       enable = true;
-      rootUrl = "https://ci.thilo-billerbeck.com";
-      httpPort = 3333;
-      admins = "thilobillerbeck";
-      database = { type = "postgres"; };
-      giteaClientIdFile = config.age.secrets.woodpeckerGiteClientId.path;
-      giteaClientSecretFile =
-        config.age.secrets.woodpeckerGiteClientSecret.path;
-      agentSecretFile =
-        config.age.secrets.woodpeckerAgentSecret.path; # "/var/lib/secrets/woodpecker/agentSecret";
+      environmentFile =
+        config.age.secrets.woodpeckerEnv.path;
     };
     gitea = {
       enable = true;

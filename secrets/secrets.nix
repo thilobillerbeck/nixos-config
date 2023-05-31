@@ -20,6 +20,7 @@ in {
   "woodpeckerGiteClientSecret.age".publicKeys = users ++ [ bart ];
   "giteaMailerPassword.age".publicKeys = users ++ [ bart ];
   "giteaDatabasePassword.age".publicKeys = users ++ [ bart ];
+  "woodpeckerEnv.age".publicKeys = users ++ systems; 
 
   # burns
   "burnsBackupEnv.age".publicKeys = users ++ [ burns ];
