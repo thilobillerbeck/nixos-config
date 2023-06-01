@@ -64,8 +64,6 @@ in {
   age.secrets = {
     woodpeckerEnv = {
       file = ./../../secrets/woodpeckerEnv.age;
-      owner = "woodpecker-server";
-      group = "woodpecker-server";
     };
     giteaMailerPassword = {
       file = ./../../secrets/giteaMailerPassword.age;
