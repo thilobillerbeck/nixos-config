@@ -26,20 +26,7 @@ in {
     firewall = { allowedTCPPorts = [ 5555 ]; };
   };
 
-  age.secrets = {
-    woodpeckerAgentSecret = {
-      file = ./../../secrets/woodpecker-secret.age;
-      owner = "woodpecker-agent";
-      group = "woodpecker-agent";
-    };
-  };
-
   services = {
-    woodpecker-agent = {
-      enable = true;
-      agentSecretFile = config.age.secrets.woodpeckerAgentSecret.path;
-      server = "bart.thilo-billerbeck.com:9000";
-    };
     gitea-runner = {
       enable = true;
       package = pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };

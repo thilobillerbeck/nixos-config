@@ -62,9 +62,6 @@ in {
   };
 
   age.secrets = {
-    woodpeckerEnv = {
-      file = ./../../secrets/woodpeckerEnv.age;
-    };
     giteaMailerPassword = {
       file = ./../../secrets/giteaMailerPassword.age;
       owner = "gitea";
@@ -124,11 +121,6 @@ in {
     dolibarr = {
       enable = true;
       domain = "invoice.thilo-billerbeck.com";
-    };
-    woodpecker-server = {
-      enable = true;
-      environmentFile =
-        config.age.secrets.woodpeckerEnv.path;
     };
     gitea = {
       enable = true;
