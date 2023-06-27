@@ -96,6 +96,22 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:3333";
         };
+        "officerent.de" = {
+          enableACME = true;
+          forceSSL = true;
+          root = "/var/www/officerent.de";
+          serverAliases = [
+            "www.officerent.de"
+          ];
+        };
+        "thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          root = "/var/www/thilo-billerbeck.com";
+          serverAliases = [
+            "www.thilo-billerbeck.com"
+          ];.
+        };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
