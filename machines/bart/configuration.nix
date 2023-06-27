@@ -13,6 +13,7 @@ in {
     ./hardware.nix
     ./../../modules/woodpecker-agent.nix
     ./../../modules/colmena-upgrade.nix
+    ./../../users/deploy.nix
   ];
 
   time.timeZone = "Europe/Berlin";
