@@ -110,7 +110,7 @@ in {
           root = "/var/www/thilo-billerbeck.com";
           serverAliases = [
             "www.thilo-billerbeck.com"
-          ];.
+          ];
         };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
