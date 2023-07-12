@@ -23,6 +23,17 @@ in {
           image = "n8nio/n8n:latest";
           volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
         };
+        "directus" = {
+          ports = [ "8055:8055" ];
+          image = "directus/directus:latest";
+          volumes = [ 
+              "directus-database:/directus/database"
+              "directus-uploads:/directus/uploads"
+           ];
+          environmentFiles = [
+            /var/lib/directus/.env
+          ];
+        };
         "portainer_agent" = {
           image = "portainer/agent:latest";
           ports = [ "9001:9001" ];
@@ -38,7 +49,7 @@ in {
 
   networking = {
     hostName = "krusty";
-    firewall = { allowedTCPPorts = [ 22 80 443 9001 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 9001 8055 ]; };
   };
 
   systemd.services.invoicePocketbase = {
@@ -69,10 +80,10 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:5678";
         };
-        "invoiceapi.thilo-billerbeck.com" = {
+        "directus.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:3456";
+          locations."/".proxyPass = "http://localhost:8055";
         };
       };
     };
