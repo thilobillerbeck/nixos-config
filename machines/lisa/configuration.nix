@@ -41,7 +41,7 @@ in {
     oci-containers = {
       backend = "docker";
       containers = {
-        "dikpostgres" = {
+        "digitaltwinapp-postgres" = {
           image = "docker.io/library/postgres:13";
           ports = [ "5555:5432" ];
           volumes = [ "/home/thilo/pg-temp/.pgdata:/var/lib/postgresql/data" ];
