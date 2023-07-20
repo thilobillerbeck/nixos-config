@@ -16,7 +16,7 @@ in {
   
   virtualisation = {
     oci-containers = {
-      backend = "docker";
+      backend = "podman";
       containers = {
         "n8n" = {
           ports = [ "5678:5678" ];
