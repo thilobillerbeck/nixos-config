@@ -9,7 +9,6 @@ in {
     ./hardware.nix
     ./../../modules/woodpecker-agent.nix
     ./../../modules/gitea-runner.nix
-    ./../../modules/containers/watchtower.nix
     ./../../modules/colmena-upgrade.nix
   ];
 
@@ -39,7 +38,7 @@ in {
 
   virtualisation = {
     oci-containers = {
-      backend = "docker";
+      backend = "podman";
       containers = {
         "digitaltwinapp-postgres" = {
           image = "docker.io/library/postgres:13";
