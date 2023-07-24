@@ -7,8 +7,6 @@ in {
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
-    ./../../modules/woodpecker-agent.nix
-    ./../../modules/gitea-runner.nix
     ./../../modules/colmena-upgrade.nix
   ];
 
@@ -26,10 +24,6 @@ in {
   };
 
   services = {
-    gitea-runner = {
-      enable = true;
-      package = pkgs.callPackage ./../../packages/gitea-actions-runner.nix { };
-    };
     netdata = {
       enable = true;
       package = unstable.netdata;
