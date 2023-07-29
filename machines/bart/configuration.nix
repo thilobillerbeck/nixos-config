@@ -35,7 +35,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9000 5000 5555 9000 ];
+    firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
   systemd = {
@@ -131,7 +131,7 @@ in {
       cookieSecure = true;
       disableRegistration = true;
       httpPort = 3001;
-      package = unstable.gitea;
+      package = unstable.forgejo;
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
@@ -154,8 +154,8 @@ in {
         "service.explore" = { DISABLE_USERS_PAGE = true; };
         federation = { ENABLED = true; };
         ui = {
-          DEFAULT_THEME = "dark-fire";
-          THEMES = "gitea,dark-fire";
+          # DEFAULT_THEME = "dark-fire";
+          # THEMES = "gitea,dark-fire";
           SHOW_USER_EMAIL = false;
         };
         indexer = { REPO_INDEXER_ENABLED = true; };

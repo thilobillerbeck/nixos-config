@@ -23,17 +23,22 @@ in {
     firewall = { allowedTCPPorts = [ 5555 ]; };
   };
 
-  services = {
-    netdata = {
-      enable = true;
-      package = unstable.netdata;
+  services.gitea-actions-runner= {
+    package = unstable.forgejo-actions-runner;
+    instances = {
+      lisa_docker = {
+        name = "lisa_docker";
+        enable = true;
+        labels = [
+          "docker:docker://node:16-bullseye"
+        ];
+        url = "https://git.thilo-billerbeck.com";
+        token = "replace-me";
+      };
     };
   };
 
   virtualisation = {
-    oci-containers = {
-      backend = "podman";
-    };
     docker = { enable = true; };
   };
 }
