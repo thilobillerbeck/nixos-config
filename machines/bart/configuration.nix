@@ -6,7 +6,10 @@ let
   drone_port = 4000;
   drone_proto = "https";
   sources = import ./../../nix/sources.nix;
-  unstable = import sources.unstable { config.allowUnfree = true; };
+  unstable = import sources.unstable {
+    config.allowUnfree = true;
+    system = "aarch64-linux";
+  };
 in {
   imports = [
     ./../../configs/server.nix

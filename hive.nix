@@ -6,12 +6,14 @@
   defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
     deployment.allowLocalDeployment = true;
-    nixpkgs.pkgs = import sources.nixpkgs { };
   };
 
   bart = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
+    nixpkgs.pkgs = import sources.nixpkgs {
+      system = "aarch64-linux";
+    };
     networking = {
       hostName = name;
       domain = "thilo-billerbeck.com";
@@ -21,6 +23,7 @@
   krusty = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
+    nixpkgs.pkgs = import sources.nixpkgs { };
     networking = {
       hostName = name;
       domain = "thilo-billerbeck.com";
@@ -30,6 +33,7 @@
   lisa = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
+    nixpkgs.pkgs = import sources.nixpkgs { };
     networking = {
       hostName = name;
       domain = "thilo-billerbeck.com";
@@ -39,6 +43,7 @@
   burns = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
+    nixpkgs.pkgs = import sources.nixpkgs { };
     networking.hostName = name;
   };
 
