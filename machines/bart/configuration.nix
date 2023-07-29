@@ -184,6 +184,7 @@ in {
     };
     uptime-kuma = {
       enable = true;
+      package = unstable.uptime-kuma;
       settings = { PORT = "3002"; };
     };
   };
