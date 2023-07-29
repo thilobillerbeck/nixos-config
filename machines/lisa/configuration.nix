@@ -33,14 +33,6 @@ in {
   virtualisation = {
     oci-containers = {
       backend = "podman";
-      containers = {
-        "digitaltwinapp-postgres" = {
-          image = "docker.io/library/postgres:13";
-          ports = [ "5555:5432" ];
-          volumes = [ "/home/thilo/pg-temp/.pgdata:/var/lib/postgresql/data" ];
-          environmentFiles = [ "/var/lib/secrets/dikpostgres.env" ];
-        };
-      };
     };
     docker = { enable = true; };
   };
