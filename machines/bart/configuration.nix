@@ -24,7 +24,7 @@ in {
     usePredictableInterfaceNames = false;
     enableIPv6 = true;
     interfaces.eth0.ipv6.addresses = [{
-      address = "2a01:4f8:c2c:3c6e::1";
+      address = "2a01:4f8:c17:21a4::1";
       prefixLength = 64;
     }];
     defaultGateway6 = {
@@ -121,23 +121,7 @@ in {
             proxyWebsockets = true;
           };
         };
-        "invoice.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          root = lib.mkForce "${pkgs.dolibarr}/htdocs";
-          locations."/".index = "index.php";
-          locations."~ [^/]\\.php(/|$)" = {
-            extraConfig = ''
-              fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-              fastcgi_pass unix:${config.services.phpfpm.pools.dolibarr.socket};
-            '';
-          };
-        };
       };
-    };
-    dolibarr = {
-      enable = true;
-      domain = "invoice.thilo-billerbeck.com";
     };
     gitea = {
       enable = true;
@@ -185,7 +169,7 @@ in {
     };
     postgresql = {
       enable = true; # Ensure postgresql is enabled
-      ensureDatabases = [ "woodpecker" "gitea" "keycloak" "ninja" ];
+      ensureDatabases = [ "woodpecker" "gitea" ];
       ensureUsers = [{
         name = "woodpecker";
         ensurePermissions = { "DATABASE woodpecker" = "ALL PRIVILEGES"; };
@@ -198,10 +182,6 @@ in {
     uptime-kuma = {
       enable = true;
       settings = { PORT = "3002"; };
-    };
-    netdata = {
-      enable = true;
-      package = unstable.netdata;
     };
   };
 }
