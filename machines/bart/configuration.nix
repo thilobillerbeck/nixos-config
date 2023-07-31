@@ -135,7 +135,7 @@ in {
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
-      log.level = "Warn";
+      log.level = "Debug";
       mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
         type = "postgres";
