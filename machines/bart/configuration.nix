@@ -35,7 +35,7 @@ in {
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 ];
+    firewall.allowedTCPPorts = [ 22 80 443 9001 ];
   };
 
   systemd = {
@@ -186,6 +186,25 @@ in {
       enable = true;
       package = unstable.uptime-kuma;
       settings = { PORT = "3002"; };
+    };
+    prometheus = {
+      enable = true;
+      port = 9001;
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [ "systemd" ];
+          port = 9002;
+        };
+      };
+      scrapeConfigs = [
+        {
+          job_name = "bart";
+          static_configs = [{
+            targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
+          }];
+        }
+      ];
     };
   };
 }
