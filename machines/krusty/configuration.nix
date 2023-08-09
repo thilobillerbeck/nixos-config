@@ -1,5 +1,5 @@
 { config, pkgs, lib,  ... }:
-let 
+let
   sources = import ./../../nix/sources.nix;
   unstable =  import sources.unstable { config.allowUnfree = true; };
 in {
@@ -13,10 +13,10 @@ in {
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "22.05";
-  
+
   virtualisation = {
     oci-containers = {
-      backend = "podman";
+      backend = "docker";
       containers = {
         "n8n" = {
           ports = [ "5678:5678" ];
@@ -26,21 +26,13 @@ in {
         "directus" = {
           ports = [ "8055:8055" ];
           image = "directus/directus:latest";
-          volumes = [ 
+          volumes = [
               "directus-database:/directus/database"
               "directus-uploads:/directus/uploads"
            ];
           environmentFiles = [
             /var/lib/directus/.env
           ];
-        };
-        "portainer_agent" = {
-          image = "portainer/agent:latest";
-          ports = [ "9001:9001" ];
-          volumes = [
-            "/var/run/docker.sock:/var/run/docker.sock"
-            "/var/lib/docker/volumes:/var/lib/docker/volumes"
-            ];
         };
       };
     };
@@ -53,7 +45,7 @@ in {
   };
 
   systemd.services.invoicePocketbase = {
-      wantedBy = [ "multi-user.target" ]; 
+      wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       description = "pocketbase";
       serviceConfig = {
