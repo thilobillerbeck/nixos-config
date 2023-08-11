@@ -218,9 +218,5 @@ in {
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
       pruneOpts = [ "--keep-daily 5" ];
     };
-    netdata = {
-      enable = true;
-      package = unstable.netdata;
-    };
   };
 }
