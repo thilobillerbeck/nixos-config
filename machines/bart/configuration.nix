@@ -135,7 +135,6 @@ in {
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
-      log.level = "Debug";
       mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
         type = "postgres";
@@ -167,6 +166,12 @@ in {
           HOST = "mail.officerent.de:465";
           IS_TLS_ENABLED = true;
           USER = "git@officerent.de";
+        };
+        "repository.upload" = {
+          TEMP_PATH = "/tmp/gitea/uploads";
+        };
+        packages = {
+          CHUNKED_UPLOAD_PATH = "/tmp/gitea/package-uploads";
         };
       };
     };

@@ -28,7 +28,7 @@ in {
     instances = {
       lisa_docker = {
         name = "lisa_docker";
-        enable = true;
+        enable = false;
         labels = [
           "docker:docker://node:16-bullseye"
         ];
