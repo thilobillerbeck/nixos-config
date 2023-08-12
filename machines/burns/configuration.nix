@@ -29,7 +29,7 @@ in {
     enableIPv6 = true;
     firewall.allowedTCPPorts = [ 80 443 ];
     interfaces.eth0.ipv6.addresses = [{
-      address = "2a01:4f8:1c1b:1079::1";
+      address = "2a01:4f8:c17:552a::1";
       prefixLength = 64;
     }];
     defaultGateway6 = {
@@ -79,7 +79,9 @@ in {
           locations."= /.well-known/matrix/server".extraConfig = let
             # use 443 instead of the default 8448 port to unite
             # the client-server and server-server port for simplicity
-            server = { "m.server" = "${fqdn}:443"; };
+            server = {
+              "m.server" = "${fqdn}:443";
+            };
           in ''
             add_header Content-Type application/json;
             return 200 '${builtins.toJSON server}';
@@ -119,9 +121,7 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${
-                toString config.services.vaultwarden.config.ROCKET_PORT
-              }";
+            proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
           };
         };
       };
@@ -149,40 +149,6 @@ in {
       }];
       settings.app_service_config_files =
         [ "/var/lib/heisenbridge/registration.yml" ];
-    };
-    mautrix-whatsapp = {
-      enable = false;
-      environmentFile = pkgs.emptyFile;
-      settings = {
-        homeserver = {
-          address = "http://localhost:8008";
-          domain = "avocadoom.de";
-          async_media = false;
-        };
-        bridge = {
-          displayname_template =
-            "{{ if .FullName }} {{ .FullName }} {{ else if .PushName}}{{.PushName}}{{else if .BusinessName}}{{.BusinessName}}{{else}}{{.JID}}{{end}} (WA)";
-          personal_filtering_spaces = true;
-          delivery_receipts = true;
-          hystory_sync = {
-            backfill = true;
-            request_full_sync = true;
-          };
-          send_presence_on_typing = true;
-          double_puppet_server_map = { };
-          login_shared_secret_map = { };
-          private_chat_portal_meta = true;
-          mute_bridging = true;
-          pinned_tag = "m.favourite";
-          archive_tag = "m.lowpriority";
-          enable_status_broadcast = false;
-          allow_user_invite = true;
-          disappearing_messages_in_groups = true;
-          url_previews = true;
-          encryption = { allow = true; };
-          permissions = { "@avocadoom:avocadoom.de" = "admin"; };
-        };
-      };
     };
     vaultwarden = {
       enable = true;
