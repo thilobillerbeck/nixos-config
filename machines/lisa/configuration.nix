@@ -23,8 +23,8 @@ in {
     firewall = { allowedTCPPorts = [ 5555 ]; };
   };
 
-  services.gitea-actions-runner= {
-    package = unstable.forgejo-actions-runner;
+  services.gitea-actions-runner = {
+    package = unstable.gitea-actions-runner;
     instances = {
       lisa_docker = {
         name = "lisa_docker";
