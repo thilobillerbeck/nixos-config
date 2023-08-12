@@ -127,7 +127,7 @@ in {
       };
     };
     heisenbridge = {
-      enable = true;
+      enable = false;
       debug = true;
       package = unstable.heisenbridge;
       homeserver = "http://localhost:8008";
