@@ -10,7 +10,8 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
-in {
+in
+{
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
@@ -44,6 +45,20 @@ in {
         wantedBy = [ "timers.target" ];
         partOf = [ "gitea-backup-cleanup.service" ];
         timerConfig.OnCalendar = "daily";
+      };
+    };
+    services.zshStrichlistePocketbase = {
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      description = "pocketbase";
+      serviceConfig = {
+        Type = "simple";
+        User = "root";
+        Group = "root";
+        LimitNOFILE = "4096";
+        Restart = "always";
+        RestartSec = "5s";
+        ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:5675 --dir /var/lib/pb/zsh/data --publicDir /var/lib/pb/zsh/public'';
       };
     };
     tmpfiles.rules = [
@@ -121,6 +136,14 @@ in {
           forceSSL = true;
           locations."/" = {
             proxyPass = "http://localhost:3002/";
+            proxyWebsockets = true;
+          };
+        };
+        "zsh-sl-api.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:5675/";
             proxyWebsockets = true;
           };
         };
