@@ -6,16 +6,24 @@
 
 let
   sources = import ./../../nix/sources.nix;
-  fqdn = let
-    join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
-  in join config.networking.domain;
+  fqdn =
+    let
+      join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
+    in
+    join config.networking.domain;
   vaultwarden-domain = "vw.thilo-billerbeck.com";
-  unstable =  import sources.unstable { config.allowUnfree = true; };
-in {
-  imports = [ # Include the results of the hardware scan.
+  unstable = import sources.unstable {
+    config.allowUnfree = true;
+    system = "aarch64-linux";
+  };
+in
+{
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware.nix
     ./../../modules/mautrix-whatsapp.nix
     ./../../modules/colmena-upgrade.nix
+    ./../../modules/synapse-sliding-sync.nix
     ./../../configs/server.nix
   ];
 
@@ -27,7 +35,7 @@ in {
     hostName = "burns";
     domain = "avocadoom.de";
     enableIPv6 = true;
-    firewall.allowedTCPPorts = [ 80 443 ];
+    firewall.allowedTCPPorts = [ 80 443 8009 ];
     interfaces.eth0.ipv6.addresses = [{
       address = "2a01:4f8:c17:552a::1";
       prefixLength = 64;
@@ -76,27 +84,34 @@ in {
           enableACME = true;
           forceSSL = true;
 
-          locations."= /.well-known/matrix/server".extraConfig = let
-            # use 443 instead of the default 8448 port to unite
-            # the client-server and server-server port for simplicity
-            server = {
-              "m.server" = "${fqdn}:443";
-            };
-          in ''
-            add_header Content-Type application/json;
-            return 200 '${builtins.toJSON server}';
-          '';
-          locations."= /.well-known/matrix/client".extraConfig = let
-            client = {
-              "m.homeserver" = { "base_url" = "https://${fqdn}"; };
-              "m.identity_server" = { "base_url" = "https://vector.im"; };
-            };
-            # ACAO required to allow element-web on any URL to request this json file
-          in ''
-            add_header Content-Type application/json;
-            add_header Access-Control-Allow-Origin *;
-            return 200 '${builtins.toJSON client}';
-          '';
+          locations."= /.well-known/matrix/server".extraConfig =
+            let
+              # use 443 instead of the default 8448 port to unite
+              # the client-server and server-server port for simplicity
+              server = {
+                "m.server" = "${fqdn}:443";
+              };
+            in
+            ''
+              add_header Content-Type application/json;
+              return 200 '${builtins.toJSON server}';
+            '';
+          locations."= /.well-known/matrix/client".extraConfig =
+            let
+              client = {
+                "m.homeserver" = { "base_url" = "https://${fqdn}"; };
+                "m.identity_server" = { "base_url" = "https://vector.im"; };
+                "org.matrix.msc3575.proxy" = {
+                  "url" = "https://${fqdn}";
+                };
+              };
+              # ACAO required to allow element-web on any URL to request this json file
+            in
+            ''
+              add_header Content-Type application/json;
+              add_header Access-Control-Allow-Origin *;
+              return 200 '${builtins.toJSON client}';
+            '';
         };
 
         # Reverse proxy for Matrix client-server and server-server communication
@@ -115,6 +130,9 @@ in {
           # forward all Matrix API calls to the synapse Matrix homeserver
           locations."/_matrix" = {
             proxyPass = "http://[::1]:8008"; # without a trailing /
+          };
+          locations."~ ^/(client/|_matrix/client/unstable/org.matrix.msc3575/sync)" = {
+              proxyPass = "http://[::1]:8009";
           };
         };
         "${vaultwarden-domain}" = {
@@ -156,6 +174,14 @@ in {
       }];
       settings.app_service_config_files =
         [ "/var/lib/heisenbridge/registration.yml" ];
+      sliding-sync = {
+        enable = true;
+        package = unstable.matrix-sliding-sync;
+        settings = {
+          SYNCV3_SERVER = "http://localhost:8008";
+        };
+        environmentFile = "/var/lib/matrix-synapse/SYNCV3_ENV";
+      };
     };
     vaultwarden = {
       enable = true;
