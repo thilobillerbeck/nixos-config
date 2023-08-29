@@ -40,6 +40,10 @@ in
     firewall.allowedTCPPorts = [ 22 80 443 9001 ];
   };
 
+  environment.systemPackages = with pkgs; [
+    rev-obsidian-sync
+  ];
+
   systemd = {
     timers = {
       gitea-backup-cleanup = {
@@ -148,6 +152,14 @@ in
           serverAliases = [
             "www.thilo-billerbeck.com"
           ];
+        };
+        "obsync.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:3000/";
+            proxyWebsockets = true;
+          };
         };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
