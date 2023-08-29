@@ -10,6 +10,7 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
+  rev-obsidian-sync = callPackage  ./../../packages/rev-obsidian-sync.nix { };
 in
 {
   imports = [
@@ -45,6 +46,22 @@ in
         wantedBy = [ "timers.target" ];
         partOf = [ "gitea-backup-cleanup.service" ];
         timerConfig.OnCalendar = "daily";
+      };
+    };
+    services.obsidian-sync = {
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      description = "obsidian-sync";
+      serviceConfig = {
+        Type = "simple";
+        DynamicUser = true;
+        Restart = "always";
+        RestartSec = "5s";
+        environment = {
+          HOST = "https://obsync.thilo-billerbeck.com";
+        };
+        WorkingDirectory = "/var/lib/obsidian-sync";
+        ExecStart = ''${rev-obsidian-sync}/bin/obsidian-sync'';
       };
     };
     services.zshStrichlistePocketbase = {
