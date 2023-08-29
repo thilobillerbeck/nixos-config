@@ -10,7 +10,7 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
-  rev-obsidian-sync = callPackage  ./../../packages/rev-obsidian-sync.nix { };
+  rev-obsidian-sync = pkgs.callPackage ./../../packages/rev-obsidian-sync.nix { };
 in
 {
   imports = [
@@ -49,19 +49,20 @@ in
       };
     };
     services.obsidian-sync = {
+      enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       description = "obsidian-sync";
+      environment = {
+        HOST = "https://obsync.thilo-billerbeck.com";
+      };
       serviceConfig = {
         Type = "simple";
-        DynamicUser = true;
         Restart = "always";
-        RestartSec = "5s";
-        environment = {
-          HOST = "https://obsync.thilo-billerbeck.com";
-        };
+        User = "root";
+        Group = "root";
         WorkingDirectory = "/var/lib/obsidian-sync";
-        ExecStart = ''${rev-obsidian-sync}/bin/obsidian-sync'';
+        ExecStart = "${rev-obsidian-sync}/bin/obsidian-sync";
       };
     };
     services.zshStrichlistePocketbase = {

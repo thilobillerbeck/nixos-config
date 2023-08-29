@@ -1,4 +1,3 @@
-❯ cat default.nix
 { lib
 , buildGoModule
 , fetchFromGitHub
