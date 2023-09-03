@@ -16,4 +16,16 @@ in
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "23.11";
 
+  networking.firewall.allowedTCPPorts = [ 6443 30779 ];
+
+  services.k3s = {
+    enable = true;
+    role = "server";
+  };
+
+  environment.systemPackages = [ pkgs.k3s pkgs.kubectl pkgs.kubernetes-helm ];
+
+  environment.variables = {
+    KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+  };
 }
