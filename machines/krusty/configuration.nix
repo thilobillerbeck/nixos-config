@@ -34,6 +34,26 @@ in {
             /var/lib/directus/.env
           ];
         };
+        "kimai-db" = {
+          image = "mysql";
+          volumes = [ "kimai-database:/var/lib/mysql" ];
+          environmentFiles = [
+            /var/lib/kimai/.env-db
+          ];
+          extraOptions = [
+            "--network=kimai"
+          ];
+        };
+        "kimai" = {
+          ports = [ "8056:8001" ];
+          image = "kimai/kimai2:apache";
+          environmentFiles = [
+            /var/lib/kimai/.env
+          ];
+          extraOptions = [
+            "--network=kimai"
+          ];
+        };
       };
     };
     docker = { enable = true; };
@@ -77,11 +97,12 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:8055";
         };
+        "kimai.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://localhost:8056";
+        };
       };
-    };
-    netdata = {
-      enable = true;
-      package = unstable.netdata;
     };
   };
 }
