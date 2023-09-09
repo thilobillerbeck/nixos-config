@@ -5,16 +5,16 @@
 
 buildGoModule rec {
   pname = "obi-sync";
-  version = "0.1.2";
+  version = "0.1.5";
 
   src = fetchFromGitHub {
     owner = "acheong08";
     repo = "obi-sync";
     rev = "v${version}";
-    hash = "sha256-l4yErWQjPZHbCk66GhlScY97rbYy9XMKr/9tGc82UE8=";
+    hash = "sha256-rVzWJ7kbak8H8YR0VV8Xb2jEqFHO37h/bWzuLt7iMTM=";
   };
 
-  vendorHash = "sha256-A/WQ9GCGiA9rncGI+zTy/iqmaXsOa4TIU7XS9r6wMnQ=";
+  vendorHash = "sha256-+3rs9p+4I+kNoZFKyEuVTLBAU7+b4eYDyNkvZrVyC6U=";
 
   ldflags = [ "-s" "-w" ];
 
