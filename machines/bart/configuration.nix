@@ -59,6 +59,7 @@ in
       description = "obsidian-sync";
       environment = {
         HOST = "https://obsync.thilo-billerbeck.com";
+        DATA_DIR = "/var/lib/obsidian-sync";
       };
       serviceConfig = {
         Type = "simple";
