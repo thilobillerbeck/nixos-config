@@ -102,7 +102,16 @@ in {
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:8056";
         };
+        "trilium.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:${toString config.services.trilium-server.port}/";
+            proxyWebsockets = true;
+          };
+        };
       };
     };
+    trilium-server.enable = true;
   };
 }
