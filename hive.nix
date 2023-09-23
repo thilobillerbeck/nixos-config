@@ -1,7 +1,12 @@
 { sources ? import ./nix/sources.nix }:
 
 {
-  meta = { nixpkgs = import sources.nixpkgs { }; };
+  meta = {
+    nixpkgs = import sources.nixpkgs { };
+    nodeNixpkgs = {
+      burns = import sources.unstable { };
+    };
+  };
 
   defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
@@ -43,7 +48,7 @@
   burns = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
-    nixpkgs.pkgs = import sources.nixpkgs {
+    nixpkgs.pkgs = import sources.unstable {
       system = "aarch64-linux";
     };
     networking.hostName = name;

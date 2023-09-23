@@ -21,9 +21,7 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware.nix
-    ./../../modules/mautrix-whatsapp.nix
     ./../../modules/colmena-upgrade.nix
-    ./../../modules/synapse-sliding-sync.nix
     ./../../configs/server.nix
   ];
 
@@ -113,27 +111,38 @@ in
               return 200 '${builtins.toJSON client}';
             '';
         };
-
-        # Reverse proxy for Matrix client-server and server-server communication
         ${fqdn} = {
           enableACME = true;
           forceSSL = true;
-
-          # Or do a redirect instead of the 404, or whatever is appropriate for you.
-          # But do not put a Matrix Web client here! See the Element web section below.
           locations."/".extraConfig = ''
             return 404;
           '';
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 
-          # locations."/synapse-admin/".root = unstable.synapse-admin;
+            location ~* ^/(client/|_matrix/client/unstable/org.matrix.msc3575/sync) {
+              proxy_pass http://127.0.0.1:8009;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host $host;
+              proxy_set_header X-Forwarded-Server $host;
+            }
 
-          # forward all Matrix API calls to the synapse Matrix homeserver
-          locations."/_matrix" = {
-            proxyPass = "http://[::1]:8008"; # without a trailing /
-          };
-          locations."~ ^/(client/|_matrix/client/unstable/org.matrix.msc3575/sync)" = {
-              proxyPass = "http://[::1]:8009";
-          };
+            location ~* ^(\/_matrix|\/_synapse\/client) {
+              proxy_pass http://127.0.0.1:8008;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host $host;
+              proxy_set_header X-Forwarded-Server $host;
+
+              client_max_body_size 50m;
+              proxy_force_ranges on;
+            }
+          '';
         };
         "${vaultwarden-domain}" = {
           enableACME = true;
@@ -176,9 +185,9 @@ in
         [ "/var/lib/heisenbridge/registration.yml" ];
       sliding-sync = {
         enable = true;
-        package = unstable.matrix-sliding-sync;
         settings = {
-          SYNCV3_SERVER = "http://localhost:8008";
+          SYNCV3_SERVER = "https://${fqdn}";
+          SYNCV3_BINDADDR = "127.0.0.1:8009";
         };
         environmentFile = "/var/lib/matrix-synapse/SYNCV3_ENV";
       };
