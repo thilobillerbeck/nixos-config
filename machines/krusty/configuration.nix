@@ -1,5 +1,8 @@
 { config, pkgs, lib, ... }:
 let
+  invoiceninja_app = "invoiceninja";
+  invoiceninja_domain = "invoiceninja.thilo-billerbeck.com";
+  invoiceninja_dataDir = "/srv/http/${invoiceninja_domain}";
   sources = import ./../../nix/sources.nix;
   unstable = import sources.unstable { config.allowUnfree = true; };
 in
@@ -55,22 +58,8 @@ in
             "--network=kimai"
           ];
         };
-        invoiceninja = {
-          image = "invoiceninja/invoiceninja:5";
-          autoStart = true;
-          ports = [ "9999:80" ];
-          volumes = [
-            "/var/lib/invoiceninja/public:/var/app/public"
-            "/var/lib/invoiceninja/storage:/var/app/storage"
-          ];
-          extraOptions = [
-            "--network=invoiceninja"
-          ];
-          environmentFiles = [
-            /var/lib/secrets/invoiceninja.env
-          ];
-        };
         invoiceninja-db = {
+          ports = [ "9999:3306" ];
           image = "mariadb";
           autoStart = true;
           volumes = [
@@ -109,6 +98,22 @@ in
   };
 
   services = {
+    phpfpm.pools.${invoiceninja_app} = {
+      user = config.services.nginx.user;
+      settings = {
+        "listen.owner" = config.services.nginx.user;
+        "pm" = "dynamic";
+        "pm.max_children" = 32;
+        "pm.max_requests" = 500;
+        "pm.start_servers" = 2;
+        "pm.min_spare_servers" = 2;
+        "pm.max_spare_servers" = 5;
+        "php_admin_value[error_log]" = "stderr";
+        "php_admin_flag[log_errors]" = true;
+        "catch_workers_output" = true;
+      };
+      phpEnv."PATH" = lib.makeBinPath [ pkgs.php82 pkgs.mysql ];
+    };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -131,10 +136,45 @@ in
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:8056";
         };
-        "invoiceninja.thilo-billerbeck.com" = {
+        "${invoiceninja_domain}" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:9999";
+          extraConfig = ''
+            server_name ${invoiceninja_domain};
+            root ${invoiceninja_dataDir}/public;
+            index index.php index.html index.htm;
+            client_max_body_size 20M;
+
+            gzip on;
+            gzip_types      application/javascript application/x-javascript text/javascript text/plain application/xml application/json;
+            gzip_proxied    no-cache no-store private expired auth;
+            gzip_min_length 1000;
+
+            location / {
+                try_files $uri $uri/ =404;
+            }
+
+            location ~* \.pdf$ {
+                add_header Cache-Control no-store;
+            }
+
+            if (!-e $request_filename) {
+                rewrite ^(.+)$ /index.php?q= last;
+            }
+
+            location ~* /storage/.*\.php$ {
+                return 503;
+            }
+
+            location ~ \.php$ {
+              include ${pkgs.nginx}/conf/fastcgi.conf;
+              fastcgi_pass unix:${config.services.phpfpm.pools.${invoiceninja_app}.socket};
+            }
+
+            location ~ /\.ht {
+                deny all;
+            }
+          '';
         };
         "trilium.thilo-billerbeck.com" = {
           enableACME = true;
@@ -147,5 +187,16 @@ in
       };
     };
     trilium-server.enable = true;
+    mysql = {
+      enable = true;
+      dataDir = "/var/lib/mariadb";
+      package = pkgs.mariadb;
+    };
+    cron = {
+      enable = true;
+      systemCronJobs = [
+        "* * * * * cd /srv/http/${invoiceninja_domain} && ${pkgs.php82}/bin/php artisan schedule:run >> /dev/null 2>&1"
+      ];
+    };
   };
 }
