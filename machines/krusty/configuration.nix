@@ -1,8 +1,9 @@
-{ config, pkgs, lib,  ... }:
+{ config, pkgs, lib, ... }:
 let
   sources = import ./../../nix/sources.nix;
-  unstable =  import sources.unstable { config.allowUnfree = true; };
-in {
+  unstable = import sources.unstable { config.allowUnfree = true; };
+in
+{
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
@@ -27,9 +28,9 @@ in {
           ports = [ "8055:8055" ];
           image = "directus/directus:latest";
           volumes = [
-              "directus-database:/directus/database"
-              "directus-uploads:/directus/uploads"
-           ];
+            "directus-database:/directus/database"
+            "directus-uploads:/directus/uploads"
+          ];
           environmentFiles = [
             /var/lib/directus/.env
           ];
@@ -54,6 +55,34 @@ in {
             "--network=kimai"
           ];
         };
+        invoiceninja = {
+          image = "invoiceninja/invoiceninja:5";
+          autoStart = true;
+          ports = [ "9999:80" ];
+          volumes = [
+            "/var/lib/invoiceninja/public:/var/app/public"
+            "/var/lib/invoiceninja/storage:/var/app/storage"
+          ];
+          extraOptions = [
+            "--network=invoiceninja"
+          ];
+          environmentFiles = [
+            /var/lib/secrets/invoiceninja.env
+          ];
+        };
+        invoiceninja-db = {
+          image = "mariadb";
+          autoStart = true;
+          volumes = [
+            "/var/lib/invoiceninja/mariadb:/var/lib/mysql"
+          ];
+          extraOptions = [
+            "--network=invoiceninja"
+          ];
+          environmentFiles = [
+            /var/lib/secrets/invoiceninja.env
+          ];
+        };
       };
     };
     docker = { enable = true; };
@@ -65,19 +94,19 @@ in {
   };
 
   systemd.services.invoicePocketbase = {
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-      description = "pocketbase";
-      serviceConfig = {
-        Type = "simple";
-        User = "root";
-        Group = "root";
-        LimitNOFILE = "4096";
-        Restart        = "always";
-        RestartSec     = "5s";
-        ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:3456 --dir /var/lib/pb/invoiceapi/data --publicDir /var/lib/pb/invoiceapi/public'';
-      };
-   };
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    description = "pocketbase";
+    serviceConfig = {
+      Type = "simple";
+      User = "root";
+      Group = "root";
+      LimitNOFILE = "4096";
+      Restart = "always";
+      RestartSec = "5s";
+      ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:3456 --dir /var/lib/pb/invoiceapi/data --publicDir /var/lib/pb/invoiceapi/public'';
+    };
+  };
 
   services = {
     nginx = {
@@ -101,6 +130,11 @@ in {
           enableACME = true;
           forceSSL = true;
           locations."/".proxyPass = "http://localhost:8056";
+        };
+        "invoiceninja.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://localhost:9999";
         };
         "trilium.thilo-billerbeck.com" = {
           enableACME = true;
