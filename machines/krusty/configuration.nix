@@ -4,7 +4,12 @@ let
   invoiceninja_domain = "invoiceninja.thilo-billerbeck.com";
   invoiceninja_dataDir = "/srv/http/${invoiceninja_domain}";
   sources = import ./../../nix/sources.nix;
-  invoiceninja_php = pkgs.php82.buildEnv { extraConfig = "memory_limit = 512M"; };
+  invoiceninja_php = pkgs.php.buildEnv {
+    extensions = { enabled, all }: with all; enabled ++ [ memcached ];
+    extraConfig = ''
+      memory_limit = 512M
+    '';
+  };
   unstable = import sources.unstable { config.allowUnfree = true; };
 in
 {
@@ -81,17 +86,36 @@ in
   systemd.services."invoiceninja" = {
     script = ''
       cd /srv/http/${invoiceninja_domain}
-      ${pkgs.php82}/bin/php artisan schedule:run
+      ${invoiceninja_php}/bin/php artisan schedule:run
     '';
     serviceConfig = {
       Type = "oneshot";
       User = config.services.nginx.user;
     };
   };
+  systemd.services.invoiceninja-scheduler = {
+    description = "invoiceninja scheduler";
+    startAt = "minutely";
+
+    unitConfig = {
+      ConditionPathExists = "${invoiceninja_dataDir}/.env";
+      ConditionDirectoryNotEmpty = "${invoiceninja_dataDir}/vendor";
+    };
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = config.services.nginx.user;
+      Group = config.services.nginx.user;
+      SyslogIdentifier = "invoiceninja-scheduler";
+      WorkingDirectory = "${invoiceninja_dataDir}";
+      ExecStart = "${invoiceninja_php}/bin/php artisan schedule:run -v";
+    };
+  };
 
   services = {
     phpfpm.pools.${invoiceninja_app} = {
       user = config.services.nginx.user;
+      phpPackage = invoiceninja_php;
       settings = {
         "listen.owner" = config.services.nginx.user;
         "pm" = "dynamic";
@@ -104,7 +128,7 @@ in
         "php_admin_flag[log_errors]" = true;
         "catch_workers_output" = true;
       };
-      phpEnv."PATH" = lib.makeBinPath [ pkgs.invoiceninja_php pkgs.mysql ];
+      phpEnv."PATH" = lib.makeBinPath [ invoiceninja_php pkgs.mysql ];
     };
     nginx = {
       enable = true;
@@ -116,7 +140,10 @@ in
         "n8n.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
-          locations."/".proxyPass = "http://localhost:5678";
+          locations."/" = {
+            proxyWebsockets = true;
+            proxyPass = "http://localhost:5678";
+          };
         };
         "directus.thilo-billerbeck.com" = {
           enableACME = true;
