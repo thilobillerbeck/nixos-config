@@ -58,20 +58,6 @@ in
             "--network=kimai"
           ];
         };
-        invoiceninja-db = {
-          ports = [ "9999:3306" ];
-          image = "mariadb";
-          autoStart = true;
-          volumes = [
-            "/var/lib/invoiceninja/mariadb:/var/lib/mysql"
-          ];
-          extraOptions = [
-            "--network=invoiceninja"
-          ];
-          environmentFiles = [
-            /var/lib/secrets/invoiceninja.env
-          ];
-        };
       };
     };
     docker = { enable = true; };
@@ -82,18 +68,23 @@ in
     firewall = { allowedTCPPorts = [ 22 80 443 9001 8055 ]; };
   };
 
-  systemd.services.invoicePocketbase = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    description = "pocketbase";
+  systemd.timers."invoiceninja" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "1m";
+      OnUnitActiveSec = "1m";
+      Unit = "invoiceninja.service";
+    };
+  };
+
+  systemd.services."invoiceninja" = {
+    script = ''
+      cd /srv/http/${invoiceninja_domain}
+      ${pkgs.php82}/bin/php artisan schedule:run
+    '';
     serviceConfig = {
-      Type = "simple";
-      User = "root";
-      Group = "root";
-      LimitNOFILE = "4096";
-      Restart = "always";
-      RestartSec = "5s";
-      ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:3456 --dir /var/lib/pb/invoiceapi/data --publicDir /var/lib/pb/invoiceapi/public'';
+      Type = "oneshot";
+      User = config.services.nginx.user;
     };
   };
 
@@ -191,12 +182,6 @@ in
       enable = true;
       dataDir = "/var/lib/mariadb";
       package = pkgs.mariadb;
-    };
-    cron = {
-      enable = true;
-      systemCronJobs = [
-        "* * * * * cd /srv/http/${invoiceninja_domain} && ${pkgs.php82}/bin/php artisan schedule:run >> /dev/null 2>&1"
-      ];
     };
   };
 }
