@@ -4,6 +4,7 @@ let
   invoiceninja_domain = "invoiceninja.thilo-billerbeck.com";
   invoiceninja_dataDir = "/srv/http/${invoiceninja_domain}";
   sources = import ./../../nix/sources.nix;
+  invoiceninja_php = pkgs.php82.buildEnv { extraConfig = "memory_limit = 512M"; };
   unstable = import sources.unstable { config.allowUnfree = true; };
 in
 {
@@ -103,7 +104,7 @@ in
         "php_admin_flag[log_errors]" = true;
         "catch_workers_output" = true;
       };
-      phpEnv."PATH" = lib.makeBinPath [ pkgs.php82 pkgs.mysql ];
+      phpEnv."PATH" = lib.makeBinPath [ pkgs.invoiceninja_php pkgs.mysql ];
     };
     nginx = {
       enable = true;
