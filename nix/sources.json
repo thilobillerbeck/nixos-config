@@ -17,10 +17,10 @@
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "715d72e967ec1dd5ecc71290ee072bcaf5181ed6",
-        "sha256": "1pq9g1gzchc8r5qdzpnc65sm172k1m6ihxz18az2nvbhxbbjhpgb",
+        "rev": "261abe8a44a7e8392598d038d2e01f7b33cf26d0",
+        "sha256": "1hpjj75s3xvngn48q27q78syrlg2yfac5hmk2573z6089ajpaxli",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/715d72e967ec1dd5ecc71290ee072bcaf5181ed6.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/261abe8a44a7e8392598d038d2e01f7b33cf26d0.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "unstable": {
@@ -29,10 +29,10 @@
         "homepage": "",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "397b1733f45dc601e82ab9e13d5d427167fc284e",
-        "sha256": "14xlsy8ijy7k3h1cxd3cljnh844xbcv3y0d50kmbjlxviclqddns",
+        "rev": "7a862f0a660d5bd850457a0ad7772e1672109ccd",
+        "sha256": "0ibzmpk9rk1f5r8ic79kdxc4kfh5jlig1q603rgpgala0gmn7a08",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/397b1733f45dc601e82ab9e13d5d427167fc284e.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/7a862f0a660d5bd850457a0ad7772e1672109ccd.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
