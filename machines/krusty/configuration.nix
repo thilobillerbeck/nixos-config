@@ -28,11 +28,6 @@ in
     oci-containers = {
       backend = "docker";
       containers = {
-        "n8n" = {
-          ports = [ "5678:5678" ];
-          image = "n8nio/n8n:latest";
-          volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
-        };
         "directus" = {
           ports = [ "8055:8055" ];
           image = "directus/directus:latest";
@@ -137,14 +132,6 @@ in
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
       virtualHosts = {
-        "n8n.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://localhost:5678";
-          };
-        };
         "directus.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
