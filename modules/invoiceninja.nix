@@ -37,25 +37,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.timers."${invoiceninja_app_name}" = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = "1m";
-        OnUnitActiveSec = "1m";
-        Unit = "${invoiceninja_app_name}.service";
-      };
-    };
-
-    systemd.services."${invoiceninja_app_name}" = {
-      script = ''
-        cd /srv/http/${cfg.domain}
-        ${invoiceninja_php}/bin/php artisan schedule:run
-      '';
-      serviceConfig = {
-        Type = "oneshot";
-        User = config.services.nginx.user;
-      };
-    };
     systemd.services."${invoiceninja_app_name}-scheduler" = {
       description = "${invoiceninja_app_name} scheduler";
       startAt = "minutely";
