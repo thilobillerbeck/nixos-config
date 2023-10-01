@@ -14,7 +14,7 @@
     hostName = "marge";
     nameservers = [ "8.8.8.8" ];
     defaultGateway = "172.31.1.1";
-    firewall = { allowedTCPPorts = [ 22 25 80 110 143 443 465 587 993 995 4190 ]; };
+    firewall = { allowedTCPPorts = [ 22 25 80 110 143 443 465 587 993 995 4190 9002 ]; };
     defaultGateway6 = {
       address = "fe80::1";
       interface = "eth0";
@@ -42,5 +42,17 @@
 
   virtualisation = {
     docker = { enable = true; };
+  };
+
+  services = {
+    prometheus = {
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [ "systemd" ];
+          port = 9002;
+        };
+      };
+    };
   };
 }

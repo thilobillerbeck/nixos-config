@@ -37,7 +37,7 @@ in
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9001 ];
+    firewall.allowedTCPPorts = [ 22 80 443 9002 ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -247,8 +247,6 @@ in
       settings = { PORT = "3002"; };
     };
     prometheus = {
-      enable = true;
-      port = 9001;
       exporters = {
         node = {
           enable = true;
@@ -256,14 +254,6 @@ in
           port = 9002;
         };
       };
-      scrapeConfigs = [
-        {
-          job_name = "bart";
-          static_configs = [{
-            targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
-          }];
-        }
-      ];
     };
   };
 }

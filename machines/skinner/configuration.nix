@@ -6,6 +6,14 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
+  prometheus_hosts = [
+    "bart"
+    "burns"
+    "krusty"
+    "lisa"
+    "marge"
+    "skinner"
+  ];
 in
 {
   imports = [
@@ -19,7 +27,7 @@ in
 
   networking = {
     hostName = "skinner";
-    firewall = { allowedTCPPorts = [ 22 80 443 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 9001 ]; };
   };
 
   virtualisation = {
@@ -53,6 +61,23 @@ in
             proxyWebsockets = true;
             proxyPass = "http://localhost:5678";
           };
+        };
+      };
+    };
+    prometheus = {
+      enable = true;
+      port = 9001;
+      scrapeConfigs = lib.imap0 (i: v: {
+        job_name = v;
+        static_configs = [{
+            targets = [ "${v}.thilo-billerbeck.com:9002" ];
+        }];
+      }) prometheus_hosts;
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [ "systemd" ];
+          port = 9002;
         };
       };
     };

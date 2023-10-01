@@ -33,7 +33,7 @@ in
     hostName = "burns";
     domain = "avocadoom.de";
     enableIPv6 = true;
-    firewall.allowedTCPPorts = [ 80 443 8009 ];
+    firewall.allowedTCPPorts = [ 80 443 8009 9002 ];
     interfaces.eth0.ipv6.addresses = [{
       address = "2a01:4f8:c17:552a::1";
       prefixLength = 64;
@@ -236,6 +236,15 @@ in
       plugins = [
         pkgs.nodePackages.thelounge-theme-abyss
       ];
+    };
+    prometheus = {
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [ "systemd" ];
+          port = 9002;
+        };
+      };
     };
   };
 }

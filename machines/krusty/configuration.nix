@@ -59,7 +59,7 @@ in
 
   networking = {
     hostName = "krusty";
-    firewall = { allowedTCPPorts = [ 22 80 443 9001 8055 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 9001 8055 9002 ]; };
   };
 
   services = {
@@ -95,5 +95,14 @@ in
       };
     };
     trilium-server.enable = true;
+    prometheus = {
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [ "systemd" ];
+          port = 9002;
+        };
+      };
+    };
   };
 }
