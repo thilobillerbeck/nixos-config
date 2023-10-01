@@ -45,6 +45,16 @@
     };
   };
 
+  marge = { name, nodes, pkgs, ... }: {
+    imports = [ ./machines/${name}/configuration.nix ];
+    deployment.targetHost = "mail.officerent.de";
+    nixpkgs.pkgs = import sources.nixpkgs { };
+    networking = {
+      hostName = name;
+      domain = "thilo-billerbeck.com";
+    };
+  };
+
   burns = { name, nodes, pkgs, ... }: {
     imports = [ ./machines/${name}/configuration.nix ];
     deployment.targetHost = "${name}.thilo-billerbeck.com";
