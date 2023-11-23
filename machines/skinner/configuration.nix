@@ -63,6 +63,14 @@ in
             proxyPass = "http://localhost:5678";
           };
         };
+        "skymoth.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyWebsockets = true;
+            proxyPass = "http://localhost:5555";
+          };
+        };
       };
     };
     prometheus = {
