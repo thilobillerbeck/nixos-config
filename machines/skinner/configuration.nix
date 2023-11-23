@@ -24,10 +24,9 @@ in
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "23.11";
 
-
   networking = {
     hostName = "skinner";
-    firewall = { allowedTCPPorts = [ 22 80 443 9001 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 5001 9001 ]; };
   };
 
   virtualisation = {
@@ -42,7 +41,9 @@ in
         };
       };
     };
-    docker = { enable = true; };
+    docker = {
+      enable = true;
+    };
   };
 
 
