@@ -19,6 +19,7 @@ in
   imports = [
     ./hardware.nix
     ./../../configs/server.nix
+    ./../../users/deploy.nix
   ];
 
   time.timeZone = "Europe/Berlin";
