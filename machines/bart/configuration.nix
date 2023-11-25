@@ -37,7 +37,7 @@ in
       interface = "eth0";
     };
     hostName = "bart";
-    firewall.allowedTCPPorts = [ 22 80 443 9002 ];
+    firewall.allowedTCPPorts = [ 22 80 443 5001 9002 ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -176,6 +176,14 @@ in
           locations."/" = {
             proxyPass = "http://localhost:5675/";
             proxyWebsockets = true;
+          };
+        };
+        "skymoth.app" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyWebsockets = true;
+            proxyPass = "http://localhost:5555";
           };
         };
       };

@@ -64,14 +64,6 @@ in
             proxyPass = "http://localhost:5678";
           };
         };
-        "skymoth.app" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://localhost:5555";
-          };
-        };
       };
     };
     prometheus = {
