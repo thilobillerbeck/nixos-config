@@ -5,7 +5,7 @@
   users.users.deploy = {
     uid = 1001;
     description = "Deployment User";
-    shell = pkgs.bash;
+    shell = pkgs.zsh;
     isSystemUser = true;
     openssh.authorizedKeys.keys = [
       # deploy
