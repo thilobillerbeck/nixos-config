@@ -64,7 +64,7 @@ in
             proxyPass = "http://localhost:5678";
           };
         };
-        "skymoth.thilo-billerbeck.com" = {
+        "skymoth.app" = {
           enableACME = true;
           forceSSL = true;
           locations."/" = {
