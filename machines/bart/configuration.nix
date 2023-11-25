@@ -52,38 +52,6 @@ in
         timerConfig.OnCalendar = "daily";
       };
     };
-    services.obsidian-sync = {
-      enable = true;
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-      description = "obsidian-sync";
-      environment = {
-        HOST = "https://obsync.thilo-billerbeck.com";
-        DATA_DIR = "/var/lib/obsidian-sync";
-      };
-      serviceConfig = {
-        Type = "simple";
-        Restart = "always";
-        User = "root";
-        Group = "root";
-        WorkingDirectory = "/var/lib/obsidian-sync";
-        ExecStart = "${rev-obsidian-sync}/bin/obsidian-sync";
-      };
-    };
-    services.zshStrichlistePocketbase = {
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-      description = "pocketbase";
-      serviceConfig = {
-        Type = "simple";
-        User = "root";
-        Group = "root";
-        LimitNOFILE = "4096";
-        Restart = "always";
-        RestartSec = "5s";
-        ExecStart = ''${unstable.pocketbase}/bin/pocketbase serve --http localhost:5675 --dir /var/lib/pb/zsh/data --publicDir /var/lib/pb/zsh/public'';
-      };
-    };
     tmpfiles.rules = [
       "L+ '${config.services.gitea.stateDir}/custom/templates/home.tmpl' - - - - ${
         ./gitea/gitea-home.tmpl
@@ -262,6 +230,11 @@ in
           port = 9002;
         };
       };
+    };
+  };
+  virtualisation = {
+    docker = {
+      enable = true;
     };
   };
 }
