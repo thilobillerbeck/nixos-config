@@ -160,7 +160,6 @@ in
       enable = true;
       cookieSecure = true;
       disableRegistration = true;
-      httpPort = 3001;
       package = unstable.forgejo;
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
@@ -176,6 +175,7 @@ in
           ENABLE_NOTIFY_MAIL = true;
           DEFAULT_KEEP_EMAIL_PRIVATE = true;
           DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
+          HTTP_PORT = 3001;
           #explore = {
           #  DISABLE_USERS_PAGE = true;
           #};
@@ -200,13 +200,11 @@ in
         "repository.upload" = {
           TEMP_PATH = "/tmp/gitea/uploads";
         };
-        packages = {
-          CHUNKED_UPLOAD_PATH = "/tmp/gitea/package-uploads";
-        };
       };
     };
     postgresql = {
       enable = true; # Ensure postgresql is enabled
+      package = pkgs.postgresql_15;
       ensureDatabases = [ "woodpecker" "gitea" ];
       ensureUsers = [{
         name = "woodpecker";
