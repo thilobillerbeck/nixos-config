@@ -3,21 +3,16 @@
 let
   gitea_url = "git.thilo-billerbeck.com";
   drone_url = "ci.thilo-billerbeck.com";
-  drone_port = 4000;
-  drone_proto = "https";
   sources = import ./../../nix/sources.nix;
   unstable = import sources.unstable {
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
-  rev-obsidian-sync = pkgs.callPackage ./../../packages/rev-obsidian-sync.nix { };
 in
 {
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
-    ./../../modules/woodpecker-agent.nix
-    ./../../modules/colmena-upgrade.nix
     ./../../users/deploy.nix
   ];
 
@@ -40,10 +35,6 @@ in
     firewall.allowedTCPPorts = [ 22 80 443 5001 9002 ];
   };
 
-  environment.systemPackages = with pkgs; [
-    rev-obsidian-sync
-  ];
-
   systemd = {
     timers = {
       gitea-backup-cleanup = {
@@ -53,19 +44,16 @@ in
       };
     };
     tmpfiles.rules = [
-      "L+ '${config.services.gitea.stateDir}/custom/templates/home.tmpl' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/templates/home.tmpl' - - - - ${
         ./gitea/gitea-home.tmpl
       }"
-      "L+ '${config.services.gitea.stateDir}/custom/templates/custom/extra_links_footer.tmpl' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/templates/custom/extra_links_footer.tmpl' - - - - ${
         ./gitea/extra_links_footer.tmpl
       }"
-      "L+ '${config.services.gitea.stateDir}/custom/public/css/theme-dark-fire.css' - - - - ${
-        ./gitea/theme-dark-fire.css
-      }"
-      "L+ '${config.services.gitea.stateDir}/custom/public/img/logo.svg' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/public/img/logo.svg' - - - - ${
         ./gitea/logo.svg
       }"
-      "L+ '${config.services.gitea.stateDir}/custom/public/img/favicon.png' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/public/img/favicon.png' - - - - ${
         ./gitea/favicon.png
       }"
     ];
@@ -74,13 +62,13 @@ in
   age.secrets = {
     giteaMailerPassword = {
       file = ./../../secrets/giteaMailerPassword.age;
-      owner = "gitea";
-      group = "gitea";
+      owner = "forgejo";
+      group = "forgejo";
     };
     giteaDatabasePassword = {
       file = ./../../secrets/giteaDatabasePassword.age;
-      owner = "gitea";
-      group = "gitea";
+      owner = "forgejo";
+      group = "forgejo";
     };
   };
 
@@ -156,7 +144,7 @@ in
         };
       };
     };
-    gitea = {
+    forgejo = {
       enable = true;
       cookieSecure = true;
       disableRegistration = true;
@@ -167,6 +155,7 @@ in
       mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
         type = "postgres";
+        createDatabase = true;
         passwordFile = config.age.secrets.giteaDatabasePassword.path;
       };
       settings = {
@@ -176,15 +165,11 @@ in
           DEFAULT_KEEP_EMAIL_PRIVATE = true;
           DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
           HTTP_PORT = 3001;
-          #explore = {
-          #  DISABLE_USERS_PAGE = true;
-          #};
+          DOMAIN = "git.thilo-billerbeck.com";
         };
         "service.explore" = { DISABLE_USERS_PAGE = true; };
         federation = { ENABLED = true; };
         ui = {
-          # DEFAULT_THEME = "dark-fire";
-          # THEMES = "gitea,dark-fire";
           SHOW_USER_EMAIL = false;
         };
         indexer = { REPO_INDEXER_ENABLED = true; };
@@ -192,7 +177,7 @@ in
         mailer = {
           ENABLED = true;
           FROM = ''"Thilos Git" <git@officerent.de>'';
-          MAILER_TYPE = "smtp";
+          PROTOCOL = "smtp";
           HOST = "mail.officerent.de:465";
           IS_TLS_ENABLED = true;
           USER = "git@officerent.de";
@@ -203,17 +188,8 @@ in
       };
     };
     postgresql = {
-      enable = true; # Ensure postgresql is enabled
-      package = pkgs.postgresql_15;
-      ensureDatabases = [ "woodpecker" "gitea" ];
-      ensureUsers = [{
-        name = "woodpecker";
-        ensurePermissions = { "DATABASE woodpecker" = "ALL PRIVILEGES"; };
-      }];
-      identMap = # Map the gitea user to postgresql
-        ''
-          gitea-users gitea gitea
-        '';
+      enable = true;
+      package = pkgs.postgresql;
     };
     uptime-kuma = {
       enable = true;
