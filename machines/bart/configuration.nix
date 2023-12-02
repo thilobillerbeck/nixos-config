@@ -44,16 +44,16 @@ in
       };
     };
     tmpfiles.rules = [
-      "L+ '${config.services.forgejo.customDir}/templates/home.tmpl' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/templates/home.tmpl' - forgejo forgejo - ${
         ./gitea/gitea-home.tmpl
       }"
-      "L+ '${config.services.forgejo.customDir}/templates/custom/extra_links_footer.tmpl' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/templates/custom/extra_links_footer.tmpl' - forgejo forgejo - ${
         ./gitea/extra_links_footer.tmpl
       }"
-      "L+ '${config.services.forgejo.customDir}/public/img/logo.svg' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/public/img/logo.svg' - forgejo forgejo - ${
         ./gitea/logo.svg
       }"
-      "L+ '${config.services.forgejo.customDir}/public/img/favicon.png' - - - - ${
+      "L+ '${config.services.forgejo.customDir}/public/img/favicon.png' - forgejo forgejo - ${
         ./gitea/favicon.png
       }"
     ];
@@ -70,6 +70,8 @@ in
       owner = "forgejo";
       group = "forgejo";
     };
+    resticBackupPassword = { file = ./../../secrets/resticBackupPassword.age; };
+    burnsBackupEnv = { file = ./../../secrets/burnsBackupEnv.age; };
   };
 
   services = {
@@ -205,6 +207,15 @@ in
         };
       };
     };
+    # restic.backups.bart = {
+    #  initialize = true;
+    #  passwordFile = config.age.secrets.resticBackupPassword.path;
+    #  environmentFile = config.age.secrets.burnsBackupEnv.path;
+    #  paths = [ ];
+    #  repository = "b2:backup-bart";
+    #  timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
+    #  pruneOpts = [ "--keep-daily 5" ];
+    # };
   };
   virtualisation = {
     docker = {
