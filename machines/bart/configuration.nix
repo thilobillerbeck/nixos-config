@@ -157,6 +157,7 @@ in
       dump = {
         enable = true;
         file = "forgejo-dump";
+        interval = "02:30";
       };
       mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
