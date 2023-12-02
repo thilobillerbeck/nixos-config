@@ -154,6 +154,10 @@ in
       appName = "Thilos SCM";
       rootUrl = "https://${gitea_url}/";
       lfs.enable = true;
+      dump = {
+        enable = true;
+        file = "forgejo-dump";
+      };
       mailerPasswordFile = config.age.secrets.giteaMailerPassword.path;
       database = {
         type = "postgres";
@@ -207,15 +211,17 @@ in
         };
       };
     };
-    # restic.backups.bart = {
-    #  initialize = true;
-    #  passwordFile = config.age.secrets.resticBackupPassword.path;
-    #  environmentFile = config.age.secrets.burnsBackupEnv.path;
-    #  paths = [ ];
-    #  repository = "b2:backup-bart";
-    #  timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
-    #  pruneOpts = [ "--keep-daily 5" ];
-    # };
+    restic.backups.bart = {
+      initialize = true;
+      passwordFile = config.age.secrets.resticBackupPassword.path;
+      environmentFile = config.age.secrets.burnsBackupEnv.path;
+      paths = [
+        "/var/lib/forgejo/dump"
+      ];
+      repository = "b2:backup-bart";
+      timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
+      pruneOpts = [ "--keep-daily 5" ];
+    };
   };
   virtualisation = {
     docker = {
