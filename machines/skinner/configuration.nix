@@ -27,7 +27,7 @@ in
 
   networking = {
     hostName = "skinner";
-    firewall = { allowedTCPPorts = [ 22 80 443 5001 9001 ]; };
+    firewall = { allowedTCPPorts = [ 22 80 443 5001 8080 9001 ]; };
   };
 
   virtualisation = {
@@ -62,6 +62,14 @@ in
           locations."/" = {
             proxyWebsockets = true;
             proxyPass = "http://localhost:5678";
+          };
+        };
+        "testcloud.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyWebsockets = true;
+            proxyPass = "http://localhost:11000";
           };
         };
       };
