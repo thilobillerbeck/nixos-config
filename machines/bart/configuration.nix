@@ -8,6 +8,9 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
+  deployHookShellScript = pkgs.writeShellScript "builder.sh" ''
+    echo "Test"
+  '';
 in
 {
   imports = [
@@ -128,6 +131,12 @@ in
             proxyWebsockets = true;
           };
         };
+        "bart.thilo-billerbeck.com" = {
+          locations."/" = {
+            proxyPass = "http://localhost:9000/";
+            proxyWebsockets = true;
+          };
+        };
         "zsh-sl-api.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
@@ -222,6 +231,16 @@ in
       repository = "b2:backup-bart";
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
       pruneOpts = [ "--keep-daily 5" ];
+    };
+    webhook = {
+      enable = true;
+      openFirewall = true;
+      hooks = {
+        test = {
+          id = "test";
+          execute-command = "${deployHookShellScript}";
+        };
+      };
     };
   };
   virtualisation = {
