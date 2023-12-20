@@ -32,4 +32,7 @@ in {
 
   # docker
   "watchtower-env.age".publicKeys = users ++ systems;
+
+  # webhook
+  "webhooksecret.age".publicKeys = users ++ systems;
 }

@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }:
 
+with builtins;
 let
   gitea_url = "git.thilo-billerbeck.com";
   drone_url = "ci.thilo-billerbeck.com";
@@ -8,9 +9,15 @@ let
     config.allowUnfree = true;
     system = "aarch64-linux";
   };
-  deployHookShellScript = pkgs.writeShellScript "builder.sh" ''
-    echo "Test"
-  '';
+  deployHookShellScript = pkgs.writeShellApplication {
+    name = "deploy-skymoth-hook";
+
+    runtimeInputs = with pkgs; [ git docker openssh ];
+    text = ''
+      git pull
+      docker compose up --build -d
+    '';
+  };
 in
 {
   imports = [
@@ -46,6 +53,9 @@ in
         timerConfig.OnCalendar = "daily";
       };
     };
+    services.webhook = {
+      serviceConfig.EnvironmentFile = config.age.secrets.webhooksecret.path;
+    };
     tmpfiles.rules = [
       "L+ '${config.services.forgejo.customDir}/templates/home.tmpl' - forgejo forgejo - ${
         ./gitea/gitea-home.tmpl
@@ -75,6 +85,7 @@ in
     };
     resticBackupPassword = { file = ./../../secrets/resticBackupPassword.age; };
     burnsBackupEnv = { file = ./../../secrets/burnsBackupEnv.age; };
+    webhooksecret = { file = ./../../secrets/webhooksecret.age; };
   };
 
   services = {
@@ -132,9 +143,10 @@ in
           };
         };
         "bart.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
           locations."/" = {
             proxyPass = "http://localhost:9000/";
-            proxyWebsockets = true;
           };
         };
         "zsh-sl-api.thilo-billerbeck.com" = {
@@ -234,12 +246,31 @@ in
     };
     webhook = {
       enable = true;
-      openFirewall = true;
-      hooks = {
-        test = {
-          id = "test";
-          execute-command = "${deployHookShellScript}";
-        };
+      user = "deploy";
+      group = "deploy";
+      hooksTemplated = {
+        skymoth-deploy = ''
+          {
+            "id": "skymoth-deploy",
+            "execute-command": "${deployHookShellScript}/bin/deploy-skymoth-hook",
+            "command-working-directory": "/opt/stacks/skymoth",
+            "include-command-output-in-response": true,
+            "include-command-output-in-response-on-error": true,
+            "trigger-rule":
+            {
+              "match":
+              {
+                "type": "value",
+                "value": "{{ getenv "WEBHOOK_SECRET" | js }}",
+                "parameter":
+                {
+                  "source": "url",
+                  "name": "token"
+                }
+              }
+            }
+          }
+        '';
       };
     };
   };
