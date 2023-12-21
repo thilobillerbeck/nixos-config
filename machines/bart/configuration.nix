@@ -18,6 +18,24 @@ let
       docker compose up --build -d
     '';
   };
+  thiloBillerbeckComDeployScript = pkgs.writeShellApplication {
+    name = "deploy-thilo-billerbeck.com-hook";
+
+    runtimeInputs = with pkgs; [ curl unzip rsync ];
+
+    text = ''
+      mkdir -p /tmp/thilo-billerbeck.com
+      curl -L \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $2" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "https://api.github.com/repos/thilobillerbeck/thilo-billerbeck-com/actions/artifacts/$1/zip" > /tmp/thilo-billerbeck.com/artifact.zip
+      unzip -o /tmp/thilo-billerbeck.com/artifact.zip -d /tmp/thilo-billerbeck.com
+      rm /tmp/thilo-billerbeck.com/artifact.zip
+      rsync -avzr --delete --omit-dir-times --no-perms /tmp/thilo-billerbeck.com/ /var/www/thilo-billerbeck.com/
+      rm -rf /tmp/thilo-billerbeck.com
+    '';
+  };
 in
 {
   imports = [
@@ -249,6 +267,38 @@ in
       user = "deploy";
       group = "deploy";
       hooksTemplated = {
+        thilo-billerbeck-com-deploy = ''
+          {
+            "id": "thilo-billerbeck-com-deploy",
+            "execute-command": "${thiloBillerbeckComDeployScript}/bin/deploy-thilo-billerbeck.com-hook",
+            "include-command-output-in-response": true,
+            "include-command-output-in-response-on-error": true,
+            "pass-arguments-to-command":
+            [
+              {
+                "source": "url",
+                "name": "artifact"
+              },
+              {
+                "source": "string",
+                "name": "{{ getenv "GITHUB_TOKEN" | js }}"
+              },
+            ],
+            "trigger-rule":
+            {
+              "match":
+              {
+                "type": "value",
+                "value": "{{ getenv "WEBHOOK_SECRET" | js }}",
+                "parameter":
+                {
+                  "source": "url",
+                  "name": "token"
+                }
+              }
+            }
+          }
+        '';
         skymoth-deploy = ''
           {
             "id": "skymoth-deploy",
