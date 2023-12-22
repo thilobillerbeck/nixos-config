@@ -28,6 +28,7 @@ in
   networking = {
     hostName = "skinner";
     firewall = { allowedTCPPorts = [ 22 80 443 5001 8080 9001 ]; };
+    networkmanager.enable = true;
   };
 
   virtualisation = {
@@ -46,7 +47,6 @@ in
       enable = true;
     };
   };
-
 
   services = {
     nginx = {
@@ -72,6 +72,25 @@ in
             proxyPass = "http://localhost:11000";
           };
         };
+      };
+    };
+    gitea-actions-runner = {
+      package = pkgs.forgejo-actions-runner;
+      instances.skinner-secretary = {
+        settings = {
+          container = {
+            network = "host";
+          };
+        };
+        enable = true;
+        name = config.networking.hostName;
+        token = "";
+        url = "https://git.thilo-billerbeck.com";
+        labels = [
+          "native:host"
+          "debian-latest:docker://node:18-bullseye"
+          "ubuntu-latest:docker://node:18-bullseye"
+        ];
       };
     };
     prometheus = {
