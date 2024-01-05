@@ -183,6 +183,14 @@ in
             proxyPass = "http://localhost:5555";
           };
         };
+        "invoice.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:3003/";
+            proxyWebsockets = true;
+          };
+        };
       };
     };
     forgejo = {
@@ -257,6 +265,7 @@ in
       environmentFile = config.age.secrets.burnsBackupEnv.path;
       paths = [
         "/var/lib/forgejo/dump"
+        "/opt/stacks/invoiceninja/docker"
       ];
       repository = "b2:backup-bart";
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
