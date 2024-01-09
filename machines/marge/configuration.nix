@@ -54,5 +54,14 @@
         };
       };
     };
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "server";
+      openFirewall = true;
+      extraUpFlags = [
+        "--advertise-exit-node"
+        "--ssh"
+      ];
+    };
   };
 }
