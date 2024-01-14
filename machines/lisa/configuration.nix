@@ -25,20 +25,6 @@ in
   };
 
   services = {
-    gitea-actions-runner = {
-      package = unstable.gitea-actions-runner;
-      instances = {
-        lisa_docker = {
-          name = "lisa_docker";
-          enable = true;
-          labels = [
-            "docker:docker://node:16-bullseye"
-          ];
-          url = "https://git.thilo-billerbeck.com";
-          token = "replace-me";
-        };
-      };
-    };
     prometheus = {
       exporters = {
         node = {
