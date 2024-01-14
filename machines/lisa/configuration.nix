@@ -8,7 +8,6 @@ in
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
-    ./../../modules/colmena-upgrade.nix
   ];
 
   environment.systemPackages = with unstable; [ gitea-actions-runner ];

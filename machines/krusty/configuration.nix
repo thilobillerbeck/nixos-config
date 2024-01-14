@@ -8,8 +8,6 @@ in
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
-    ./../../modules/colmena-upgrade.nix
-    ./../../modules/invoiceninja.nix
     ./../../modules/containers/watchtower.nix
     ./../../users/deploy.nix
   ];
@@ -63,10 +61,6 @@ in
   };
 
   services = {
-    invoiceninja = {
-      enable = true;
-      domain = "invoiceninja.thilo-billerbeck.com";
-    };
     nginx = {
       enable = true;
       recommendedGzipSettings = true;

@@ -13,13 +13,15 @@ in {
   ];
 
   nix = {
-    autoOptimiseStore = true;
+    optimise = {
+      automatic = true;
+      dates = [ "23:00" ];
+    };
     gc = {
       automatic = true;
-      options = "--delete-older-than 3d";
       dates = "daily";
+      options = "--delete-older-than 3d";
     };
-    optimise.automatic = true;
     trustedUsers = [ "root" "thilo" ];
   };
 
@@ -52,7 +54,11 @@ in {
 
   virtualisation = {
     docker = {
-      autoPrune.enable = true;
+      autoPrune = {
+        enable = true;
+        flags = [ "--all" ];
+        dates = "daily";
+      };
       daemon.settings = { dns = config.networking.nameservers; };
     };
   };

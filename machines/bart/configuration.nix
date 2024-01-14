@@ -3,7 +3,6 @@
 with builtins;
 let
   gitea_url = "git.thilo-billerbeck.com";
-  drone_url = "ci.thilo-billerbeck.com";
   sources = import ./../../nix/sources.nix;
   unstable = import sources.unstable {
     config.allowUnfree = true;
@@ -64,13 +63,6 @@ in
   };
 
   systemd = {
-    timers = {
-      gitea-backup-cleanup = {
-        wantedBy = [ "timers.target" ];
-        partOf = [ "gitea-backup-cleanup.service" ];
-        timerConfig.OnCalendar = "daily";
-      };
-    };
     services.webhook = {
       serviceConfig.EnvironmentFile = config.age.secrets.webhooksecret.path;
     };
@@ -123,11 +115,6 @@ in
             client_max_body_size 0;
           '';
         };
-        "${drone_url}" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/".proxyPass = "http://localhost:3333";
-        };
         "officerent.de" = {
           enableACME = true;
           forceSSL = true;
@@ -144,14 +131,6 @@ in
             "www.thilo-billerbeck.com"
           ];
         };
-        "obsync.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://localhost:3000/";
-            proxyWebsockets = true;
-          };
-        };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
@@ -165,14 +144,6 @@ in
           forceSSL = true;
           locations."/" = {
             proxyPass = "http://localhost:9000/";
-          };
-        };
-        "zsh-sl-api.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://localhost:5675/";
-            proxyWebsockets = true;
           };
         };
         "skymoth.app" = {
