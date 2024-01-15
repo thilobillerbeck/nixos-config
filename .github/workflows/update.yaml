@@ -22,8 +22,7 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - run: nix-shell --run "colmena apply -v"
-        if: ${{ github.event_name != 'schedule' }}
         name: Update machines
-      - run: nix-shell --run "colmena apply -v --reboot"
+      - run: nix-shell --run "colmena exec -v \"kernel-check-reboot\""
         if: ${{ github.event_name == 'schedule' }}
-        name: Update machines (with reboot)
+        name: Check for kenrel update and reboot
