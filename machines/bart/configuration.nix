@@ -162,6 +162,14 @@ in
             proxyWebsockets = true;
           };
         };
+        "audiobookshelf.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://100.76.126.85:8000/";
+            proxyWebsockets = true;
+          };
+        };
       };
     };
     forgejo = {
@@ -302,6 +310,11 @@ in
           }
         '';
       };
+    };
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "server";
+      openFirewall = true;
     };
   };
   virtualisation = {
