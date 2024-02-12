@@ -60,6 +60,8 @@ in
     firewall = { allowedTCPPorts = [ 22 80 443 9001 8055 9002 ]; };
   };
 
+  systemd.services.trilium-server.serviceConfig.ExecStart = lib.mkForce "${unstable.trilium-server}/bin/trilium-server";
+
   services = {
     nginx = {
       enable = true;
