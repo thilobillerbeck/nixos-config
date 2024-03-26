@@ -20,6 +20,19 @@
       interface = "eth0";
     };
     dhcpcd.enable = false;
+    nat = {
+      enable = true;
+      enableIPv6 = true;
+      internalIPs = [
+        "100.67.152.0/24"
+      ];
+      internalIPv6s = [
+        "fd7a:115c:a1e0::/48"
+      ];
+      externalInterface = "eth0";
+      externalIP = "116.203.63.1";
+      externalIPv6 = "2a01:4f8:1c1c:761c::1";
+    };
     usePredictableInterfaceNames = lib.mkForce false;
     interfaces = {
       eth0 = {
