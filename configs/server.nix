@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   sources = import ./../nix/sources.nix;
   unstable = import sources.unstable { config.allowUnfree = true; };
@@ -11,6 +11,11 @@ in {
     ./../users/thilo.nix
     "${(import ./../nix/sources.nix).agenix}/modules/age.nix"
   ];
+
+  # inspired by https://github.com/nix-community/srvos/blob/main/nixos/server/default.nix
+
+  fonts.fontconfig.enable = lib.mkDefault false;
+  sound.enable = false;
 
   nix = {
     optimise = {
@@ -45,7 +50,10 @@ in {
     timesyncd.enable = true;
   };
 
-  environment.variables.EDITOR = "nvim";
+  environment.variables = {
+    EDITOR = "nvim";
+    BROWSER = "echo";
+  };
 
   security.acme = {
     defaults.email = "thilo.billerbeck@officerent.de";
@@ -60,6 +68,26 @@ in {
         dates = "daily";
       };
       daemon.settings = { dns = config.networking.nameservers; };
+    };
+  };
+
+  systemd = {
+    watchdog = {
+      runtimeTime = "20s";
+      rebootTime = "30s";
+    };
+
+    sleep.extraConfig = ''
+      AllowSuspend=no
+      AllowHibernation=no
+    '';
+  };
+
+  boot = {
+    tmp.cleanOnBoot = lib.mkDefault true;
+    kernel.sysctl = {
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
     };
   };
 
