@@ -333,7 +333,7 @@ in
               "match":
               {
                 "type": "value",
-                "value": "{{ getenv "WEBHOOK_SECRET" | js }}",
+                "value": "{{ getenv "RWW_WEBHOOK_SECRET" | js }}",
                 "parameter":
                 {
                   "source": "url",
