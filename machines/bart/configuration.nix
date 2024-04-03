@@ -35,6 +35,24 @@ let
       rm -rf /tmp/thilo-billerbeck.com
     '';
   };
+  rwwWikiDeployScript = pkgs.writeShellApplication {
+    name = "deploy-rww-wiki-hook";
+
+    runtimeInputs = with pkgs; [ curl unzip rsync ];
+
+    text = ''
+      mkdir -p /tmp/rww-wiki.thilo-billerbeck.com
+      curl -L \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $2" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "https://api.github.com/repos/RadioWeinWelle/wiki/actions/artifacts/$1/zip" > /tmp/rww-wiki.thilo-billerbeck.com
+      unzip -o /tmp/rww-wiki.thilo-billerbeck.com/artifact.zip -d /tmp/rww-wiki.thilo-billerbeck.com
+      rm /tmp/rww-wiki.thilo-billerbeck.com/artifact.zip
+      rsync -avzr --delete --omit-dir-times --no-perms /tmp/rww-wiki.thilo-billerbeck.com/ /var/www/rww-wiki.thilo-billerbeck.com/
+      rm -rf /tmp/rww-wiki.thilo-billerbeck.com
+    '';
+  };
 in
 {
   imports = [
@@ -130,6 +148,12 @@ in
           serverAliases = [
             "www.thilo-billerbeck.com"
           ];
+        };
+        "rww-wiki.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          root = "/var/www/rww-wiki.thilo-billerbeck.com";
+          basicAuthFile = "/var/lib/secrets/rww-wiki-auth";
         };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
@@ -259,6 +283,38 @@ in
           {
             "id": "thilo-billerbeck-com-deploy",
             "execute-command": "${thiloBillerbeckComDeployScript}/bin/deploy-thilo-billerbeck.com-hook",
+            "include-command-output-in-response": true,
+            "include-command-output-in-response-on-error": true,
+            "pass-arguments-to-command":
+            [
+              {
+                "source": "url",
+                "name": "artifact"
+              },
+              {
+                "source": "string",
+                "name": "{{ getenv "GITHUB_TOKEN" | js }}"
+              },
+            ],
+            "trigger-rule":
+            {
+              "match":
+              {
+                "type": "value",
+                "value": "{{ getenv "WEBHOOK_SECRET" | js }}",
+                "parameter":
+                {
+                  "source": "url",
+                  "name": "token"
+                }
+              }
+            }
+          }
+        '';
+        rww-wiki-thilo-billerbeck-com-deploy = ''
+          {
+            "id": "rww-wiki-thilo-billerbeck-com-deploy",
+            "execute-command": "${rwwWikiDeployScript}/bin/deploy-rww-wiki-hook",
             "include-command-output-in-response": true,
             "include-command-output-in-response-on-error": true,
             "pass-arguments-to-command":
