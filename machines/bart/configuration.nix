@@ -46,7 +46,7 @@ let
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $2" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/RadioWeinWelle/wiki/actions/artifacts/$1/zip" > /tmp/rww-wiki.thilo-billerbeck.com
+        "https://api.github.com/repos/RadioWeinWelle/wiki/actions/artifacts/$1/zip" > /tmp/rww-wiki.thilo-billerbeck.com/artifact.zip
       unzip -o /tmp/rww-wiki.thilo-billerbeck.com/artifact.zip -d /tmp/rww-wiki.thilo-billerbeck.com
       rm /tmp/rww-wiki.thilo-billerbeck.com/artifact.zip
       rsync -avzr --delete --omit-dir-times --no-perms /tmp/rww-wiki.thilo-billerbeck.com/ /var/www/rww-wiki.thilo-billerbeck.com/
@@ -59,6 +59,7 @@ in
     ./../../configs/server.nix
     ./hardware.nix
     ./../../users/deploy.nix
+    ./../../modules/deploymentUser.nix
   ];
 
   time.timeZone = "Europe/Berlin";
@@ -372,6 +373,12 @@ in
       useRoutingFeatures = "server";
       openFirewall = true;
     };
+  };
+  users.deploymentUsers .rww-wiki = {
+    deploymentPath = "/var/www/rww-wiki.thilo-billerbeck.com";
+    keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICgpdAnTQh8EF2Ehga5LDaJWyMrv6pwv7BddF2jgRXQn rww-wiki@github"
+    ];
   };
   virtualisation = {
     docker = {
