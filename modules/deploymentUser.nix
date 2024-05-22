@@ -21,7 +21,11 @@ in
 
   config = {
     users.groups = builtins.mapAttrs
-      (name: group: { })
+      (name: group: {
+        members = [
+          config.services.nginx.user
+        ];
+      })
       config.users.deploymentUsers;
 
     users.users = builtins.mapAttrs
@@ -33,6 +37,7 @@ in
           openssh
         ];
         home = user.deploymentPath;
+        homeMode = "751";
         openssh.authorizedKeys.keys = user.keys;
         group = "${name}";
         extraGroups = [ "docker" ];
