@@ -137,6 +137,9 @@ in
           forceSSL = true;
           root = "/var/www/rww-wiki.thilo-billerbeck.com";
           basicAuthFile = "/var/lib/secrets/rww-wiki-auth";
+          serverAliases = [
+            "wiki.radio-wein-welle.de"
+          ];
         };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
