@@ -227,7 +227,7 @@ in
       pruneOpts = [ "--keep-daily 5" ];
     };
     thelounge = {
-      enable = true;
+      enable = false;
       port = 7575;
       extraConfig = {
         reverseProxy = true;
