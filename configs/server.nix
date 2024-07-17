@@ -15,7 +15,6 @@ in {
   # inspired by https://github.com/nix-community/srvos/blob/main/nixos/server/default.nix
 
   fonts.fontconfig.enable = lib.mkDefault false;
-  sound.enable = false;
 
   nix = {
     optimise = {
