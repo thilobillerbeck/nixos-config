@@ -180,6 +180,15 @@ in
             proxyWebsockets = true;
           };
         };
+        "tj.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://100.119.180.14:3000/";
+            proxyWebsockets = true;
+          };
+          basicAuthFile = "/var/lib/secrets/tj-auth";
+        };
       };
     };
     forgejo = {
