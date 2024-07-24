@@ -180,23 +180,11 @@ in
             proxyWebsockets = true;
           };
         };
-        "render.trafficjam.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
+        "*.flanders.thilo-billerbeck.com" = {
           locations."/" = {
-            proxyPass = "http://100.119.180.14:3000/";
+            proxyPass = "http://100.121.93.82";
             proxyWebsockets = true;
           };
-          basicAuthFile = "/var/lib/secrets/tj-auth";
-        };
-        "render-dl.trafficjam.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://100.119.180.14:8080/";
-            proxyWebsockets = true; 
-          };
-          basicAuthFile = "/var/lib/secrets/tj-auth";
         };
       };
     };
