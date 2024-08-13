@@ -186,6 +186,14 @@ in
             proxyWebsockets = true;
           };
         };
+        "immich.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://100.121.93.82:2283";
+            proxyWebsockets = true;
+          };
+        };
       };
     };
     forgejo = {
