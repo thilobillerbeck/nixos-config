@@ -186,7 +186,7 @@ in
             proxyWebsockets = true;
           };
         };
-        "immich.thilo-billerbeck.com" = {
+        "photos.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
           locations."/" = {
