@@ -151,21 +151,7 @@ in
             proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
           };
         };
-        "the-lounge.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://localhost:${toString config.services.thelounge.port}";
-          };
-        };
       };
-    };
-    heisenbridge = {
-      enable = false;
-      debug = true;
-      package = unstable.heisenbridge;
-      homeserver = "http://localhost:8008";
-      owner = "@avocadoom:avocadoom.de";
     };
     matrix-synapse = {
       enable = true;
@@ -225,17 +211,6 @@ in
       repository = "b2:backup-burns";
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
       pruneOpts = [ "--keep-daily 5" ];
-    };
-    thelounge = {
-      enable = false;
-      port = 7575;
-      extraConfig = {
-        reverseProxy = true;
-        theme = "thelounge-theme-abyss";
-      };
-      plugins = [
-        pkgs.nodePackages.thelounge-theme-abyss
-      ];
     };
     prometheus = {
       exporters = {
