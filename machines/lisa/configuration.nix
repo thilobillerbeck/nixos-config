@@ -20,7 +20,7 @@ in
 
   networking = {
     hostName = "lisa";
-    firewall = { allowedTCPPorts = [ 5555 9002 ]; };
+    firewall = { allowedTCPPorts = [ 9002 ]; };
   };
 
   services = {
