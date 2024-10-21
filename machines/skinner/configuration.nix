@@ -28,24 +28,12 @@ in
   networking = {
     hostName = "skinner";
     firewall = {
-      allowedTCPPorts = [ 22 80 443 5001 8080 9001 51820 51821  ];
-      allowedUDPPorts = [ 51820 ];
+      allowedTCPPorts = [ 22 80 443 9001 9002 ];
     };
     networkmanager.enable = true;
   };
 
   virtualisation = {
-    oci-containers = {
-      backend = "docker";
-      containers = {
-        "n8n" = {
-          ports = [ "5678:5678" ];
-          user = "root";
-          image = "docker.n8n.io/n8nio/n8n";
-          volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
-        };
-      };
-    };
     docker = {
       enable = true;
     };
@@ -65,14 +53,6 @@ in
           locations."/" = {
             proxyWebsockets = true;
             proxyPass = "http://localhost:5678";
-          };
-        };
-        "testcloud.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://localhost:11000";
           };
         };
       };
