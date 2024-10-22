@@ -28,7 +28,7 @@ in
   networking = {
     hostName = "skinner";
     firewall = {
-      allowedTCPPorts = [ 22 80 443 9001 9002 9999 ];
+      allowedTCPPorts = [ 22 80 443 9001 9002 ];
     };
     networkmanager.enable = true;
   };
