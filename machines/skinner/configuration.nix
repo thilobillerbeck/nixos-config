@@ -28,7 +28,7 @@ in
   networking = {
     hostName = "skinner";
     firewall = {
-      allowedTCPPorts = [ 22 80 443 9001 9002 ];
+      allowedTCPPorts = [ 22 80 443 9001 9002 9999 ];
     };
     networkmanager.enable = true;
   };
@@ -39,24 +39,48 @@ in
     };
   };
 
+  services.openssh.settings.PermitRootLogin = lib.mkDefault "prohibit-password";
+  users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+6nhr0UgPZyNw0Fz6+t8FTu0vIe4giAGBE9rVWPeA root@coolify" ];
+
+  age.secrets.coolify-env.file = ../../secrets/coolify-env-file.age;
+  systemd.services.coolify-prepare-files = {
+    description = "Setup files for coolify";
+    wantedBy = [ "coolify.service" ];
+    wants = [ "data-coolify.mount" ];
+    script = ''
+      #! ${pkgs.bash}/bin/bash
+      NAMES='source ssh applications databases backups services proxy webhooks-during-maintenance ssh/keys ssh/mux proxy/dynamic'
+      for NAME in $NAMES
+      do
+        FOLDER_PATH="/data/coolify/$NAME"
+        if [ ! -d "$FOLDER_PATH" ]; then
+          mkdir -p "$FOLDER_PATH"
+        fi
+      done
+
+      cp -f "${./coolify/docker-compose.yml}" /data/coolify/source/docker-compose.yml
+      cp -f "${./coolify/docker-compose.prod.yml}" /data/coolify/source/docker-compose.prod.yml
+      cp -f "${ config.age.secrets.coolify-env.path }" /data/coolify/source/.env
+      cp -f "${./coolify/upgrade.sh}" /data/coolify/source/upgrade.sh
+
+      # Generate SSH key if not ready
+      if [ ! -f "/data/coolify/ssh/keys/id.root@host.docker.internal" ]; then
+        ${pkgs.openssh}/bin/ssh-keygen -f /data/coolify/ssh/keys/id.root@host.docker.internal -t ed25519 -N "" -C root@coolify
+      fi
+
+      chown -R 9999:root /data/coolify
+      chmod -R 700 /data/coolify
+    '';
+  };
+  systemd.services.coolify = {
+    script = ''
+      APP_PORT="9999" "${pkgs.docker}/bin/docker" compose --env-file /data/coolify/source/.env -f /data/coolify/source/docker-compose.yml -f /data/coolify/source/docker-compose.prod.yml up -d --pull always --remove-orphans --force-recreate
+    '';
+    after = [ "docker.service" "docker.socket" ];
+    wantedBy = [ "multi-user.target" ];
+  };
+
   services = {
-    nginx = {
-      enable = true;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-      virtualHosts = {
-        "n8n.thilo-billerbeck.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://localhost:5678";
-          };
-        };
-      };
-    };
     gitea-actions-runner = {
       package = pkgs.forgejo-actions-runner;
       instances.skinner-secretary = {

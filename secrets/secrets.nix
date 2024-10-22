@@ -13,7 +13,9 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIqawo+unXia1wuw3mWGAyoiiw7mP+JXUtuJNaP14Hbh";
   lisa =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJwf1+7C62c+D/6junwIkCGEskoXICETel6E3CNYQcD";
-  systems = [ bart burns krusty lisa ];
+  skinner =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINJfmDTHJxyvAAKcEAflDkjBMRyz4f6xaswhCPyQh/YC";
+  systems = [ bart burns krusty lisa skinner ];
 in {
   # bart
   "woodpeckerGiteClientId.age".publicKeys = users ++ [ bart ];
@@ -35,4 +37,7 @@ in {
 
   # webhook
   "webhooksecret.age".publicKeys = users ++ systems;
+
+  # coolify
+  "coolify-env-file.age".publicKeys = users ++ [ skinner ];
 }
