@@ -190,7 +190,7 @@ in
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://100.121.93.82:2283";
+            proxyPass = "http://100.99.69.13:2283";
             proxyWebsockets = true;
           };
         };
