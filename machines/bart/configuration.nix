@@ -119,10 +119,10 @@ in
         "officerent.de" = {
           enableACME = true;
           forceSSL = true;
-          root = "/var/www/officerent.de";
           serverAliases = [
             "www.officerent.de"
           ];
+          locations."/".return = "301 https://thilo-billerbeck.com$request_uri";
         };
         "thilo-billerbeck.com" = {
           enableACME = true;
