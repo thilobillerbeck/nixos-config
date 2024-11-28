@@ -169,14 +169,6 @@ in
       }];
       settings.app_service_config_files =
         [ "/var/lib/heisenbridge/registration.yml" ];
-      sliding-sync = {
-        enable = true;
-        settings = {
-          SYNCV3_SERVER = "https://${fqdn}";
-          SYNCV3_BINDADDR = "127.0.0.1:8009";
-        };
-        environmentFile = "/var/lib/matrix-synapse/SYNCV3_ENV";
-      };
     };
     vaultwarden = {
       enable = true;
