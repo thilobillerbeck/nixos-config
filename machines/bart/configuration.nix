@@ -246,7 +246,7 @@ in
     };
     postgresql = {
       enable = true;
-      package = pkgs.postgresql;
+      package = pkgs.postgresql_15;
     };
     uptime-kuma = {
       enable = true;
