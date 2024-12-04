@@ -2,7 +2,7 @@
 
 {
   age.secrets = {
-    watchtowerEnv = { file = ./../../secrets/watchtower-env.age; };
+    watchtowerEnv = { file = ./../../private/secrets/watchtower-env.age; };
   };
 
   virtualisation = {

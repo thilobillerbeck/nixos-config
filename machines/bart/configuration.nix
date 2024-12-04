@@ -85,18 +85,18 @@ in
 
   age.secrets = {
     giteaMailerPassword = {
-      file = ./../../secrets/giteaMailerPassword.age;
+      file = ./../../private/secrets/giteaMailerPassword.age;
       owner = "forgejo";
       group = "forgejo";
     };
     giteaDatabasePassword = {
-      file = ./../../secrets/giteaDatabasePassword.age;
+      file = ./../../private/secrets/giteaDatabasePassword.age;
       owner = "forgejo";
       group = "forgejo";
     };
-    resticBackupPassword = { file = ./../../secrets/resticBackupPassword.age; };
-    burnsBackupEnv = { file = ./../../secrets/burnsBackupEnv.age; };
-    webhooksecret = { file = ./../../secrets/webhooksecret.age; };
+    resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
+    burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
+    webhooksecret = { file = ./../../private/secrets/webhooksecret.age; };
   };
 
   services = {

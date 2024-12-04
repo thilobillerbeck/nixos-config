@@ -46,12 +46,12 @@ in
 
   age.secrets = {
     vaultwardenConfigEnv = {
-      file = ./../../secrets/vaultwardenConfigEnv.age;
+      file = ./../../private/secrets/vaultwardenConfigEnv.age;
       owner = "vaultwarden";
       group = "vaultwarden";
     };
-    burnsBackupEnv = { file = ./../../secrets/burnsBackupEnv.age; };
-    resticBackupPassword = { file = ./../../secrets/resticBackupPassword.age; };
+    burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
+    resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
   };
 
   services = {

@@ -42,7 +42,7 @@ in
   services.openssh.settings.PermitRootLogin = lib.mkDefault "prohibit-password";
   users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+6nhr0UgPZyNw0Fz6+t8FTu0vIe4giAGBE9rVWPeA root@coolify" ];
 
-  age.secrets.coolify-env.file = ../../secrets/coolify-env-file.age;
+  age.secrets.coolify-env.file = ../../private/secrets/coolify-env-file.age;
   systemd.services.coolify-prepare-files = {
     description = "Setup files for coolify";
     wantedBy = [ "coolify.service" ];
