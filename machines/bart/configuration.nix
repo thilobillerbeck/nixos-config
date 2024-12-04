@@ -42,6 +42,7 @@ in
     ./hardware.nix
     ./../../users/deploy.nix
     ./../../modules/deploymentUser.nix
+    ./../../private/machines/bart.nix
   ];
 
   time.timeZone = "Europe/Berlin";
