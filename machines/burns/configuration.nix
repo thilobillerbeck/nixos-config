@@ -21,7 +21,6 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware.nix
-    ./../../modules/colmena-upgrade.nix
     ./../../configs/server.nix
   ];
 
