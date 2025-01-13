@@ -4,7 +4,7 @@
   meta = {
     nixpkgs = import sources.nixpkgs { };
     nodeNixpkgs = {
-      burns = import sources.unstable {
+      burns = import sources.nixpkgs {
         system = "aarch64-linux";
       };
       bart = import sources.nixpkgs {
