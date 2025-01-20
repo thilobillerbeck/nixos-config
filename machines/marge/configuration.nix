@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
-{
+let
+  mailcowDir = "/opt/mailcow-dockerized";
+in {
   imports = [
     ./hardware.nix
     ./../../configs/server.nix
@@ -58,6 +60,33 @@
   };
 
   services = {
+    # nginx mailcow
+    nginx = {
+      enable = true;
+      recommendedTlsSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      virtualHosts = {
+        "mail.officerent.de" = {
+          serverAliases = [
+            "autodiscover.thilo-billerbeck.com"
+            "autoconfig.thilo-billerbeck.com"
+            "autodiscover.officerent.de"
+            "autoconfig.officerent.de"
+          ];
+          enableACME = true;
+          forceSSL = true;
+          sslCertificate = "${mailcowDir}/data/assets/ssl/cert.pem";
+          sslCertificateKey = "${mailcowDir}/data/assets/ssl/key.pem";
+          locations."/Microsoft-Server-ActiveSync".proxyPass =
+            "http://127.0.0.1:8080/Microsoft-Server-ActiveSync";
+          locations."/".proxyPass = 
+            "http://127.0.0.1:8080/";
+        };
+      };
+    };
+
     prometheus = {
       exporters = {
         node = {
