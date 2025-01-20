@@ -170,7 +170,7 @@ in
         [ "/var/lib/heisenbridge/registration.yml" ];
     };
     vaultwarden = {
-      enable = true;
+      enable = false;
       dbBackend = "sqlite";
       backupDir = "/var/lib/vaultwarden/backups";
       environmentFile = config.age.secrets.vaultwardenConfigEnv.path;
