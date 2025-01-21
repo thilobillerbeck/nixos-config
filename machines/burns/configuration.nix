@@ -44,18 +44,13 @@ in
   };
 
   age.secrets = {
-    vaultwardenConfigEnv = {
-      file = ./../../private/secrets/vaultwardenConfigEnv.age;
-      owner = "vaultwarden";
-      group = "vaultwarden";
-    };
     burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
     resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
   };
 
   services = {
     postgresql = {
-      enable = true;
+      enable = false;
       initialScript = pkgs.writeText "synapse-init.sql" ''
         CREATE ROLE "matrix-synapse" WITH LOGIN PASSWORD 'synapse';
         CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
@@ -153,7 +148,7 @@ in
       };
     };
     matrix-synapse = {
-      enable = true;
+      enable = false;
       settings.server_name = config.networking.domain;
       settings.listeners = [{
         port = 8008;
@@ -191,7 +186,7 @@ in
       };
     };
     restic.backups.burns = {
-      initialize = true;
+      initialize = false;
       passwordFile = config.age.secrets.resticBackupPassword.path;
       environmentFile = config.age.secrets.burnsBackupEnv.path;
       paths = [
