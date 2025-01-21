@@ -4,9 +4,6 @@
   meta = {
     nixpkgs = import sources.nixpkgs { };
     nodeNixpkgs = {
-      burns = import sources.nixpkgs {
-        system = "aarch64-linux";
-      };
       bart = import sources.nixpkgs {
          system = "aarch64-linux";
       };
@@ -58,12 +55,6 @@
       hostName = name;
       domain = "thilo-billerbeck.com";
     };
-  };
-
-  burns = { name, nodes, pkgs, ... }: {
-    imports = [ ./machines/${name}/configuration.nix ];
-    deployment.targetHost = "${name}.thilo-billerbeck.com";
-    networking.hostName = name;
   };
 
   skinner = { name, nodes, pkgs, ... }: {
