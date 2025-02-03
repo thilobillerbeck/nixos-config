@@ -17,10 +17,10 @@
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "666e1b3f09c267afd66addebe80fb05a5ef2b554",
-        "sha256": "02cpqb4zdirzxfj210viim1lknpp0flvwcc1a2knmrmhl1f9dgz8",
+        "rev": "f6687779bf4c396250831aa5a32cbfeb85bb07a3",
+        "sha256": "1fj41pdp0lkrk4f7svkvfr32p0p0cr9icfbgml2hzayvi6iydqg7",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/666e1b3f09c267afd66addebe80fb05a5ef2b554.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/f6687779bf4c396250831aa5a32cbfeb85bb07a3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "unstable": {
