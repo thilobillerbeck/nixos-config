@@ -64,6 +64,7 @@ in {
   age.secrets = {
     burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
     resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
+    vaultwardenConfigEnv = { file = ./../../private/secrets/vaultwardenConfigEnv.age; };
   };
 
   virtualisation = {
@@ -94,6 +95,13 @@ in {
             "http://127.0.0.1:8080/Microsoft-Server-ActiveSync";
           locations."/".proxyPass = 
             "http://127.0.0.1:8080/";
+        };
+        "bitwarden.thilo-billerbeck.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+          };
         };
         # This host section can be placed on a different host than the rest,
         # i.e. to delegate from the host being accessible as ${config.networking.domain}
@@ -193,6 +201,29 @@ in {
         }];
       }];
     };
+
+    vaultwarden = {
+       enable = true;
+       package = pkgs.vaultwarden;
+       dbBackend = "sqlite";
+       backupDir = "/var/lib/vaultwarden/backups";
+       environmentFile = config.age.secrets.vaultwardenConfigEnv.path;
+       config = {
+         DOMAIN = "https://bitwarden.thilo-billerbeck.com";
+         SIGNUPS_ALLOWED = false;
+         ROCKET_ADDRESS = "127.0.0.1";
+         ROCKET_PORT = 8234;
+         ROCKET_LOG = "critical";
+         SMTP_HOST = "mail.officerent.de";
+         SMTP_PORT = 587;
+         SMTP_SECURITY = "starttls";
+         SMTP_FROM = "vw@officerent.de";
+         SMTP_FROM_NAME = "bitwarden.thilo-billerbeck.com";
+         SMTP_AUTH_MECHANIS = "Login";
+         SMTP_ACCEPT_INVALID_HOSTNAMES = true;
+         SMTP_ACCEPT_INVALID_CERTS = true;
+       };
+     };
 
     prometheus = {
       exporters = {
