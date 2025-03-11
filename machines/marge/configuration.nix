@@ -148,16 +148,6 @@ in {
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 
-            location ~* ^/(client/|_matrix/client/unstable/org.matrix.msc3575/sync) {
-              proxy_pass http://127.0.0.1:8009;
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-Forwarded-Host $host;
-              proxy_set_header X-Forwarded-Server $host;
-            }
-
             location ~* ^(\/_matrix|\/_synapse\/client) {
               proxy_pass http://127.0.0.1:8008;
               proxy_set_header Host $host;
