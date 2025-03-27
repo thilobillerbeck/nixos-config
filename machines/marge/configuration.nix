@@ -89,8 +89,6 @@ in {
           ];
           enableACME = true;
           forceSSL = true;
-          sslCertificate = "${mailcowDir}/data/assets/ssl/cert.pem";
-          sslCertificateKey = "${mailcowDir}/data/assets/ssl/key.pem";
           locations."/Microsoft-Server-ActiveSync".proxyPass =
             "http://127.0.0.1:8080/Microsoft-Server-ActiveSync";
           locations."/".proxyPass = 
@@ -246,6 +244,15 @@ in {
       repository = "b2:backup-burns";
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
       pruneOpts = [ "--keep-daily 5" ];
+    };
+  };
+
+  security.acme = {
+    certs."mail.officerent.de" = {
+      postRun = ''
+        cp fullchain.pem /opt/mailcow-dockerized/data/assets/ssl/key.pem
+        cp key.pem /opt/mailcow-dockerized/data/assets/ssl/key.pem
+      '';
     };
   };
 }
