@@ -177,13 +177,7 @@ in
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://100.125.227.125:8000/";
-            proxyWebsockets = true;
-          };
-        };
-        "*.flanders.thilo-billerbeck.com" = {
-          locations."/" = {
-            proxyPass = "http://100.121.93.82";
+            proxyPass = "http://flanders:13378";
             proxyWebsockets = true;
           };
         };
@@ -191,7 +185,7 @@ in
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://100.99.69.13:2283";
+            proxyPass = "http://flanders:2283";
             proxyWebsockets = true;
           };
         };
