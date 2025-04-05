@@ -71,6 +71,8 @@ in {
     docker = { enable = true; };
   };
 
+  services.resolved.enable = true;
+
   services = {
     # nginx mailcow
     nginx = {
@@ -225,7 +227,7 @@ in {
 
     tailscale = {
       enable = true;
-      useRoutingFeatures = "server";
+      useRoutingFeatures = "both";
       openFirewall = true;
       extraUpFlags = [
         "--advertise-exit-node"
