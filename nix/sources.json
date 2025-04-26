@@ -5,10 +5,10 @@
         "homepage": "https://matrix.to/#/#agenix:nixos.org",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "e600439ec4c273cf11e06fe4d9d906fb98fa097c",
-        "sha256": "006ngydiykjgqs85cl19h9klq8kaqm5zs0ng51dnwy7nzgqxzsdr",
+        "rev": "96e078c646b711aee04b82ba01aefbff87004ded",
+        "sha256": "1sy6gf4pgrvv93m918fwdl6n7qs0nww5p6jvjpb7iwdfcy08aw3c",
         "type": "tarball",
-        "url": "https://github.com/ryantm/agenix/archive/e600439ec4c273cf11e06fe4d9d906fb98fa097c.tar.gz",
+        "url": "https://github.com/ryantm/agenix/archive/96e078c646b711aee04b82ba01aefbff87004ded.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
