@@ -177,7 +177,7 @@ in
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://flanders:13378";
+            proxyPass = "http://docker01:13378";
             proxyWebsockets = true;
           };
         };
