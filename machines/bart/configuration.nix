@@ -173,7 +173,7 @@ in
             proxyWebsockets = true;
           };
         };
-        "audiobookshelf.thilo-billerbeck.com" = {
+        "audiobookshelf.billerbeck.one" = {
           enableACME = true;
           forceSSL = true;
           locations."/" = {
