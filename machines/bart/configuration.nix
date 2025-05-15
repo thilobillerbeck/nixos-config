@@ -185,7 +185,7 @@ in
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://docker01:8912";
+            proxyPass = "http://docker01:11000";
             proxyWebsockets = true;
           };
         };
