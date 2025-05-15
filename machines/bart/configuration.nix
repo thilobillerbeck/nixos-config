@@ -181,6 +181,14 @@ in
             proxyWebsockets = true;
           };
         };
+        "cloud.billerbeck.one" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://docker01:8912";
+            proxyWebsockets = true;
+          };
+        };
         "photos.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
