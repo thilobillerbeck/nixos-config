@@ -187,6 +187,9 @@ in
           locations."/" = {
             proxyPass = "http://docker01:11000";
             proxyWebsockets = true;
+            extraConfig = ''
+              client_max_body_size 0;
+            '';
           };
         };
         "photos.thilo-billerbeck.com" = {
