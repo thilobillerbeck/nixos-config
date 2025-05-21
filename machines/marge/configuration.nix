@@ -3,17 +3,12 @@
 let
   mailcowDir = "/opt/mailcow-dockerized";
   matrix_domain = "avocadoom.de";
-  matrix_fqdn =
-    let
-      join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
-    in
-    join matrix_domain;
+  matrix_fqdn = let
+    join = domain: "matrix" + lib.optionalString (domain != null) ".${domain}";
+  in join matrix_domain;
 in {
-  imports = [
-    ./hardware.nix
-    ./../../configs/server.nix
-    ./../../users/deploy.nix
-  ];
+  imports =
+    [ ./hardware.nix ./../../configs/server.nix ./../../users/deploy.nix ];
 
   time.timeZone = "Europe/Berlin";
   system.stateVersion = "23.05";
@@ -22,7 +17,9 @@ in {
     hostName = "marge";
     nameservers = [ "8.8.8.8" ];
     defaultGateway = "172.31.1.1";
-    firewall = { allowedTCPPorts = [ 22 25 80 110 143 443 465 587 993 995 4190 9002 ]; };
+    firewall = {
+      allowedTCPPorts = [ 22 25 80 110 143 443 465 587 993 995 4190 9002 ];
+    };
     defaultGateway6 = {
       address = "fe80::1";
       interface = "eth0";
@@ -31,12 +28,8 @@ in {
     nat = {
       enable = true;
       enableIPv6 = true;
-      internalIPs = [
-        "100.67.152.0/24"
-      ];
-      internalIPv6s = [
-        "fd7a:115c:a1e0::/48"
-      ];
+      internalIPs = [ "100.67.152.0/24" ];
+      internalIPv6s = [ "fd7a:115c:a1e0::/48" ];
       externalInterface = "eth0";
       externalIP = "116.203.63.1";
       externalIPv6 = "2a01:4f8:1c1c:761c::1";
@@ -44,15 +37,24 @@ in {
     usePredictableInterfaceNames = lib.mkForce false;
     interfaces = {
       eth0 = {
-        ipv4.addresses = [
-          { address="116.203.63.1"; prefixLength=32; }
-        ];
-        ipv6.addresses = [
-          { address="2a01:4f8:1c1c:761c::1"; prefixLength=64; }
-          /* { address="fe80::9400:2ff:fe96:594d"; prefixLength=64; } */
-        ];
-        ipv4.routes = [ { address = "172.31.1.1"; prefixLength = 32; } ];
-        ipv6.routes = [ { address = "fe80::1"; prefixLength = 128; } ];
+        ipv4.addresses = [{
+          address = "116.203.63.1";
+          prefixLength = 32;
+        }];
+        ipv6.addresses = [{
+          address = "2a01:4f8:1c1c:761c::1";
+          prefixLength = 64;
+        }
+        # { address="fe80::9400:2ff:fe96:594d"; prefixLength=64; }
+          ];
+        ipv4.routes = [{
+          address = "172.31.1.1";
+          prefixLength = 32;
+        }];
+        ipv6.routes = [{
+          address = "fe80::1";
+          prefixLength = 128;
+        }];
       };
     };
   };
@@ -63,13 +65,15 @@ in {
 
   age.secrets = {
     burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
-    resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
-    vaultwardenConfigEnv = { file = ./../../private/secrets/vaultwardenConfigEnv.age; };
+    resticBackupPassword = {
+      file = ./../../private/secrets/resticBackupPassword.age;
+    };
+    vaultwardenConfigEnv = {
+      file = ./../../private/secrets/vaultwardenConfigEnv.age;
+    };
   };
 
-  virtualisation = {
-    docker = { enable = true; };
-  };
+  virtualisation = { docker = { enable = true; }; };
 
   services.resolved.enable = true;
 
@@ -93,14 +97,15 @@ in {
           forceSSL = true;
           locations."/Microsoft-Server-ActiveSync".proxyPass =
             "http://127.0.0.1:8080/Microsoft-Server-ActiveSync";
-          locations."/".proxyPass = 
-            "http://127.0.0.1:8080/";
+          locations."/".proxyPass = "http://127.0.0.1:8080/";
         };
         "bitwarden.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+            proxyPass = "http://127.0.0.1:${
+                toString config.services.vaultwarden.config.ROCKET_PORT
+              }";
           };
         };
         # This host section can be placed on a different host than the rest,
@@ -110,34 +115,28 @@ in {
           enableACME = true;
           forceSSL = true;
 
-          locations."= /.well-known/matrix/server".extraConfig =
-            let
-              # use 443 instead of the default 8448 port to unite
-              # the client-server and server-server port for simplicity
-              server = {
-                "m.server" = "${matrix_fqdn}:443";
+          locations."= /.well-known/matrix/server".extraConfig = let
+            # use 443 instead of the default 8448 port to unite
+            # the client-server and server-server port for simplicity
+            server = { "m.server" = "${matrix_fqdn}:443"; };
+          in ''
+            add_header Content-Type application/json;
+            return 200 '${builtins.toJSON server}';
+          '';
+          locations."= /.well-known/matrix/client".extraConfig = let
+            client = {
+              "m.homeserver" = { "base_url" = "https://${matrix_fqdn}"; };
+              "m.identity_server" = { "base_url" = "https://vector.im"; };
+              "org.matrix.msc3575.proxy" = {
+                "url" = "https://${matrix_fqdn}";
               };
-            in
-            ''
-              add_header Content-Type application/json;
-              return 200 '${builtins.toJSON server}';
-            '';
-          locations."= /.well-known/matrix/client".extraConfig =
-            let
-              client = {
-                "m.homeserver" = { "base_url" = "https://${matrix_fqdn}"; };
-                "m.identity_server" = { "base_url" = "https://vector.im"; };
-                "org.matrix.msc3575.proxy" = {
-                  "url" = "https://${matrix_fqdn}";
-                };
-              };
-              # ACAO required to allow element-web on any URL to request this json file
-            in
-            ''
-              add_header Content-Type application/json;
-              add_header Access-Control-Allow-Origin *;
-              return 200 '${builtins.toJSON client}';
-            '';
+            };
+            # ACAO required to allow element-web on any URL to request this json file
+          in ''
+            add_header Content-Type application/json;
+            add_header Access-Control-Allow-Origin *;
+            return 200 '${builtins.toJSON client}';
+          '';
         };
         ${matrix_fqdn} = {
           enableACME = true;
@@ -193,27 +192,27 @@ in {
     };
 
     vaultwarden = {
-       enable = true;
-       package = pkgs.vaultwarden;
-       dbBackend = "sqlite";
-       backupDir = "/var/lib/vaultwarden/backups";
-       environmentFile = config.age.secrets.vaultwardenConfigEnv.path;
-       config = {
-         DOMAIN = "https://bitwarden.thilo-billerbeck.com";
-         SIGNUPS_ALLOWED = false;
-         ROCKET_ADDRESS = "127.0.0.1";
-         ROCKET_PORT = 8234;
-         ROCKET_LOG = "critical";
-         SMTP_HOST = "mail.officerent.de";
-         SMTP_PORT = 587;
-         SMTP_SECURITY = "starttls";
-         SMTP_FROM = "vw@officerent.de";
-         SMTP_FROM_NAME = "bitwarden.thilo-billerbeck.com";
-         SMTP_AUTH_MECHANIS = "Login";
-         SMTP_ACCEPT_INVALID_HOSTNAMES = true;
-         SMTP_ACCEPT_INVALID_CERTS = true;
-       };
-     };
+      enable = true;
+      package = pkgs.vaultwarden;
+      dbBackend = "sqlite";
+      backupDir = "/var/lib/vaultwarden/backups";
+      environmentFile = config.age.secrets.vaultwardenConfigEnv.path;
+      config = {
+        DOMAIN = "https://bitwarden.thilo-billerbeck.com";
+        SIGNUPS_ALLOWED = false;
+        ROCKET_ADDRESS = "127.0.0.1";
+        ROCKET_PORT = 8234;
+        ROCKET_LOG = "critical";
+        SMTP_HOST = "mail.officerent.de";
+        SMTP_PORT = 587;
+        SMTP_SECURITY = "starttls";
+        SMTP_FROM = "vw@officerent.de";
+        SMTP_FROM_NAME = "bitwarden.thilo-billerbeck.com";
+        SMTP_AUTH_MECHANIS = "Login";
+        SMTP_ACCEPT_INVALID_HOSTNAMES = true;
+        SMTP_ACCEPT_INVALID_CERTS = true;
+      };
+    };
 
     prometheus = {
       exporters = {
@@ -229,10 +228,7 @@ in {
       enable = true;
       useRoutingFeatures = "both";
       openFirewall = true;
-      extraUpFlags = [
-        "--advertise-exit-node"
-        "--ssh"
-      ];
+      extraUpFlags = [ "--advertise-exit-node" "--ssh" ];
     };
 
     restic.backups.burns = {
@@ -255,6 +251,26 @@ in {
         cp fullchain.pem /opt/mailcow-dockerized/data/assets/ssl/key.pem
         cp key.pem /opt/mailcow-dockerized/data/assets/ssl/key.pem
       '';
+    };
+  };
+
+  systemd.services.copyMailcowCerts = {
+    description = "Copy LE certs to mailcow";
+    script = ''
+      cp /var/lib/acme/mail.officerent.de/fullchain.pem /opt/mailcow-dockerized/data/assets/ssl/cert.pem
+      cp /var/lib/acme/mail.officerent.de/key.pem /opt/mailcow-dockerized/data/assets/ssl/key.pem
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  systemd.timers.copyMailcowCerts = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
     };
   };
 }
