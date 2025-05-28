@@ -200,6 +200,14 @@ in
             proxyWebsockets = true;
           };
         };
+        "paperless.billerbeck.one" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://docker01:8010";
+            proxyWebsockets = true;
+          };
+        };
       };
     };
     forgejo = {
