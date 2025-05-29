@@ -35,8 +35,8 @@ let
       rm -rf /tmp/thilo-billerbeck.com
     '';
   };
-in
-{
+  authCertDir = config.security.acme.certs."auth.billerbeck.one".directory;
+in {
   imports = [
     ./../../configs/server.nix
     ./hardware.nix
@@ -95,7 +95,9 @@ in
       owner = "forgejo";
       group = "forgejo";
     };
-    resticBackupPassword = { file = ./../../private/secrets/resticBackupPassword.age; };
+    resticBackupPassword = {
+      file = ./../../private/secrets/resticBackupPassword.age;
+    };
     burnsBackupEnv = { file = ./../../private/secrets/burnsBackupEnv.age; };
     webhooksecret = { file = ./../../private/secrets/webhooksecret.age; };
   };
@@ -120,27 +122,21 @@ in
         "officerent.de" = {
           enableACME = true;
           forceSSL = true;
-          serverAliases = [
-            "www.officerent.de"
-          ];
+          serverAliases = [ "www.officerent.de" ];
           locations."/".return = "301 https://thilo-billerbeck.com$request_uri";
         };
         "thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
           root = "/var/www/thilo-billerbeck.com";
-          serverAliases = [
-            "www.thilo-billerbeck.com"
-          ];
+          serverAliases = [ "www.thilo-billerbeck.com" ];
         };
         "rww-wiki.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
           root = "/var/www/rww-wiki.thilo-billerbeck.com";
           basicAuthFile = "/var/lib/secrets/rww-wiki-auth";
-          serverAliases = [
-            "wiki.radio-wein-welle.de"
-          ];
+          serverAliases = [ "wiki.radio-wein-welle.de" ];
         };
         "status.thilo-billerbeck.com" = {
           enableACME = true;
@@ -153,9 +149,7 @@ in
         "bart.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://localhost:9000/";
-          };
+          locations."/" = { proxyPass = "http://localhost:9000/"; };
         };
         "skymoth.app" = {
           enableACME = true;
@@ -195,6 +189,7 @@ in
         "photos.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
+          serverAliases = [ "photos.billerbeck.one" ];
           locations."/" = {
             proxyPass = "http://docker01:2283";
             proxyWebsockets = true;
@@ -205,6 +200,14 @@ in
           forceSSL = true;
           locations."/" = {
             proxyPass = "http://docker01:8010";
+            proxyWebsockets = true;
+          };
+        };
+        "auth.billerbeck.one" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:8901";
             proxyWebsockets = true;
           };
         };
@@ -240,9 +243,7 @@ in
         };
         "service.explore" = { DISABLE_USERS_PAGE = true; };
         federation = { ENABLED = true; };
-        ui = {
-          SHOW_USER_EMAIL = false;
-        };
+        ui = { SHOW_USER_EMAIL = false; };
         indexer = { REPO_INDEXER_ENABLED = true; };
         actions = { ENABLED = true; };
         mailer = {
@@ -253,9 +254,7 @@ in
           IS_TLS_ENABLED = true;
           USER = "git@officerent.de";
         };
-        "repository.upload" = {
-          TEMP_PATH = "/tmp/gitea/uploads";
-        };
+        "repository.upload" = { TEMP_PATH = "/tmp/gitea/uploads"; };
       };
     };
     postgresql = {
@@ -280,10 +279,7 @@ in
       initialize = true;
       passwordFile = config.age.secrets.resticBackupPassword.path;
       environmentFile = config.age.secrets.burnsBackupEnv.path;
-      paths = [
-        "/var/lib/forgejo/dump"
-        "/opt/stacks/invoiceninja/docker"
-      ];
+      paths = [ "/var/lib/forgejo/dump" "/opt/stacks/invoiceninja/docker" ];
       repository = "b2:backup-bart";
       timerConfig = { OnCalendar = "*-*-* 3:00:00"; };
       pruneOpts = [ "--keep-daily 5" ];
@@ -355,15 +351,11 @@ in
       openFirewall = true;
     };
   };
-  users.deploymentUsers .rww-wiki = {
+  users.deploymentUsers.rww-wiki = {
     deploymentPath = "/var/www/rww-wiki.thilo-billerbeck.com";
     keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICgpdAnTQh8EF2Ehga5LDaJWyMrv6pwv7BddF2jgRXQn rww-wiki@github"
     ];
   };
-  virtualisation = {
-    docker = {
-      enable = true;
-    };
-  };
+  virtualisation = { docker = { enable = true; }; };
 }
