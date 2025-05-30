@@ -141,6 +141,7 @@ in {
         "status.thilo-billerbeck.com" = {
           enableACME = true;
           forceSSL = true;
+          serverAliases = [ "status.billerbeck.one" ];
           locations."/" = {
             proxyPass = "http://localhost:3002/";
             proxyWebsockets = true;
