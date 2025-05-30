@@ -108,6 +108,14 @@ in {
               }";
           };
         };
+        "ntfy.billerbeck.one" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://localhost:2468";
+            proxyWebsockets = true;
+          };
+        };
         # This host section can be placed on a different host than the rest,
         # i.e. to delegate from the host being accessible as ${config.networking.domain}
         # to another host actually running the Matrix homeserver.
@@ -118,7 +126,9 @@ in {
           locations."= /.well-known/matrix/server".extraConfig = let
             # use 443 instead of the default 8448 port to unite
             # the client-server and server-server port for simplicity
-            server = { "m.server" = "${matrix_fqdn}:443"; };
+            server = { 
+              "m.server" = "${matrix_fqdn}:443"; 
+              };
           in ''
             add_header Content-Type application/json;
             return 200 '${builtins.toJSON server}';
@@ -229,6 +239,17 @@ in {
       useRoutingFeatures = "both";
       openFirewall = true;
       extraUpFlags = [ "--advertise-exit-node" "--ssh" ];
+    };
+
+    ntfy-sh = {
+      enable = true;
+      settings = {
+        base-url = "https://ntfy.billerbeck.one";
+        listen-http = "localhost:2468";
+        behind-proxy = true;
+        auth-file = "/var/lib/ntfy-sh/user.db";
+        auth-default-access = "deny-all";
+      };
     };
 
     restic.backups.burns = {
